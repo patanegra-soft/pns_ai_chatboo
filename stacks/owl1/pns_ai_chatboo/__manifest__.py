@@ -4,7 +4,7 @@
 # Odoo reads this file with ast.literal_eval — no module docstring before `{`.
 {
     'name': 'Chatboo',
-    'version': '2.1.542',
+    'version': '2.1.543',
     'category': 'Patanegra AI',
     'summary': 'Conversational chat client (Chatboo) for the PNS AI MCP server.',
     'description': """

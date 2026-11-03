@@ -62,7 +62,16 @@ are already on.
 
 ### Getting started
 
-1. **Install.** Clone the `14.0` or `19.0` branch of `pns_ai_chatboo`, `pns_ai_mcp` and `pns_base` into the addons path and install Chatboo from Apps. On Odoo 14, first run `pip install "openpyxl>=3.1.2"`.
+1. **Install.** From the Odoo Apps Store, download Chatboo: the store brings PNS AI Engine and PNS Base. From git, clone the three on the same series (`19.0` or `14.0`):
+
+   ```bash
+   mkdir -p ~/odoo/pns && cd ~/odoo/pns
+   for r in pns_base pns_ai_mcp pns_ai_chatboo; do
+     git clone -b 19.0 --depth 1 https://github.com/patanegra-soft/$r
+   done
+   ```
+
+   Each clone is one more entry in `addons_path` (`~/odoo/pns/pns_base,~/odoo/pns/pns_ai_mcp,~/odoo/pns/pns_ai_chatboo`). On Odoo 14, first run `pip install "openpyxl>=3.1.2"`. Restart Odoo, *Apps → Update Apps List* and install **Chatboo**; the other two come with it.
 2. **Set up the AI Engine.** Chatboo talks to the AI through `pns_ai_mcp`. Follow its [Getting started](https://github.com/patanegra-soft/pns_ai_mcp#getting-started): AI administrator, your access and one provider.
 
 **Done.** Click the elephant in the top bar.
@@ -215,7 +224,16 @@ ya estás.
 
 ### Puesta en marcha
 
-1. **Instala.** Clona la rama `14.0` o `19.0` de `pns_ai_chatboo`, `pns_ai_mcp` y `pns_base` en el addons path e instala Chatboo desde Aplicaciones. En Odoo 14, antes, `pip install "openpyxl>=3.1.2"`.
+1. **Instala.** Desde la tienda de Odoo, descarga Chatboo: la tienda trae PNS AI Engine y PNS Base. Desde git, clona los tres en la misma serie (`19.0` o `14.0`):
+
+   ```bash
+   mkdir -p ~/odoo/pns && cd ~/odoo/pns
+   for r in pns_base pns_ai_mcp pns_ai_chatboo; do
+     git clone -b 19.0 --depth 1 https://github.com/patanegra-soft/$r
+   done
+   ```
+
+   Cada clon es una entrada más del `addons_path` (`~/odoo/pns/pns_base,~/odoo/pns/pns_ai_mcp,~/odoo/pns/pns_ai_chatboo`). En Odoo 14, antes, `pip install "openpyxl>=3.1.2"`. Reinicia Odoo, *Aplicaciones → Actualizar lista de aplicaciones* e instala **Chatboo**; los otros dos entran con él.
 2. **Configura el Motor de IA.** Chatboo habla con la IA a través de `pns_ai_mcp`. Sigue su [puesta en marcha](https://github.com/patanegra-soft/pns_ai_mcp#puesta-en-marcha): administrador de IA, tu acceso y un proveedor.
 
 **Listo.** Pulsa el elefante de la barra superior.
