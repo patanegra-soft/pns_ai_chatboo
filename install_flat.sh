@@ -10,6 +10,8 @@
 #
 # Result: <addons_dir>/<module>/ with __manifest__.py at its root, ready for
 # addons_path. Odoo 14 uses stacks/owl1; Odoo 15 and later use stacks/owl2.
+# The flat manifest carries the series in its version and the banner in
+# images, as the Odoo Apps Store reads them.
 # Odoo 13 and older are not supported (README, "Odoo versions").
 # An existing <addons_dir>/<module>/ is replaced.
 
@@ -67,6 +69,50 @@ if [ -f "$OUT/README.md" ]; then
     sed 's|common/static/description/|static/description/|g' "$OUT/README.md" > "$OUT/README.md.tmp"
     mv "$OUT/README.md.tmp" "$OUT/README.md"
 fi
+
+# What the Odoo Apps Store reads from a flat module:
+# - version with the series first (19.0.2.1.542). Odoo adds the same prefix
+#   when it loads a version without it, so the installed version is the same.
+# - images: the banner, when the manifest names none.
+# - index.html in ASCII: accents as HTML entities (same page in a browser).
+command -v python3 >/dev/null || die "python3 is needed to write the flat manifest"
+python3 - "$OUT" "$SERIES" <<'PY'
+import os
+import re
+import sys
+
+out, series = sys.argv[1], sys.argv[2]
+path = os.path.join(out, '__manifest__.py')
+with open(path, encoding='utf-8') as fh:
+    text = fh.read()
+
+
+def prefixed(match):
+    version = match.group(2)
+    if version.startswith(series + '.'):
+        return match.group(0)
+    return '%s%s.%s%s' % (match.group(1), series, version, match.group(3))
+
+
+text = re.sub(r"""(['"]version['"]\s*:\s*['"])([^'"]+)(['"])""", prefixed, text, count=1)
+banner = 'static/description/banner.png'
+if not re.search(r"""['"]images['"]\s*:""", text) and os.path.isfile(os.path.join(out, banner)):
+    text = re.sub(r"""(\n(\s*)['"]version['"]\s*:[^\n]*\n)""",
+                  lambda m: "%s%s'images': ['%s'],\n" % (m.group(1), m.group(2), banner),
+                  text, count=1)
+with open(path, 'w', encoding='utf-8') as fh:
+    fh.write(text)
+
+page = os.path.join(out, 'static', 'description', 'index.html')
+if os.path.isfile(page):
+    with open(page, encoding='utf-8') as fh:
+        html = fh.read()
+    parts = re.split(r'(?is)(<style.*?</style>|<script.*?</script>)', html)
+    for i in range(0, len(parts), 2):
+        parts[i] = ''.join(c if ord(c) < 128 else '&#%d;' % ord(c) for c in parts[i])
+    with open(page, 'w', encoding='ascii') as fh:
+        fh.write(''.join(parts))
+PY
 
 find "$OUT" -name '__pycache__' -type d -prune -exec rm -rf {} +
 

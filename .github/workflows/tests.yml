@@ -104,9 +104,18 @@ jobs:
                 if [ -d "$CORE/$dep" ] || [ -d "/tmp/addons/$dep" ]; then continue; fi
                 url="https://codeload.github.com/${GITHUB_REPOSITORY_OWNER}/${dep}/tar.gz/refs/heads/${{ matrix.series }}"
                 echo "Fetching ${dep} ${{ matrix.series }}"
-                mkdir -p "/tmp/addons/$dep"
-                if ! curl -fsSL "$url" | tar -xz -C "/tmp/addons/$dep" --strip-components=1; then
+                got="$(mktemp -d)"
+                if ! curl -fsSL "$url" | tar -xz -C "$got" --strip-components=1; then
                   echo "::error::${dep} is not in Odoo ${{ matrix.series }} nor at ${url}"
+                  exit 1
+                fi
+                # The flat branch holds <dep>/ at its root (older ones: the module itself).
+                if [ -f "$got/$dep/__manifest__.py" ]; then
+                  mv "$got/$dep" "/tmp/addons/$dep"
+                elif [ -f "$got/__manifest__.py" ]; then
+                  mv "$got" "/tmp/addons/$dep"
+                else
+                  echo "::error::no ${dep}/__manifest__.py at ${url}"
                   exit 1
                 fi
                 next="$next $dep"
