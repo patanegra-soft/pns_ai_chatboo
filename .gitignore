@@ -1,0 +1,14 @@
+docs/_oldversions
+
+# Python bytecode (never version)
+__pycache__/
+*.py[cod]
+*$py.class
+*.pyc
+
+# local venv for the unit tests
+.venv/
+.last_odoo_test.log
+commit_msg.tmp
+# Apps icons under common/static/description/ (*.png, *.svg) must stay tracked.
+# icon.svg = source matrix; icon.png = Apps/UI export. Never gitignore these.

@@ -1,0 +1,57 @@
+name: Bug
+description: Something does not work as documented.
+labels: [bug]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        One bug per issue. Ideas and questions go to Discussions.
+        Security problems are reported privately (see SECURITY.md), never here.
+        Do not paste secrets, API keys or customer data.
+  - type: input
+    id: series
+    attributes:
+      label: Odoo series
+      placeholder: "19.0"
+    validations:
+      required: true
+  - type: input
+    id: version
+    attributes:
+      label: Module version
+      description: The `version` in `__manifest__.py`, or the release tag.
+      placeholder: "1.0.6"
+    validations:
+      required: true
+  - type: dropdown
+    id: install
+    attributes:
+      label: How you installed it
+      options:
+        - Flat branch (git clone -b <series>)
+        - install_flat.sh from main
+        - Odoo Apps Store
+        - Other
+    validations:
+      required: true
+  - type: textarea
+    id: steps
+    attributes:
+      label: Steps to reproduce
+      placeholder: |
+        1. …
+        2. …
+    validations:
+      required: true
+  - type: textarea
+    id: expected
+    attributes:
+      label: What you expected and what happened
+    validations:
+      required: true
+  - type: textarea
+    id: log
+    attributes:
+      label: Odoo log
+      description: The traceback or the relevant lines. Remove anything private.
+      render: text

@@ -1,0 +1,160 @@
+# Written by publish.sh: ["14.0", "19.0"] is the list of series in publish.conf.
+# Unit tests without Odoo, then the module installed with its Odoo tests
+# on a clean, official Odoo image of each series.
+# Run workflow with a series (18.0) tries one that is not published yet.
+name: Tests
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+    inputs:
+      series:
+        description: "One Odoo series to try, e.g. 18.0. Empty: the series in publish.conf."
+        required: false
+        default: ""
+
+defaults:
+  run:
+    shell: bash
+
+jobs:
+  unit:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+      - uses: actions/setup-python@v6
+        with:
+          python-version: "3.12"
+      - name: pytest unit_tests
+        run: |
+          if [ ! -d unit_tests ]; then echo "No unit_tests/."; exit 0; fi
+          if [ -f requirements-test.txt ]; then
+            pip install -q -r requirements-test.txt
+          else
+            pip install -q pytest
+          fi
+          python -m pytest -q -p no:cacheprovider unit_tests
+
+  odoo:
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        series: ${{ fromJSON(inputs.series && format('["{0}"]', inputs.series) || '["14.0", "19.0"]') }}
+    services:
+      db:
+        image: postgres:15
+        env:
+          POSTGRES_USER: odoo
+          POSTGRES_PASSWORD: odoo
+          POSTGRES_DB: postgres
+        options: >-
+          --health-cmd pg_isready
+          --health-interval 5s
+          --health-timeout 5s
+          --health-retries 10
+    container:
+      image: odoo:${{ matrix.series }}
+      options: --user root
+    steps:
+      - uses: actions/checkout@v5
+
+      - name: Flat module
+        run: |
+          bash install_flat.sh "${{ matrix.series }}" /tmp/addons
+          echo "MODULE=$(ls /tmp/addons)" >> "$GITHUB_ENV"
+          base="$(find /usr /opt -path '*/odoo/addons/base/__manifest__.py' 2>/dev/null | head -1)"
+          if [ -z "$base" ]; then
+            echo "::error::no Odoo addons folder in the odoo:${{ matrix.series }} image"
+            exit 1
+          fi
+          core="$(dirname "$(dirname "$base")")"
+          echo "Odoo addons: $core"
+          echo "CORE=$core" >> "$GITHUB_ENV"
+
+      - name: Chrome for the browser tests
+        run: |
+          # Odoo only runs a module's JavaScript in a browser. Before 16 the
+          # image is too old for the current Chrome: those tests are skipped.
+          if ! grep -rqsE 'browser_js|start_tour' "/tmp/addons/$MODULE/tests"; then
+            echo "No browser tests."
+            exit 0
+          fi
+          series="${{ matrix.series }}"
+          if [ "${series%%.*}" -lt 16 ]; then
+            echo "::warning::Odoo ${series}: no Chrome here, the browser tests are skipped"
+            exit 0
+          fi
+          curl -fsSLo /tmp/chrome.deb https://dl.google.com/linux/direct/google-chrome-stable_current_amd64.deb
+          apt-get update -qq
+          apt-get install -y -qq /tmp/chrome.deb >/dev/null
+          google-chrome --version
+
+      - name: Dependencies missing from a clean Odoo
+        run: |
+          # A dependency that is neither in the image nor already fetched comes
+          # from the flat branch of its public repository, same owner.
+          queue="$MODULE"
+          while [ -n "$queue" ]; do
+            next=""
+            for mod in $queue; do
+              deps="$(python3 -c "import ast, sys; print(' '.join(ast.literal_eval(open(sys.argv[1]).read()).get('depends', [])))" "/tmp/addons/$mod/__manifest__.py")"
+              for dep in $deps; do
+                if [ -d "$CORE/$dep" ] || [ -d "/tmp/addons/$dep" ]; then continue; fi
+                url="https://codeload.github.com/${GITHUB_REPOSITORY_OWNER}/${dep}/tar.gz/refs/heads/${{ matrix.series }}"
+                echo "Fetching ${dep} ${{ matrix.series }}"
+                mkdir -p "/tmp/addons/$dep"
+                if ! curl -fsSL "$url" | tar -xz -C "/tmp/addons/$dep" --strip-components=1; then
+                  echo "::error::${dep} is not in Odoo ${{ matrix.series }} nor at ${url}"
+                  exit 1
+                fi
+                next="$next $dep"
+              done
+            done
+            queue="$next"
+          done
+          command -v pip3 >/dev/null || { apt-get update -qq && apt-get install -y -qq python3-pip >/dev/null; }
+          for req in /tmp/addons/*/requirements.txt; do
+            [ -f "$req" ] || continue
+            pip3 install -q -r "$req" || pip3 install -q --break-system-packages -r "$req"
+          done
+          # Odoo refuses a module whose external_dependencies do not import.
+          for manifest in /tmp/addons/*/__manifest__.py; do
+            pkgs="$(python3 -c "import ast, sys; print(' '.join(ast.literal_eval(open(sys.argv[1]).read()).get('external_dependencies', {}).get('python', [])))" "$manifest")"
+            for pkg in $pkgs; do
+              python3 -c "import $pkg" 2>/dev/null && continue
+              echo "Installing $pkg"
+              pip3 install -q "$pkg" || pip3 install -q --break-system-packages "$pkg"
+            done
+          done
+
+      - name: Install and run the Odoo tests
+        run: |
+          set +e
+          odoo --db_host db --db_port 5432 --db_user odoo --db_password odoo \
+            -d ci --addons-path "/tmp/addons,$CORE" \
+            -i "$MODULE" --test-enable --test-tags "/$MODULE" \
+            --stop-after-init --workers 0 --max-cron-threads 0 \
+            --log-level=test 2>&1 | tee /tmp/odoo.log
+          status="${PIPESTATUS[0]}"
+          # Odoo 15+ ends with "... of N tests"; Odoo 14 prints "Ran N tests" per suite.
+          ran="$(grep -oE 'of [0-9]+ tests' /tmp/odoo.log | grep -oE '[0-9]+' | tail -1)"
+          if [ -z "$ran" ]; then
+            ran=0
+            for n in $(grep -oE 'Ran [0-9]+ tests?' /tmp/odoo.log | grep -oE '[0-9]+'); do ran=$((ran + n)); done
+          fi
+          if [ "$status" -ne 0 ] || grep -qE ' (ERROR|CRITICAL) ' /tmp/odoo.log; then
+            echo "::error::Odoo ${{ matrix.series }}: install or tests failed (${ran} tests ran)"
+            exit 1
+          fi
+          if [ -d "/tmp/addons/$MODULE/tests" ] && [ "$ran" -eq 0 ]; then
+            echo "::error::Odoo ${{ matrix.series }}: the module has tests/ but none ran"
+            exit 1
+          fi
+          series="${{ matrix.series }}"
+          if [ "${series%%.*}" -ge 16 ] && grep -qi 'chrome browser not found' /tmp/odoo.log; then
+            echo "::error::Odoo ${series}: Chrome was installed but the browser tests were skipped"
+            exit 1
+          fi
+          echo "::notice::Odoo ${{ matrix.series }}: ${MODULE} installed, ${ran} Odoo tests passed"

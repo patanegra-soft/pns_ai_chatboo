@@ -1,0 +1,517 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+<meta name="tdm-reservation" content="0"/>
+<title>Chatboo</title>
+</head>
+<body>
+<style>
+  .pb {
+    max-width: 960px;
+    margin: 0 auto;
+    padding: 0 0 32px;
+    background: #f3f1f0;
+    color: #1A1A1A;
+    font-family: Inter, "Segoe UI", system-ui, -apple-system, sans-serif;
+    font-size: 15px;
+    line-height: 1.55;
+  }
+  .pb * { box-sizing: border-box; }
+  .pb h1, .pb h2, .pb h3, .pb .pb-n {
+    font-family: "Space Grotesk", "Segoe UI", system-ui, sans-serif;
+    letter-spacing: -0.02em;
+  }
+  .pb a { color: #1A1A1A; }
+  .pb code {
+    font-family: ui-monospace, Consolas, Menlo, monospace;
+    font-size: 0.88em;
+    background: #ebe7e4;
+    padding: 1px 6px;
+    border-radius: 5px;
+  }
+  .pb em { font-style: normal; border-bottom: 3px solid #F7E112; }
+
+  .pb-target { display: block; height: 0; }
+  .pb-es { display: none; }
+  #es:target ~ .pb-en { display: none; }
+  #es:target ~ .pb-es { display: block; }
+
+  .pb-bar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 14px 24px;
+    background: #fff;
+    border-bottom: 1px solid #e6e2e0;
+  }
+  .pb-brand { font-weight: 800; font-size: 14px; letter-spacing: 0.06em; }
+  .pb-brand small { display: block; font-size: 10px; color: #8a8582; letter-spacing: 0.18em; font-weight: 600; }
+  .pb-tabs { background: #f3f1f0; border-radius: 999px; padding: 4px; white-space: nowrap; }
+  .pb-tabs a {
+    display: inline-block;
+    padding: 5px 14px;
+    border-radius: 999px;
+    font-size: 13px;
+    font-weight: 700;
+    text-decoration: none;
+    color: #6f6a67;
+  }
+  .pb-tabs a.pb-t-en { background: #1A1A1A; color: #fff; }
+  #es:target ~ .pb-bar .pb-t-en { background: transparent; color: #6f6a67; }
+  #es:target ~ .pb-bar .pb-t-es { background: #1A1A1A; color: #fff; }
+
+  .pb-sec { padding: 36px 24px 0; }
+  .pb-hero { display: block; }
+  .pb-eyebrow {
+    margin: 0 0 14px;
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: #6f6a67;
+  }
+  .pb-eyebrow span {
+    display: inline-block;
+    width: 8px;
+    height: 8px;
+    margin-right: 8px;
+    border-radius: 2px;
+    background: #F7E112;
+  }
+  .pb h1 { margin: 0 0 16px; font-size: 40px; line-height: 1.06; font-weight: 700; }
+  .pb-lead { margin: 0 0 22px; font-size: 17px; color: #565150; max-width: 34em; }
+  .pb-dark {
+    margin-top: 24px;
+    padding: 24px;
+    border-radius: 22px;
+    background: #141414;
+    color: #fff;
+  }
+  .pb-dark-head {
+    margin: 0 0 12px;
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: #9a9591;
+  }
+  .pb-series span {
+    display: inline-block;
+    margin: 0 5px 7px 0;
+    padding: 5px 11px;
+    border-radius: 8px;
+    font-family: ui-monospace, Consolas, Menlo, monospace;
+    font-size: 13px;
+    font-weight: 600;
+    background: #F7E112;
+    color: #1A1A1A;
+  }
+  .pb-dark-note { margin: 6px 0 18px; font-size: 13px; color: #b4afab; }
+  .pb-app {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    padding: 12px 14px;
+    border-radius: 16px;
+    background: #fff;
+    color: #1A1A1A;
+  }
+  .pb-app img { width: 52px; height: 52px; flex: none; display: block; }
+  .pb-app b { display: block; font-size: 15px; }
+  .pb-app span { font-size: 13px; color: #7a7570; }
+
+  .pb h2 { margin: 0 0 18px; font-size: 28px; font-weight: 700; }
+  .pb-big {
+    padding: 28px;
+    border-radius: 20px;
+    background: #fff;
+    border: 1px solid #ebe7e4;
+    border-left: 8px solid #F7E112;
+  }
+  .pb-big h3 { margin: 0 0 12px; font-size: 24px; line-height: 1.25; }
+  .pb-big p { margin: 0 0 10px; color: #4a4643; font-size: 16px; }
+  .pb-big p:last-child { margin: 0; font-weight: 600; color: #1A1A1A; }
+  .pb-pains { margin-top: 18px; }
+  .pb-pain {
+    margin-bottom: 14px;
+    padding: 24px;
+    border-radius: 20px;
+    background: #fff;
+    border: 1px solid #ebe7e4;
+  }
+  .pb-n { display: block; margin-bottom: 10px; font-size: 40px; font-weight: 700; color: #e9e4e1; line-height: 1; }
+  .pb-pain h3 { margin: 0 0 8px; font-size: 19px; line-height: 1.3; font-weight: 600; }
+  .pb-pain p { margin: 0; font-style: italic; color: #6f6a67; }
+
+  .pb-feat {
+    margin-bottom: 14px;
+    padding: 24px;
+    border-radius: 20px;
+    background: #fff;
+    border: 1px solid #ebe7e4;
+  }
+  .pb-feat h3 { margin: 0 0 12px; font-size: 19px; }
+  .pb-feat ul { margin: 0; padding-left: 1.1em; }
+  .pb-feat li { margin: 0 0 8px; }
+  .pb-feat li:last-child { margin-bottom: 0; }
+
+  .pb-steps { margin: 0; padding: 0; list-style: none; counter-reset: pbstep; }
+  .pb-steps li {
+    position: relative;
+    margin-bottom: 12px;
+    padding: 18px 20px 18px 66px;
+    border-radius: 16px;
+    background: #fff;
+    border: 1px solid #ebe7e4;
+    counter-increment: pbstep;
+  }
+  .pb-steps li:before {
+    content: counter(pbstep);
+    position: absolute;
+    left: 18px;
+    top: 16px;
+    width: 32px;
+    height: 32px;
+    border-radius: 9px;
+    background: #1A1A1A;
+    color: #F7E112;
+    font-weight: 700;
+    text-align: center;
+    line-height: 32px;
+  }
+  .pb-steps b { display: block; margin-bottom: 4px; }
+  .pb-steps p { margin: 0; color: #4a4643; }
+  .pb-steps pre {
+    margin: 8px 0 0;
+    padding: 10px 12px;
+    border-radius: 10px;
+    background: #141414;
+    color: #F7E112;
+    font-family: ui-monospace, Consolas, Menlo, monospace;
+    font-size: 13px;
+    white-space: pre-wrap;
+  }
+  .pb-tip { margin: 14px 0 0; padding: 14px 18px; border-radius: 14px; background: #1A1A1A; color: #e6e2e0; }
+  .pb-tip b { color: #F7E112; }
+
+  .pb-src { padding: 24px; border-radius: 20px; background: #fff; border: 1px solid #ebe7e4; }
+  .pb-src h3 { margin: 0 0 10px; font-size: 19px; }
+  .pb-src ul { margin: 0 0 10px; padding-left: 1.1em; }
+  .pb-src li { margin: 0 0 6px; }
+  .pb-src p { margin: 0; }
+
+  .pb-foot { padding: 28px 24px 0; font-size: 13px; color: #8a8582; }
+  .pb-foot a { color: #6f6a67; }
+
+  @media (min-width: 760px) {
+    .pb-hero { display: grid; grid-template-columns: 1.1fr 1fr; gap: 36px; align-items: center; }
+    .pb-dark { margin-top: 0; }
+    .pb h1 { font-size: 46px; }
+    .pb-pains { display: grid; grid-template-columns: repeat(3, 1fr); gap: 14px; }
+    .pb-pain { margin-bottom: 0; }
+    .pb-feats { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+    .pb-feat { margin-bottom: 0; }
+  }
+</style>
+<div class="pb">
+  <span id="en" class="pb-target"></span>
+  <span id="es" class="pb-target"></span>
+
+  <div class="pb-bar">
+    <div class="pb-brand">PATANEGRA<small>SOFT</small></div>
+    <div class="pb-tabs"><a class="pb-t-en" href="#en">EN</a><a class="pb-t-es" href="#es">ES</a></div>
+  </div>
+
+  <!-- ============================== ENGLISH ============================== -->
+  <div class="pb-en" lang="en">
+
+    <section class="pb-sec pb-hero">
+      <div>
+        <p class="pb-eyebrow"><span></span>For Odoo consultants</p>
+        <h1>AI for all your clients, without leaving Odoo.</h1>
+        <p class="pb-lead">
+          Chatboo opens an AI chat on top of the screen your client is already
+          using. It knows what is on that screen, answers with the user's own
+          permissions, and goes away with one click.
+        </p>
+      </div>
+      <div class="pb-dark">
+        <p class="pb-dark-head">Odoo series</p>
+        <p class="pb-series"><span>14.0</span><span>19.0</span></p>
+        <p class="pb-dark-note">Tested, with a branch ready to install.</p>
+        <div class="pb-app">
+          <img src="icon.png" alt="Chatboo"/>
+          <div><b>Chatboo</b><span>AI chat with each user's own permissions</span></div>
+        </div>
+      </div>
+    </section>
+
+    <section class="pb-sec">
+      <h2>The pain</h2>
+      <div class="pb-big">
+        <h3>To use AI, people have to <em>leave Odoo</em>.</h3>
+        <p>
+          They export spreadsheets into another application, or hand their
+          Odoo password to an outside service. The answer lands somewhere
+          else, and the work stops while they copy it back.
+        </p>
+        <p>Chatboo opens on top of the screen they are already on.</p>
+      </div>
+      <div class="pb-pains">
+        <div class="pb-pain">
+          <span class="pb-n">01</span>
+          <h3>Waiting while the AI <em>thinks</em>?</h3>
+          <p>It is a layer you put on and take off. Close it, keep working, and the elephant tells you when the answer is ready.</p>
+        </div>
+        <div class="pb-pain">
+          <span class="pb-n">02</span>
+          <h3>Does every question <em>cost money</em>?</h3>
+          <p>Turn what you repeat into a skill. Most of the time it runs without calling the AI: zero cost, same answer every time.</p>
+        </div>
+        <div class="pb-pain">
+          <span class="pb-n">03</span>
+          <h3>Explaining <em>which record</em> you mean, every time?</h3>
+          <p>It knows what is on screen. If several records match, click the row and that is it.</p>
+        </div>
+      </div>
+    </section>
+
+    <section class="pb-sec">
+      <h2>What you get</h2>
+      <div class="pb-feats">
+        <div class="pb-feat">
+          <h3>On the screen they already use</h3>
+          <ul>
+            <li>The elephant in the top bar opens the chat over the current screen. Nobody leaves the record they were on.</li>
+            <li>It knows which record or list is on screen.</li>
+            <li>When several records could match, it lists them. Click a row and the next question is about that one.</li>
+            <li>Conversations are saved and can be reopened. Each user sees only their own.</li>
+          </ul>
+        </div>
+        <div class="pb-feat">
+          <h3>Work while it thinks</h3>
+          <ul>
+            <li>Close the chat and carry on. The answer keeps coming.</li>
+            <li>When it is ready, the elephant shows a bell and Odoo shows a notice.</li>
+            <li>A long answer can be stopped from the chat.</li>
+          </ul>
+        </div>
+        <div class="pb-feat">
+          <h3>Answers they can use</h3>
+          <ul>
+            <li>Tables whose cells open the record, and charts drawn in the chat.</li>
+            <li>Export an answer to PDF, Excel or Word, or copy it.</li>
+            <li>Attach a spreadsheet, a Word file, a PDF, an image or plain text, and ask about it.</li>
+            <li>Answers can be read aloud.</li>
+          </ul>
+        </div>
+        <div class="pb-feat">
+          <h3>Skills that cost nothing</h3>
+          <ul>
+            <li>Type <code>/</code> and pick a skill: a procedure written once, for the client's routines.</li>
+            <li>Tables and charts from a skill come from code, not from the AI. Same data, same answer.</li>
+            <li>A good answer can be saved as a new skill from the chat itself.</li>
+            <li>That knowledge is a service you sell and maintain at each client.</li>
+          </ul>
+        </div>
+        <div class="pb-feat">
+          <h3>Safe for your client</h3>
+          <ul>
+            <li>It reads as the person who asks: their access rights, record rules and companies.</li>
+            <li>A change is a plan with a Confirm button. Only users you allow can confirm.</li>
+          </ul>
+        </div>
+        <div class="pb-feat">
+          <h3>Put it on, take it off</h3>
+          <ul>
+            <li>A plain Odoo module: no external server, no build tools.</li>
+            <li>Apache 2.0. No fee per user, per database or per year.</li>
+            <li>Uninstall it from Apps like any other module.</li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
+    <section class="pb-sec">
+      <h2>Getting started</h2>
+      <ol class="pb-steps">
+        <li>
+          <b>Install.</b>
+          <p>Clone the <code>14.0</code> or <code>19.0</code> branch of <code>pns_ai_chatboo</code>, <code>pns_ai_mcp</code> and <code>pns_base</code> into the addons path and install Chatboo from Apps. On Odoo 14, first run <code>pip install "openpyxl&gt;=3.1.2"</code>.</p>
+        </li>
+        <li>
+          <b>Set up the AI Engine.</b>
+          <p>Chatboo talks to the AI through <code>pns_ai_mcp</code>. Follow its <a href="https://github.com/patanegra-soft/pns_ai_mcp#getting-started">Getting started</a>: AI administrator, your access and one provider.</p>
+        </li>
+      </ol>
+      <p class="pb-tip"><b>Done.</b> Click the elephant in the top bar.</p>
+    </section>
+
+    <section class="pb-sec">
+      <div class="pb-src">
+        <h3>Source code</h3>
+        <p>On GitHub: <a href="https://github.com/patanegra-soft/pns_ai_chatboo">patanegra-soft/pns_ai_chatboo</a>.</p>
+        <ul>
+          <li><code>main</code> is one tree for every series: shared code in <code>common/</code> and one stack per OWL generation (<code>owl1</code> for Odoo 14, <code>owl2</code> for 15 and later).</li>
+          <li><code>./install_flat.sh 19.0 &lt;dir&gt;</code> builds the flat module of a series. The branches <code>14.0</code> and <code>19.0</code> are that result, ready for the addons path.</li>
+          <li>Odoo 15.0 to 18.0: no branch, and not tested by people or by CI. Build them from <code>main</code> with <code>install_flat.sh</code> (also <code>pns_base</code> and <code>pns_ai_mcp</code>) and try them on a test database first.</li>
+          <li>Tests without a database (<code>unit_tests/</code>, pytest) live in <code>main</code>. The Odoo tests are in <code>tests/</code>.</li>
+        </ul>
+        <p>Bugs: an issue, with the bug form. Ideas and questions: Discussions.</p>
+      </div>
+    </section>
+
+  </div>
+
+  <!-- ============================== ESPAÑOL ============================== -->
+  <div class="pb-es" lang="es">
+
+    <section class="pb-sec pb-hero">
+      <div>
+        <p class="pb-eyebrow"><span></span>Para consultores de Odoo</p>
+        <h1>IA para todos tus clientes, sin salir de Odoo.</h1>
+        <p class="pb-lead">
+          Chatboo abre un chat de IA encima de la pantalla que tu cliente ya
+          está usando. Sabe qué hay en esa pantalla, responde con los permisos
+          del propio usuario y se quita con un clic.
+        </p>
+      </div>
+      <div class="pb-dark">
+        <p class="pb-dark-head">Versiones de Odoo</p>
+        <p class="pb-series"><span>14.0</span><span>19.0</span></p>
+        <p class="pb-dark-note">Probadas, con una rama lista para instalar.</p>
+        <div class="pb-app">
+          <img src="icon.png" alt="Chatboo"/>
+          <div><b>Chatboo</b><span>Chat de IA con los permisos de cada usuario</span></div>
+        </div>
+      </div>
+    </section>
+
+    <section class="pb-sec">
+      <h2>El dolor</h2>
+      <div class="pb-big">
+        <h3>Para usar IA hay que <em>salir de Odoo</em>.</h3>
+        <p>
+          Se exportan Excels a otra aplicación, o se le da la contraseña de
+          Odoo a un servicio de fuera. La respuesta llega a otro sitio y el
+          trabajo se para mientras se copia de vuelta.
+        </p>
+        <p>Chatboo se abre encima de la pantalla en la que ya estás.</p>
+      </div>
+      <div class="pb-pains">
+        <div class="pb-pain">
+          <span class="pb-n">01</span>
+          <h3>¿Esperar mirando cómo <em>piensa</em> la IA?</h3>
+          <p>Es una capa de quita y pon. La cierras, sigues trabajando y el elefante te avisa cuando la respuesta está lista.</p>
+        </div>
+        <div class="pb-pain">
+          <span class="pb-n">02</span>
+          <h3>¿Cada pregunta <em>cuesta dinero</em>?</h3>
+          <p>Lo que repites lo conviertes en un skill. Casi siempre se ejecuta sin llamar a la IA: coste cero y la misma respuesta cada vez.</p>
+        </div>
+        <div class="pb-pain">
+          <span class="pb-n">03</span>
+          <h3>¿Explicarle cada vez <em>de qué registro</em> hablas?</h3>
+          <p>Sabe qué hay en pantalla. Si varios encajan, pinchas la fila y listo.</p>
+        </div>
+      </div>
+    </section>
+
+    <section class="pb-sec">
+      <h2>Qué te llevas</h2>
+      <div class="pb-feats">
+        <div class="pb-feat">
+          <h3>En la pantalla que ya usan</h3>
+          <ul>
+            <li>El elefante de la barra superior abre el chat encima de la pantalla actual. Nadie sale del registro en el que estaba.</li>
+            <li>Sabe qué registro o qué lista hay en pantalla.</li>
+            <li>Si varios registros encajan, los enseña. Pinchas una fila y la siguiente pregunta va sobre esa.</li>
+            <li>Las conversaciones se guardan y se pueden reabrir. Cada usuario ve solo las suyas.</li>
+          </ul>
+        </div>
+        <div class="pb-feat">
+          <h3>Trabaja mientras piensa</h3>
+          <ul>
+            <li>Cierras el chat y sigues. La respuesta sigue llegando.</li>
+            <li>Cuando está lista, el elefante enseña una campanita y Odoo muestra un aviso.</li>
+            <li>Una respuesta larga se puede parar desde el chat.</li>
+          </ul>
+        </div>
+        <div class="pb-feat">
+          <h3>Respuestas que sirven</h3>
+          <ul>
+            <li>Tablas cuyas celdas abren el registro, y gráficos dibujados en el chat.</li>
+            <li>Exportar una respuesta a PDF, Excel o Word, o copiarla.</li>
+            <li>Adjuntar un Excel, un Word, un PDF, una imagen o un texto, y preguntar sobre él.</li>
+            <li>Las respuestas se pueden leer en voz alta.</li>
+          </ul>
+        </div>
+        <div class="pb-feat">
+          <h3>Skills que no cuestan nada</h3>
+          <ul>
+            <li>Escribes <code>/</code> y eliges un skill: un procedimiento escrito una vez, para las rutinas del cliente.</li>
+            <li>Las tablas y gráficos de un skill salen del código, no de la IA. Mismos datos, misma respuesta.</li>
+            <li>Una buena respuesta se puede guardar como skill nuevo desde el propio chat.</li>
+            <li>Ese conocimiento es un servicio que vendes y mantienes en cada cliente.</li>
+          </ul>
+        </div>
+        <div class="pb-feat">
+          <h3>Seguro para tu cliente</h3>
+          <ul>
+            <li>Lee como la persona que pregunta: sus permisos, sus reglas de registro y sus compañías.</li>
+            <li>Un cambio es un plan con un botón Confirmar. Solo confirman los usuarios que tú permitas.</li>
+          </ul>
+        </div>
+        <div class="pb-feat">
+          <h3>Se pone y se quita</h3>
+          <ul>
+            <li>Un módulo de Odoo normal: sin servidor externo, sin herramientas de compilación.</li>
+            <li>Apache 2.0. Sin cuota por usuario, por base de datos ni por año.</li>
+            <li>Se desinstala desde Aplicaciones como cualquier otro.</li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
+    <section class="pb-sec">
+      <h2>Puesta en marcha</h2>
+      <ol class="pb-steps">
+        <li>
+          <b>Instala.</b>
+          <p>Clona la rama <code>14.0</code> o <code>19.0</code> de <code>pns_ai_chatboo</code>, <code>pns_ai_mcp</code> y <code>pns_base</code> en el addons path e instala Chatboo desde Aplicaciones. En Odoo 14, antes, <code>pip install "openpyxl&gt;=3.1.2"</code>.</p>
+        </li>
+        <li>
+          <b>Configura el Motor de IA.</b>
+          <p>Chatboo habla con la IA a través de <code>pns_ai_mcp</code>. Sigue su <a href="https://github.com/patanegra-soft/pns_ai_mcp#puesta-en-marcha">puesta en marcha</a>: administrador de IA, tu acceso y un proveedor.</p>
+        </li>
+      </ol>
+      <p class="pb-tip"><b>Listo.</b> Pulsa el elefante de la barra superior.</p>
+    </section>
+
+    <section class="pb-sec">
+      <div class="pb-src">
+        <h3>Código fuente</h3>
+        <p>En GitHub: <a href="https://github.com/patanegra-soft/pns_ai_chatboo">patanegra-soft/pns_ai_chatboo</a>.</p>
+        <ul>
+          <li><code>main</code> es un solo árbol para todas las versiones: código común en <code>common/</code> y una pila por generación de OWL (<code>owl1</code> para Odoo 14, <code>owl2</code> para la 15 y siguientes).</li>
+          <li><code>./install_flat.sh 19.0 &lt;dir&gt;</code> construye el módulo plano de una versión. Las ramas <code>14.0</code> y <code>19.0</code> son ese resultado, listas para el addons path.</li>
+          <li>Odoo 15.0 a 18.0: sin rama y sin probar, ni por personas ni por el CI. Se construyen desde <code>main</code> con <code>install_flat.sh</code> (también <code>pns_base</code> y <code>pns_ai_mcp</code>) y se prueban antes en una base de pruebas.</li>
+          <li>Los tests sin base de datos (<code>unit_tests/</code>, pytest) viven en <code>main</code>. Los tests de Odoo están en <code>tests/</code>.</li>
+        </ul>
+        <p>Errores: un issue, con el formulario de error. Ideas y preguntas: Discussions.</p>
+      </div>
+    </section>
+
+  </div>
+
+  <footer class="pb-foot">
+    <a href="https://patanegra.com">PATANEGRA Soft</a>&trade; &mdash; Apache License 2.0.
+    <a href="LICENSE">LICENSE</a> &middot; <a href="NOTICE">NOTICE</a>.
+    Chatboo&trade; and the elephant-and-speech-bubble device are trademarks of
+    PATANEGRA Soft SL. The Apache license does not grant trademark rights.
+  </footer>
+</div>
+</body>
+</html>
