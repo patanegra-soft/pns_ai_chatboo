@@ -139,13 +139,43 @@ def important(pairs):
                      for p, v in pairs)
 
 
+COLOR = re.compile(r'^(#[0-9a-fA-F]{3,8}|(rgb|hsl)a?\([^()]*\)|[a-zA-Z]+)$')
+BORDER_STYLES = {'none', 'hidden', 'dotted', 'dashed', 'solid', 'double',
+                 'groove', 'ridge', 'inset', 'outset'}
+BORDER_WIDTH = re.compile(r'^([\d.]+[a-z%]*|thin|medium|thick)$')
+
+
+def store_safe(merged):
+    """Same look, written with properties Odoo's sanitizer keeps.
+
+    It keeps background-color but not background, and border-<side>-width,
+    -style and -color but not border-<side> (except top and bottom).
+    """
+    out = {}
+    for prop, value in merged.items():
+        side = re.match(r'^border-(left|right)$', prop)
+        if prop == 'background' and COLOR.match(value) and value.lower() != 'none':
+            out['background-color'] = value
+        elif side:
+            parts = re.findall(r'\w+\([^()]*\)|\S+', value)
+            width = next((p for p in parts if BORDER_WIDTH.match(p)), None)
+            style = next((p for p in parts if p.lower() in BORDER_STYLES), None)
+            color = next((p for p in parts if p not in (width, style)), None)
+            for key, val in (('width', width), ('style', style), ('color', color)):
+                if val:
+                    out['border-%s-%s' % (side.group(1), key)] = val
+        else:
+            out[prop] = value
+    return out
+
+
 def matches(sel, tag, classes, ancestors):
     def fits(part, t, c):
         return (not part[0] or part[0] == t) and part[1] <= c
     if not fits(sel[-1], tag, classes):
         return False
     rest = sel[:-1]
-    for t, c in reversed(ancestors):
+    for t, c, *_ in reversed(ancestors):
         if rest and fits(rest[-1], t, c):
             rest = rest[:-1]
     return not rest
@@ -208,11 +238,28 @@ def inline_styles(html):
                 for p, v in pairs:
                     merged.pop(p, None)
                     merged[p] = v.replace('"', "'")
+        # The sanitizer drops gap and justify-content. In a flex row both come
+        # back as margin-left on every child but the first: the gap itself,
+        # or auto, which shares the free space like space-between.
+        if stack:
+            parent = stack[-1]
+            if parent[2] and parent[3] and 'margin-left' not in merged and 'margin' not in merged:
+                merged['margin-left'] = parent[2]
+            parent[3] += 1
+        gap = None
+        if merged.get('display') in ('flex', 'inline-flex') \
+                and merged.get('flex-direction', 'row') == 'row':
+            spread = merged.get('justify-content') == 'space-between'
+            if 'gap' in merged and not spread:
+                gap = merged.pop('gap').split()[-1]
+            elif spread and 'gap' not in merged:
+                gap = 'auto'
+                merged.pop('justify-content')
         if not (tag in VOID or attrs.rstrip().endswith('/')):
-            stack.append((tag, classes))
+            stack.append([tag, classes, gap, 0])
         if not merged:
             return m.group(0)
-        style = '; '.join('%s: %s' % kv for kv in merged.items())
+        style = '; '.join('%s: %s' % kv for kv in store_safe(merged).items())
         own = re.search(r'''\sstyle\s*=\s*(["'])(.*?)\1''', attrs, re.S)
         if own:
             attrs = attrs[:own.start()] + ' style="%s; %s"' % (style, own.group(2)) + attrs[own.end():]
@@ -224,7 +271,7 @@ def inline_styles(html):
 
     def end(m):
         tag = m.group(1).lower()
-        if any(t == tag for t, _ in stack):
+        if any(entry[0] == tag for entry in stack):
             while stack and stack.pop()[0] != tag:
                 pass
         return m.group(0)
