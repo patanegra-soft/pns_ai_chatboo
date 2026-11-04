@@ -76,6 +76,7 @@ fi
 # - images: banner_store.png (2:1, the store crops wider pictures to that),
 #   else banner.png, when the manifest names none.
 # - index.html in ASCII: accents as HTML entities (same page in a browser).
+# - index.html with its CSS also in style attributes: the store drops <style>.
 command -v python3 >/dev/null || die "python3 is needed to write the flat manifest"
 python3 - "$OUT" "$SERIES" <<'PY'
 import os
@@ -106,10 +107,147 @@ if banner and not re.search(r"""['"]images['"]\s*:""", text):
 with open(path, 'w', encoding='utf-8') as fh:
     fh.write(text)
 
+COMPOUND = re.compile(r'^([a-zA-Z][\w-]*)?((?:\.[\w-]+)*)$')
+START = re.compile(r'''<([a-zA-Z][\w-]*)((?:[^>"']|"[^"]*"|'[^']*')*)>''')
+END = re.compile(r'</([a-zA-Z][\w-]*)\s*>')
+VOID = {'area', 'base', 'br', 'col', 'embed', 'hr', 'img', 'input', 'link',
+        'meta', 'source', 'track', 'wbr'}
+
+
+def selector(text):
+    """[(tag, classes)] for 'tag.class tag .class', or None for anything else."""
+    parts = []
+    for word in text.split():
+        m = COMPOUND.match(word)
+        if not m or not word:
+            return None
+        parts.append(((m.group(1) or '').lower(), set(m.group(2).split('.')) - {''}))
+    return parts or None
+
+
+def declarations(body):
+    pairs = []
+    for item in body.split(';'):
+        prop, sep, value = item.partition(':')
+        if sep and prop.strip() and value.strip():
+            pairs.append((prop.strip().lower(), value.strip()))
+    return pairs
+
+
+def important(pairs):
+    return '; '.join('%s: %s%s' % (p, v, '' if '!important' in v else ' !important')
+                     for p, v in pairs)
+
+
+def matches(sel, tag, classes, ancestors):
+    def fits(part, t, c):
+        return (not part[0] or part[0] == t) and part[1] <= c
+    if not fits(sel[-1], tag, classes):
+        return False
+    rest = sel[:-1]
+    for t, c in reversed(ancestors):
+        if rest and fits(rest[-1], t, c):
+            rest = rest[:-1]
+    return not rest
+
+
+def inline_styles(html):
+    """Copy the page's CSS into style attributes.
+
+    The Apps Store drops <style> from the description; it keeps style
+    attributes. Rules made only of tags and classes go inline. The rest
+    (:target, pseudo-classes, @media, *) stays in <style> with !important,
+    so it still wins over the inline copy where a stylesheet is read.
+    """
+    block = re.search(r'(?is)(<style[^>]*>)(.*?)(</style>)', html)
+    if not block:
+        return html
+    css = re.sub(r'(?s)/\*.*?\*/', '', block.group(2))
+    rules, kept, i = [], [], 0
+    while True:
+        j = css.find('{', i)
+        if j < 0:
+            break
+        prelude = css[i:j].strip()
+        if prelude.startswith('@'):
+            depth, k = 1, j + 1
+            while k < len(css) and depth:
+                depth += {'{': 1, '}': -1}.get(css[k], 0)
+                k += 1
+            inner = re.sub(r'([^{}]+)\{([^{}]*)\}',
+                           lambda m: '  %s { %s }\n' % (m.group(1).strip(),
+                                                        important(declarations(m.group(2)))),
+                           css[j + 1:k - 1])
+            kept.append('%s {\n%s}' % (prelude, inner))
+            i = k
+            continue
+        k = css.find('}', j)
+        pairs = declarations(css[j + 1:k])
+        other = []
+        for text in prelude.split(','):
+            sel = selector(text)
+            if sel:
+                spec = (sum(len(c) for _, c in sel), sum(1 for t, _ in sel if t))
+                rules.append((spec, len(rules), sel, pairs))
+            elif text.strip():
+                other.append(text.strip())
+        if other:
+            kept.append('%s { %s }' % (', '.join(other), important(pairs)))
+        i = k + 1
+    rules.sort(key=lambda r: (r[0], r[1]))
+
+    stack, out = [], []
+
+    def start(m):
+        tag, attrs = m.group(1).lower(), m.group(2)
+        cls = re.search(r'''\sclass\s*=\s*["']([^"']*)["']''', attrs)
+        classes = set(cls.group(1).split()) if cls else set()
+        merged = {}
+        for _, _, sel, pairs in rules:
+            if matches(sel, tag, classes, stack):
+                for p, v in pairs:
+                    merged.pop(p, None)
+                    merged[p] = v.replace('"', "'")
+        if not (tag in VOID or attrs.rstrip().endswith('/')):
+            stack.append((tag, classes))
+        if not merged:
+            return m.group(0)
+        style = '; '.join('%s: %s' % kv for kv in merged.items())
+        own = re.search(r'''\sstyle\s*=\s*(["'])(.*?)\1''', attrs, re.S)
+        if own:
+            attrs = attrs[:own.start()] + ' style="%s; %s"' % (style, own.group(2)) + attrs[own.end():]
+        elif attrs.rstrip().endswith('/'):
+            attrs = attrs.rstrip()[:-1].rstrip() + ' style="%s" /' % style
+        else:
+            attrs = attrs.rstrip() + ' style="%s"' % style
+        return '<%s%s>' % (m.group(1), attrs)
+
+    def end(m):
+        tag = m.group(1).lower()
+        if any(t == tag for t, _ in stack):
+            while stack and stack.pop()[0] != tag:
+                pass
+        return m.group(0)
+
+    html = html[:block.start(2)] + '\n' + '\n'.join(kept) + '\n' + html[block.end(2):]
+    for piece in re.split(r'(?is)(<!--.*?-->|<style.*?</style>|<script.*?</script>)', html):
+        if re.match(r'(?is)<(!--|style|script)', piece):
+            out.append(piece)
+            continue
+        pos = 0
+        for m in re.finditer(r'%s|%s' % (START.pattern, END.pattern), piece):
+            out.append(piece[pos:m.start()])
+            sm, em = START.fullmatch(m.group(0)), END.fullmatch(m.group(0))
+            out.append(start(sm) if sm else end(em))
+            pos = m.end()
+        out.append(piece[pos:])
+    return ''.join(out)
+
+
 page = os.path.join(out, 'static', 'description', 'index.html')
 if os.path.isfile(page):
     with open(page, encoding='utf-8') as fh:
-        html = fh.read()
+        html = inline_styles(fh.read())
     parts = re.split(r'(?is)(<style.*?</style>|<script.*?</script>)', html)
     for i in range(0, len(parts), 2):
         parts[i] = ''.join(c if ord(c) < 128 else '&#%d;' % ord(c) for c in parts[i])
