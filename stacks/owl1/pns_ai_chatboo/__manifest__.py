@@ -3,8 +3,8 @@
 # Copyright (C) 2025-2026 Patanegra Soft <https://patanegra.com>
 # Odoo reads this file with ast.literal_eval — no module docstring before `{`.
 {
-    'name': 'Chatboo',
-    'version': '2.1.545',
+    'name': 'Chatboo — AI Chat Assistant',
+    'version': '2.1.546',
     'category': 'Productivity',
     'summary': 'AI chat assistant inside Odoo: ask about your records, with the permissions of whoever asks, and get tables, charts and PDF or Excel answers.',
     'description': """
