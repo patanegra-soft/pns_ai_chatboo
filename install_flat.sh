@@ -73,7 +73,8 @@ fi
 # What the Odoo Apps Store reads from a flat module:
 # - version with the series first (19.0.2.1.542). Odoo adds the same prefix
 #   when it loads a version without it, so the installed version is the same.
-# - images: the banner, when the manifest names none.
+# - images: banner_store.png (2:1, the store crops wider pictures to that),
+#   else banner.png, when the manifest names none.
 # - index.html in ASCII: accents as HTML entities (same page in a browser).
 command -v python3 >/dev/null || die "python3 is needed to write the flat manifest"
 python3 - "$OUT" "$SERIES" <<'PY'
@@ -95,8 +96,10 @@ def prefixed(match):
 
 
 text = re.sub(r"""(['"]version['"]\s*:\s*['"])([^'"]+)(['"])""", prefixed, text, count=1)
-banner = 'static/description/banner.png'
-if not re.search(r"""['"]images['"]\s*:""", text) and os.path.isfile(os.path.join(out, banner)):
+banner = next((b for b in ('static/description/banner_store.png',
+                            'static/description/banner.png')
+               if os.path.isfile(os.path.join(out, b))), None)
+if banner and not re.search(r"""['"]images['"]\s*:""", text):
     text = re.sub(r"""(\n(\s*)['"]version['"]\s*:[^\n]*\n)""",
                   lambda m: "%s%s'images': ['%s'],\n" % (m.group(1), m.group(2), banner),
                   text, count=1)
