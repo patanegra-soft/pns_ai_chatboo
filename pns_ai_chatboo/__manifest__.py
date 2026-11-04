@@ -4,10 +4,10 @@
 # Odoo reads this file with ast.literal_eval — no module docstring before `{`.
 {
     'name': 'Chatboo',
-    'version': '19.0.2.1.543',
-    'images': ['static/description/banner.png'],
-    'category': 'Patanegra AI',
-    'summary': 'Conversational chat client (Chatboo) for the PNS AI MCP server.',
+    'version': '19.0.2.1.545',
+    'images': ['static/description/banner_store.png'],
+    'category': 'Productivity',
+    'summary': 'AI chat assistant inside Odoo: ask about your records, with the permissions of whoever asks, and get tables, charts and PDF or Excel answers.',
     'description': """
 Part of Patanegra Soft Suite (pns_suite). Consumes the Patanegra Application Agent Protocol (PAAP).
 
