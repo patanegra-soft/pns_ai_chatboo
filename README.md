@@ -60,6 +60,23 @@ are already on.
 - Apache 2.0. No fee per user, per database or per year.
 - Uninstall it from Apps like any other module.
 
+### What it does not do
+
+- **No AI of its own.** Providers, agents and approvals live in the AI Engine. Without a provider with the **Conversation** role, the chat has no one to ask.
+- **Not for every user by default.** Only users with **AI Conversational** and a generated API key can use it.
+- **No changes without a person.** The AI proposes; a user with **AI Writer** presses Confirm.
+- **Two tested series.** 14.0 and 19.0. From 15.0 to 18.0 you build the modules yourself and try them first; 13.0 and older do not run (see *Odoo versions*).
+
+### Questions
+
+**Where do the questions go?** To the providers set up in the AI Engine, in the order of the agent's list. A skill that runs without the AI sends nothing out.
+
+**Is the voice an outside service?** No. Reading an answer aloud uses the browser's own voice.
+
+**Is Chatboo an MCP server?** No. The MCP server is in the AI Engine (`/mcp`). Chatboo is the chat inside Odoo, and it talks to the engine through PAAP, inside the same Odoo.
+
+**Can I use the engine without Chatboo?** Yes. The AI Engine alone serves Cursor and other MCP clients.
+
 ### Getting started
 
 1. **Install.** From the Odoo Apps Store, download Chatboo: the store brings PNS AI Engine and PNS Base. From git, clone the three on the same series (`19.0` or `14.0`):
@@ -221,6 +238,23 @@ ya estás.
 - Un módulo de Odoo normal: sin servidor externo, sin herramientas de compilación.
 - Apache 2.0. Sin cuota por usuario, por base de datos ni por año.
 - Se desinstala desde Aplicaciones como cualquier otro.
+
+### Qué no hace
+
+- **No trae IA propia.** Los proveedores, los agentes y las aprobaciones viven en el Motor de IA. Sin un proveedor con el rol **Conversación**, el chat no tiene a quién preguntar.
+- **No es para todos los usuarios de entrada.** Solo lo usan quienes tienen **IA Conversacional** y una clave API generada.
+- **No cambia nada sin una persona.** La IA propone; un usuario con **IA Escritor** pulsa Confirmar.
+- **Dos versiones probadas.** 14.0 y 19.0. De la 15.0 a la 18.0 construyes tú los módulos y los pruebas antes; la 13.0 y anteriores no funcionan (ver *Versiones de Odoo*).
+
+### Preguntas
+
+**¿Adónde van las preguntas?** A los proveedores configurados en el Motor de IA, en el orden de la lista del agente. Un skill que se ejecuta sin la IA no envía nada fuera.
+
+**¿La voz es un servicio de fuera?** No. Leer una respuesta en voz alta usa la voz del propio navegador.
+
+**¿Chatboo es un servidor MCP?** No. El servidor MCP está en el Motor de IA (`/mcp`). Chatboo es el chat dentro de Odoo y habla con el motor por PAAP, dentro del mismo Odoo.
+
+**¿Puedo usar el motor sin Chatboo?** Sí. El Motor de IA solo ya sirve a Cursor y a otros clientes MCP.
 
 ### Puesta en marcha
 
