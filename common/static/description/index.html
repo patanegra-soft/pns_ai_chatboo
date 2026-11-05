@@ -34,9 +34,8 @@
   .pb em { font-style: normal; border-bottom: 3px solid #F7E112; }
 
   .pb-target { display: block; height: 0; scroll-margin-top: 64px; }
-  .pb-es { display: none; }
+  .pb:not(:has(#es:target)) .pb-es { display: none; }
   .pb:has(#es:target) .pb-en { display: none; }
-  .pb:has(#es:target) .pb-es { display: block; }
 
   .pb-bar {
     display: flex;
