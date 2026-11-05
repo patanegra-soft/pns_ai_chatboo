@@ -8,8 +8,6 @@
 </head>
 <body>
 <style>
-.pb-es { display: none !important }
-.pb-tabs a.pb-t-en { background: #1A1A1A !important; color: #fff !important }
 .pb * { box-sizing: border-box !important }
 .pb:has(#es:target) .pb-en { display: none !important }
 .pb:has(#es:target) .pb-es { display: block !important }
@@ -34,7 +32,7 @@
 
   <div class="pb-bar" style="display: flex; align-items: center; padding: 14px 24px; background-color: #fff; border-bottom: 1px solid #e6e2e0; position: sticky; top: 0; z-index: 1">
     <div class="pb-brand" style="font-weight: 800; font-size: 14px; letter-spacing: 0.06em">PATANEGRA<small style="display: block; font-size: 10px; color: #8a8582; letter-spacing: 0.18em; font-weight: 600">SOFT</small></div>
-    <div class="pb-tabs" style="background-color: #f3f1f0; border-radius: 999px; padding: 4px; white-space: nowrap; margin-left: auto"><a class="pb-t-en" href="#en" style="display: inline-block; padding: 5px 14px; border-radius: 999px; font-size: 13px; font-weight: 700; text-decoration: none; color: #6f6a67">EN</a><a class="pb-t-es" href="#es" style="display: inline-block; padding: 5px 14px; border-radius: 999px; font-size: 13px; font-weight: 700; text-decoration: none; color: #6f6a67">ES</a></div>
+    <div class="pb-tabs" style="background-color: #f3f1f0; border-radius: 999px; padding: 4px; white-space: nowrap; margin-left: auto"><a class="pb-t-en" href="#en" style="display: inline-block; padding: 5px 14px; border-radius: 999px; font-size: 13px; font-weight: 700; text-decoration: none; background-color: #1A1A1A; color: #fff">EN</a><a class="pb-t-es" href="#es" style="display: inline-block; padding: 5px 14px; border-radius: 999px; font-size: 13px; font-weight: 700; text-decoration: none; color: #6f6a67">ES</a></div>
   </div>
 
   <!-- ============================== ENGLISH ============================== -->
@@ -180,7 +178,7 @@
 
   <!-- ============================== ESPA&#209;OL ============================== -->
   <span id="es" class="pb-target" style="display: block; height: 0; scroll-margin-top: 64px"></span>
-  <div class="pb-es" lang="es">
+  <div class="pb-es" lang="es" style="display: none">
 
     <section class="pb-sec pb-hero" style="padding: 36px 24px 0; display: block">
       <div>
