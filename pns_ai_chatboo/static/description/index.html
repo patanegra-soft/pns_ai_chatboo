@@ -9,8 +9,8 @@
 <body>
 <style>
 .pb * { box-sizing: border-box !important }
+.pb:not(:has(#es:target)) .pb-es { display: none !important }
 .pb:has(#es:target) .pb-en { display: none !important }
-.pb:has(#es:target) .pb-es { display: block !important }
 .pb:has(#es:target) .pb-t-en { background: transparent !important; color: #6f6a67 !important }
 .pb:has(#es:target) .pb-t-es { background: #1A1A1A !important; color: #fff !important }
 .pb-big p:last-child { margin: 0 !important; font-weight: 600 !important; color: #1A1A1A !important }
@@ -178,7 +178,7 @@
 
   <!-- ============================== ESPA&#209;OL ============================== -->
   <span id="es" class="pb-target" style="display: block; height: 0; scroll-margin-top: 64px"></span>
-  <div class="pb-es" lang="es" style="display: none">
+  <div class="pb-es" lang="es">
 
     <section class="pb-sec pb-hero" style="padding: 36px 24px 0; display: block">
       <div>
