@@ -181,19 +181,36 @@ def matches(sel, tag, classes, ancestors):
     return not rest
 
 
+def family(prop):
+    return prop.split('-')[0]
+
+
+def subject_classes(text):
+    """Classes of the element a complex selector styles (its last compound)."""
+    last = re.split(r'[\s>~+]+', text.strip())[-1]
+    last = re.sub(r':[\w-]+(\([^()]*\))?', '', last)
+    return set(re.findall(r'\.([\w-]+)', last))
+
+
 def inline_styles(html):
     """Copy the page's CSS into style attributes.
 
     The Apps Store drops <style> from the description; it keeps style
     attributes. Rules made only of tags and classes go inline. The rest
-    (:target, pseudo-classes, @media, *) stays in <style> with !important,
-    so it still wins over the inline copy where a stylesheet is read.
+    (:target, :has, pseudo-classes, @media, *) stays in <style> with
+    !important, so it still wins over the inline copy where a stylesheet
+    is read.
+
+    A property that such a rule changes on a class (the hidden language,
+    the active tab) is not copied inline for that class: it stays in
+    <style> too. Without a stylesheet the page shows its plain state
+    (every language, no active tab) instead of a state nobody can leave.
     """
     block = re.search(r'(?is)(<style[^>]*>)(.*?)(</style>)', html)
     if not block:
         return html
     css = re.sub(r'(?s)/\*.*?\*/', '', block.group(2))
-    rules, kept, i = [], [], 0
+    parsed, i = [], 0
     while True:
         j = css.find('{', i)
         if j < 0:
@@ -204,26 +221,46 @@ def inline_styles(html):
             while k < len(css) and depth:
                 depth += {'{': 1, '}': -1}.get(css[k], 0)
                 k += 1
-            inner = re.sub(r'([^{}]+)\{([^{}]*)\}',
-                           lambda m: '  %s { %s }\n' % (m.group(1).strip(),
-                                                        important(declarations(m.group(2)))),
-                           css[j + 1:k - 1])
-            kept.append('%s {\n%s}' % (prelude, inner))
+            parsed.append(('at', prelude, css[j + 1:k - 1]))
             i = k
             continue
         k = css.find('}', j)
-        pairs = declarations(css[j + 1:k])
+        parsed.append(('rule', prelude, declarations(css[j + 1:k])))
+        i = k + 1
+
+    state = set()
+    for kind, prelude, body in parsed:
+        if kind != 'rule':
+            continue
+        for text in prelude.split(','):
+            if text.strip() and not selector(text):
+                state |= {(c, family(p)) for c in subject_classes(text) for p, _ in body}
+
+    rules, plain, kept = [], [], []
+    for kind, prelude, body in parsed:
+        if kind == 'at':
+            inner = re.sub(r'([^{}]+)\{([^{}]*)\}',
+                           lambda m: '  %s { %s }\n' % (m.group(1).strip(),
+                                                        important(declarations(m.group(2)))),
+                           body)
+            kept.append('%s {\n%s}' % (prelude, inner))
+            continue
         other = []
         for text in prelude.split(','):
             sel = selector(text)
             if sel:
-                spec = (sum(len(c) for _, c in sel), sum(1 for t, _ in sel if t))
-                rules.append((spec, len(rules), sel, pairs))
+                stays = [(p, v) for p, v in body if any((c, family(p)) in state for c in sel[-1][1])]
+                goes = [pv for pv in body if pv not in stays]
+                if stays:
+                    plain.append('%s { %s }' % (text.strip(), important(stays)))
+                if goes:
+                    spec = (sum(len(c) for _, c in sel), sum(1 for t, _ in sel if t))
+                    rules.append((spec, len(rules), sel, goes))
             elif text.strip():
                 other.append(text.strip())
         if other:
-            kept.append('%s { %s }' % (', '.join(other), important(pairs)))
-        i = k + 1
+            kept.append('%s { %s }' % (', '.join(other), important(body)))
+    kept = plain + kept
     rules.sort(key=lambda r: (r[0], r[1]))
 
     stack, out = [], []

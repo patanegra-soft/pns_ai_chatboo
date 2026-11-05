@@ -33,10 +33,10 @@
   }
   .pb em { font-style: normal; border-bottom: 3px solid #F7E112; }
 
-  .pb-target { display: block; height: 0; }
+  .pb-target { display: block; height: 0; scroll-margin-top: 64px; }
   .pb-es { display: none; }
-  #es:target ~ .pb-en { display: none; }
-  #es:target ~ .pb-es { display: block; }
+  .pb:has(#es:target) .pb-en { display: none; }
+  .pb:has(#es:target) .pb-es { display: block; }
 
   .pb-bar {
     display: flex;
@@ -45,6 +45,9 @@
     padding: 14px 24px;
     background: #fff;
     border-bottom: 1px solid #e6e2e0;
+    position: sticky;
+    top: 0;
+    z-index: 1;
   }
   .pb-brand { font-weight: 800; font-size: 14px; letter-spacing: 0.06em; }
   .pb-brand small { display: block; font-size: 10px; color: #8a8582; letter-spacing: 0.18em; font-weight: 600; }
@@ -59,8 +62,8 @@
     color: #6f6a67;
   }
   .pb-tabs a.pb-t-en { background: #1A1A1A; color: #fff; }
-  #es:target ~ .pb-bar .pb-t-en { background: transparent; color: #6f6a67; }
-  #es:target ~ .pb-bar .pb-t-es { background: #1A1A1A; color: #fff; }
+  .pb:has(#es:target) .pb-t-en { background: transparent; color: #6f6a67; }
+  .pb:has(#es:target) .pb-t-es { background: #1A1A1A; color: #fff; }
 
   .pb-sec { padding: 36px 24px 0; }
   .pb-hero { display: block; }
@@ -217,7 +220,6 @@
 </style>
 <div class="pb">
   <span id="en" class="pb-target"></span>
-  <span id="es" class="pb-target"></span>
 
   <div class="pb-bar">
     <div class="pb-brand">PATANEGRA<small>SOFT</small></div>
@@ -366,6 +368,7 @@
   </div>
 
   <!-- ============================== ESPAÑOL ============================== -->
+  <span id="es" class="pb-target"></span>
   <div class="pb-es" lang="es">
 
     <section class="pb-sec pb-hero">
