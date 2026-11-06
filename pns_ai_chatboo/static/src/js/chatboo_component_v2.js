@@ -288,7 +288,7 @@ odoo.define('pns_ai_chatboo.Chatboo', function (require) {
                 slashItems: [],
                 slashIndex: 0,
                 slashMode: 'commands', // 'commands' (/ menu) | 'skills' (after /skills)
-                inputPlaceholder: _t('Ask Chatboo... (/ for commands & skills, ↑↓ for history)'),
+                inputPlaceholder: _t('Ask Chatboo AI... (/ for commands & skills, ↑↓ for history)'),
                 // AI Provider selector
                 providers: [],
                 selectedProviderId: null,
@@ -4093,7 +4093,7 @@ odoo.define('pns_ai_chatboo.Chatboo', function (require) {
 
         // Default input placeholder (computed at runtime, i18n-safe).
         _defaultInputPlaceholder() {
-            return _t('Ask Chatboo... (/ for commands & skills, ↑↓ for history)');
+            return _t('Ask Chatboo AI... (/ for commands & skills, ↑↓ for history)');
         }
 
         _resetInputPlaceholder() {
@@ -5741,7 +5741,7 @@ odoo.define('pns_ai_chatboo.Chatboo', function (require) {
                     <div t-attf-class="d-flex mb-2 {{ msg.role === 'user' ? 'justify-content-end' : 'justify-content-start' }}{{ msg.wideCanvas ? ' o_chatboo_message_row--chart' : '' }}"
                          t-att-data-msg-index="msg_index"
                          t-att-data-turn="msg.context_info and msg.context_info.turn">
-                        <div t-attf-class="o_chatboo_message card border-0 shadow-sm p-2 {{ msg.role === 'user' ? 'bg-primary text-white' : 'bg-white' }}{{ msg.wideCanvas ? ' o_chatboo_message--chart' : '' }}" style="border-radius: 8px; position: relative;">
+                        <div t-attf-class="o_chatboo_message card border-0 shadow-sm p-2 {{ msg.role === 'user' ? 'bg-primary text-white' : 'bg-white' }}{{ msg.wideCanvas ? ' o_chatboo_message--chart' : '' }}" t-att-data-ai-generated="msg.role === 'assistant' ? 'true' : undefined" style="border-radius: 8px; position: relative;">
                             <div t-if="msg.wideCanvas"
                                  class="o_chatboo_card_resize"
                                  t-on-pointerdown="_onCardResizeStart"/>

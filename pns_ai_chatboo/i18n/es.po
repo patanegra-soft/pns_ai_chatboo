@@ -1033,8 +1033,8 @@ msgstr "Showmode de sesión: show-table (tabla primero) o show-chart (gráfico p
 #. module: pns_ai_chatboo
 #. openerp-web
 #: code:addons/pns_ai_chatboo/static/src/js/chatboo_component_v2.js:0
-msgid "Ask Chatboo... (/ for commands & skills, ↑↓ for history)"
-msgstr "Pregunta a Chatboo... (/ para comandos y skills, ↑↓ historial)"
+msgid "Ask Chatboo AI... (/ for commands & skills, ↑↓ for history)"
+msgstr "Pregunta a Chatboo IA... (/ para comandos y skills, ↑↓ historial)"
 
 #. module: pns_ai_chatboo
 #. openerp-web
