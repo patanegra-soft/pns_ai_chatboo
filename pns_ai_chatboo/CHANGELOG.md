@@ -2,6 +2,15 @@
 
 What changes for people who use this module, one section per published version, newest first. The heading is the git tag.
 
+## owl1-2.1.553_owl2-2.1.553 (2026-11-06)
+
+- The AI-generated mark also goes on PDFs saved as attachments and on HTML exports. Text and Markdown have no properties and stay unmarked.
+
+## owl1-2.1.552_owl2-2.1.552 (2026-11-06)
+
+- The prompt box now reads "Ask Chatboo AI...", so it is plain that an AI answers.
+- Answers, and the PDF and Word files exported from them, carry a machine-readable mark that an AI system made them (EU AI Act, article 50). Nothing else changes on screen.
+
 ## owl1-2.1.551_owl2-2.1.551 (2026-11-06)
 
 - The `/financial-health` skill description no longer ends with an internal reference code that meant nothing outside the original database.
