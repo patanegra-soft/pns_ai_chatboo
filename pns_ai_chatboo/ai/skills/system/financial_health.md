@@ -1,7 +1,7 @@
 ---
 skill: financial-health
 name: Financial health
-description: Narrative financial situation report (JYDY-14): KPIs, liquidity, debts, collections, ratios, facilities; configurable period.
+description: Narrative financial situation report: KPIs, liquidity, debts, collections, ratios, facilities; configurable period.
 agent_codes: pns_ai_chatboo
 version: 2.17
 triggers: estado financiero, situación financiera, situacion financiera, informe financiero, financial health, financial situation, financial report
