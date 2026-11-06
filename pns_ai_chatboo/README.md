@@ -2,7 +2,7 @@
 
 ![AI for all your clients, without leaving Odoo](static/description/banner.png)
 
-**[English](#english) · [Español](#español)**
+**[English](#english) · [Español](#español) · [www.patanegra.com](https://www.patanegra.com/chatboo.html)**
 
 ## English
 

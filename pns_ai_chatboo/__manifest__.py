@@ -4,7 +4,7 @@
 # Odoo reads this file with ast.literal_eval — no module docstring before `{`.
 {
     'name': 'Chatboo — AI Chat Assistant',
-    'version': '14.0.2.1.549',
+    'version': '14.0.2.1.550',
     'images': ['static/description/banner_store.png'],
     'category': 'Productivity',
     'summary': 'AI chat assistant inside Odoo: ask about your records, with the permissions of whoever asks, and get tables, charts and PDF or Excel answers.',
@@ -19,7 +19,7 @@ inference loop. Chatboo owns the conversation: session history, the chat
 turn endpoint (SSE streaming) and the user interface.
 """,
     'author': 'PATANEGRA Soft',
-    'website': 'https://github.com/patanegra-soft/pns_ai_chatboo',
+    'website': 'https://www.patanegra.com/chatboo.html',
     # Apache License 2.0 — see LICENSE file
     'license': 'Other OSI approved licence',
     'depends': ['web', 'bus', 'mail', 'pns_base', 'pns_ai_mcp'],
