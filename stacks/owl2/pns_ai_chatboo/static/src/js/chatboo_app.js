@@ -70,7 +70,7 @@ const ChatbooTurn = globalThis.ChatbooTurn;
 // Default input placeholder; replaced by the skill's argument hint
 // (arg_hint) when the user picks or types "/<code> ".
 const DEFAULT_INPUT_PLACEHOLDER = _t(
-    "Ask Chatboo... (/ for commands & skills, ↑↓ for history)"
+    "Ask Chatboo AI... (/ for commands & skills, ↑↓ for history)"
 );
 
 /** Max visible lines for the multiline prompt (future: Settings). */

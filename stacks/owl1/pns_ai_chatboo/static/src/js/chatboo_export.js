@@ -824,6 +824,19 @@ odoo.define('pns_ai_chatboo.export', function (require) {
         return host;
     }
 
+    var AI_CREATOR = 'Chatboo (AI system)';
+    var AI_KEYWORD = 'ai-generated';
+
+    /**
+     * EU AI Act art. 50.2: a machine-readable mark that the file comes from an
+     * AI system. Document properties only; the page does not change.
+     */
+    function markAiPdf(doc) {
+        if (doc && typeof doc.setProperties === 'function') {
+            doc.setProperties({ creator: AI_CREATOR, keywords: AI_KEYWORD });
+        }
+    }
+
     /**
      * Slice a tall canvas into A4 PDF pages (JPEG, Helvetica-free raster).
      *
@@ -872,6 +885,7 @@ odoo.define('pns_ai_chatboo.export', function (require) {
             page += 1;
         }
         var filename = generateFilename(msgIndex, 'pdf', ctx);
+        markAiPdf(pdf);
         pdf.save(filename);
         if (ctx.notification) {
             ctx.notification({ message: _t("PDF downloaded: ") + filename, type: 'success', sticky: false });
@@ -1853,6 +1867,7 @@ odoo.define('pns_ai_chatboo.export', function (require) {
                     return typeof b === 'string' ? b : (b.text || '');
                 }).join('\n') : '');
             if (opts.returnBlob) {
+                markAiPdf(doc);
                 return doc.output('blob');
             }
             generateTextPDF(doc, md, msgIndex, ctx);
@@ -2060,9 +2075,11 @@ odoo.define('pns_ai_chatboo.export', function (require) {
         }
 
         if (opts.returnBlob) {
+            markAiPdf(doc);
             return doc.output('blob');
         }
         var filename = generateFilename(msgIndex, 'pdf', ctx);
+        markAiPdf(doc);
         doc.save(filename);
         if (ctx.notification) {
             ctx.notification({ message: _t("PDF downloaded: ") + filename, type: 'success', sticky: false });
@@ -2101,6 +2118,7 @@ odoo.define('pns_ai_chatboo.export', function (require) {
         });
 
         var filename = generateFilename(msgIndex, 'pdf', ctx);
+        markAiPdf(doc);
         doc.save(filename);
 
         if (ctx.notification) {
@@ -3075,7 +3093,8 @@ odoo.define('pns_ai_chatboo.export', function (require) {
             : '@page{size:210mm 297mm;mso-page-orientation:portrait;margin:18mm;}';
         return '<html xmlns:o="urn:schemas-microsoft-com:office:office" '
             + 'xmlns:w="urn:schemas-microsoft-com:office:word">'
-            + '<head><meta charset="utf-8"/><title>' + t + '</title>'
+            + '<head><meta charset="utf-8"/><meta name="generator" content="' + AI_CREATOR + '"/>'
+            + '<meta name="keywords" content="' + AI_KEYWORD + '"/><title>' + t + '</title>'
             + '<style>' + page + WORD_STYLE + '</style></head><body>' + body + '</body></html>';
     }
 
@@ -3554,7 +3573,7 @@ odoo.define('pns_ai_chatboo.export', function (require) {
     function buildHtmlDocument(title, sections, charts, richFallback, statsHtml, landscape, proseHtml) {
         var body = composeHtmlBody(title, sections, charts, richFallback, statsHtml, landscape, proseHtml);
         var t = escapeWordText(title || '');
-        return '<!DOCTYPE html><html><head><meta charset="utf-8"/><title>' + t + '</title>'
+        return '<!DOCTYPE html><html><head><meta charset="utf-8"/><meta name="generator" content="' + AI_CREATOR + '"/><meta name="keywords" content="' + AI_KEYWORD + '"/><title>' + t + '</title>'
             + '<style>' + WORD_STYLE + '</style></head><body>' + body + '</body></html>';
     }
 
