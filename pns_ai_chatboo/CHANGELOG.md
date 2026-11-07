@@ -2,6 +2,10 @@
 
 What changes for people who use this module, one section per published version, newest first. The heading is the git tag.
 
+## owl1-2.1.554_owl2-2.1.554 (2026-11-07)
+
+- The Apps subtitle says what people search for: open source, Odoo Community 14 and 19, chatbot, and the models it talks to (OpenAI, Claude, Ollama).
+
 ## owl1-2.1.553_owl2-2.1.553 (2026-11-06)
 
 - The AI-generated mark also goes on PDFs saved as attachments and on HTML exports. Text and Markdown have no properties and stay unmarked.
