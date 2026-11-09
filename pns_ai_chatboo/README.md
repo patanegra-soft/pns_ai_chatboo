@@ -74,7 +74,7 @@ Press Confirm and the draft opens. Several documents dropped together give one p
 
 It needs the Invoicing app and the rights to create vendor bills, because the plan runs as you. A PDF with text costs one chat turn with your own provider; a photo or a scan is transcribed once by a provider with the **Vision** role.
 
-**Against Odoo 20.** Odoo 20 also creates records from a file, with its AI app. That app is Odoo Enterprise, and every request spends IAP credits; its bill digitization is another IAP service, paid per document. Chatboo does it on Odoo Community with your own provider, shows the whole plan before Confirm, creates the vendor when it is missing and warns of duplicates.
+**On Odoo Community.** Chatboo does this on Odoo Community, 14.0 to 20.0, with your own provider and your own key: it shows the whole plan before Confirm, creates the vendor when it is missing and warns of duplicates.
 
 ### Skills
 
@@ -304,7 +304,7 @@ Pulsas Confirmar y se abre el borrador. Si sueltas varios documentos a la vez, s
 
 Hace falta la app de Facturación y permiso para crear facturas de proveedor, porque el plan corre como tú. Un PDF con texto cuesta un turno de chat con tu propio proveedor; una foto o un escaneado los transcribe una vez un proveedor con el rol **Visión**.
 
-**Frente a Odoo 20.** Odoo 20 también crea registros a partir de un fichero, con su app de IA. Esa app es de Odoo Enterprise y cada petición gasta créditos IAP; su digitalización de facturas es otro servicio IAP, de pago por documento. Chatboo lo hace en Odoo Community con tu propio proveedor, enseña el plan entero antes de Confirmar, crea el proveedor si falta y avisa de duplicados.
+**En Odoo Community.** Chatboo lo hace en Odoo Community, de la 14.0 a la 20.0, con tu propio proveedor y tu propia clave: enseña el plan entero antes de Confirmar, crea el proveedor si falta y avisa de duplicados.
 
 ### Skills
 
