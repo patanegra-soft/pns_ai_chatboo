@@ -2,6 +2,10 @@
 
 What changes for people who use this module, one section per published version, newest first. The heading is the git tag.
 
+## owl1-2.1.586_owl2-2.1.586_owl3-2.1.586 (2026-11-09)
+
+- README only: the vendor-bills section describes what Chatboo does on Odoo Community 14.0 to 20.0 with your own provider, without comparing with other products.
+
 ## owl1-2.1.585_owl2-2.1.585_owl3-2.1.585 (2026-11-09)
 
 - Paste a photo or a screenshot with Ctrl+V, like dropping a file: it goes with your question, and a pasted bill is registered the same way.
