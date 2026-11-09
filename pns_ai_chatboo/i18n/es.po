@@ -1087,8 +1087,8 @@ msgstr "Imágenes (JSON)"
 #. module: pns_ai_chatboo
 #. openerp-web
 #: code:addons/pns_ai_chatboo/static/src/js/chatboo_component_v2.js:0
-msgid "File too large (max 10 MB):"
-msgstr "Archivo demasiado grande (máx. 10 MB):"
+msgid "File too large (max %s MB):"
+msgstr "Archivo demasiado grande (máx. %s MB):"
 
 #. module: pns_ai_chatboo
 #. openerp-web

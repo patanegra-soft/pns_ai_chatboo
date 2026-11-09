@@ -43,12 +43,9 @@ MAX_UPLOAD_TOTAL_BYTES = 50 * 1024 * 1024
 CHATBOO_AGENT_CODE = 'pns_ai_chatboo'
 
 
-def upload_max_bytes(env):
-    """Per-file limit for pictures and files sent to the chat.
-
-    There is always a limit: an empty, invalid or 0 setting means the
-    default, never "no limit".
-    """
+def upload_setting_bytes(env):
+    """The upload limit as set: 0 means no per-file limit. Absent or
+    invalid means the default."""
     raw = env['ir.config_parameter'].sudo().get_param(
         ICP_UPLOAD_MAX_BYTES, DEFAULT_UPLOAD_MAX_BYTES,
     )
@@ -56,7 +53,18 @@ def upload_max_bytes(env):
         value = int(raw)
     except (TypeError, ValueError):
         return DEFAULT_UPLOAD_MAX_BYTES
-    return value if value > 0 else DEFAULT_UPLOAD_MAX_BYTES
+    return max(0, value)
+
+
+def upload_max_bytes(env):
+    """Per-file limit for pictures and files sent to the chat.
+
+    A 0 setting lifts the per-file limit; what remains is the hard cap on
+    what one message carries (``MAX_UPLOAD_TOTAL_BYTES``), so there is
+    always a number to compare against.
+    """
+    value = upload_setting_bytes(env)
+    return value if value > 0 else MAX_UPLOAD_TOTAL_BYTES
 
 
 def _data_url_bytes(value):
@@ -130,7 +138,7 @@ def read_product_settings(env):
         except (TypeError, ValueError):
             retention_days = 0
     download_bytes = read_download_max_bytes(env)
-    upload_bytes = upload_max_bytes(env)
+    upload_bytes = upload_setting_bytes(env)
     return {
         'show_systray': param_bool(icp.get_param(ICP_SHOW_SYSTRAY, 'True')),
         'dataset_cache_max_bytes': 0 if cache_bytes <= 0 else cache_bytes,
@@ -142,7 +150,9 @@ def read_product_settings(env):
         'download_max_mb': (
             0 if download_bytes <= 0 else max(1, download_bytes // (1024 * 1024))
         ),
-        'upload_max_mb': max(1, upload_bytes // (1024 * 1024)),
+        'upload_max_mb': (
+            0 if upload_bytes <= 0 else max(1, upload_bytes // (1024 * 1024))
+        ),
         'chart_engine': read_chart_engine(env),
         'default_show_mode': normalize_layout_show_mode(
             read_default_show_mode(env),

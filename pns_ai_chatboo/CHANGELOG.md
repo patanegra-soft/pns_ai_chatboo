@@ -2,6 +2,10 @@
 
 What changes for people who use this module, one section per published version, newest first. The heading is the git tag.
 
+## owl1-2.1.588_owl2-2.1.588_owl3-2.1.588 (2026-11-09)
+
+- The upload limit in Settings now rules in the browser too. The chat refused any file over 10 MB with its own fixed number, whatever Settings said; now it reads the configured limit and names it in the message. 0 in Settings lifts the per-file limit (one message still carries at most 50 MB in all); before, 0 meant 15 MB.
+
 ## owl1-2.1.587_owl2-2.1.587_owl3-2.1.587 (2026-11-09)
 
 - Banners (Apps store, README and site) show the seven supported series, 14.0 to 20.0; the old ones still said 14 and 19. Images only.

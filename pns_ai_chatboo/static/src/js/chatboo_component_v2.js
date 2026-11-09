@@ -4046,16 +4046,33 @@ odoo.define('pns_ai_chatboo.Chatboo', function (require) {
             this._focusChatInput();
         }
 
+        // Per-file upload limit, the same number the server checks on the turn
+        // (Settings > Chatboo > Upload limit; 0 there lifts it, the message cap stays).
+        _uploadMaxBytes() {
+            const n = Number(session.pns_chatboo_upload_max_bytes);
+            return n > 0 ? n : 15 * 1024 * 1024;
+        }
+
+        _refuseIfTooBig(file) {
+            const limit = this._uploadMaxBytes();
+            if (!(file.size > limit)) {
+                return false;
+            }
+            const mb = Math.max(1, Math.round(limit / (1024 * 1024)));
+            if (this.props.notification) {
+                this.props.notification({
+                    message: _t('File too large (max %s MB):').replace('%s', mb) + ' ' + file.name,
+                    type: 'danger',
+                });
+            }
+            return true;
+        }
+
         // Routes a list of files (from the picker or drag&drop): vision
         // images → multimodal way (keep their name); the rest → data file.
         async _ingestFiles(files) {
             for (const f of Array.from(files || [])) {
-                if (f.size > 10 * 1024 * 1024) {  // safety cap 10 MB
-                    if (this.props.notification) {
-                        this.props.notification({
-                            message: _t('File too large (max 10 MB): ') + f.name, type: 'danger',
-                        });
-                    }
+                if (this._refuseIfTooBig(f)) {
                     continue;
                 }
                 if (this._isVisionImage(f)) {
@@ -4102,12 +4119,7 @@ odoo.define('pns_ai_chatboo.Chatboo', function (require) {
         }
 
         async _attachDataFile(file) {
-            if (file.size > 10 * 1024 * 1024) {  // safety cap 10 MB
-                if (this.props.notification) {
-                    this.props.notification({
-                        message: _t('File too large (max 10 MB): ') + file.name, type: 'danger',
-                    });
-                }
+            if (this._refuseIfTooBig(file)) {
                 return;
             }
             try {
