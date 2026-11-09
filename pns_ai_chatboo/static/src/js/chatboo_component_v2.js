@@ -152,7 +152,7 @@ odoo.define('pns_ai_chatboo.Chatboo', function (require) {
      *  6. CHAT + STREAMING         (_streamChat, _sendMessage, _runResultTurn)
      *  7. SLASH COMMANDS           (_onSlashInput, _updateSlashSuggestions, _applySlashSelection)
      *  8. INPUT HANDLING           (_onInputKeydown — keyboard shortcuts)
-     *  9. CONTENT FORMATTING       (_formatContent, _formatMarkdown, _formatCSV, _formatJsonAsTable)
+     *  9. CONTENT FORMATTING       (_formatContent, _safeHtml, _escapeHtml)
      * 10. CONTEXT CHART            (_showContextChart — token usage visualization)
      * 11. EXPORT (PDF/Excel/Copy)  (_copyToClipboard, _downloadAsPDF, _downloadAsExcel)
      *
@@ -356,6 +356,8 @@ odoo.define('pns_ai_chatboo.Chatboo', function (require) {
             this.tipDeleteSession = _t('Delete session');
             this.tipThinking = _t('Thinking…');
             this.tipConnecting = _t('Connecting…');
+            this.tipSource = _t('Source:');
+            this.tipNoModelInfo = _t('No model information');
             this.tipCurrent = _t('Current');
             this.tipMessages = _t('messages');
             this._slashMenuEl = null;
@@ -556,6 +558,7 @@ odoo.define('pns_ai_chatboo.Chatboo', function (require) {
             this.scrollToBottom();
             this._setupContextClickHandling();
             this._setupRefLinkHandler();
+            this._setupFormCardHandler();
             this._setupTtsClickAnchoring();
             this._drainPaintQueue();
             // Session loading (_initSession) is called from the systray after
@@ -615,6 +618,66 @@ odoo.define('pns_ai_chatboo.Chatboo', function (require) {
                 window.open(href, '_blank', 'noopener');
             };
             el.addEventListener('click', this._refLinkHandler, true);
+        }
+
+        // A ``kind=form`` card: the form opens in a dialog with the proposed
+        // values. Closing it discards; only the person's Save writes.
+        _setupFormCardHandler() {
+            const el = this.el || this.messagesRef.el;
+            if (!el || this._formCardHandler) {
+                return;
+            }
+            this._formCardHandler = (ev) => {
+                ev.stopPropagation();
+                this._openFormCard(ev.detail || {});
+            };
+            el.addEventListener('chatboo-open-form', this._formCardHandler);
+        }
+
+        async _openFormCard(card) {
+            const notify = (message, type) => {
+                if (this.props.notification) {
+                    this.props.notification({ message: message, type: type });
+                }
+            };
+            let res = null;
+            try {
+                res = await this._callJsonRoute('/chatboo/open-form', card);
+            } catch (e) {
+                res = null;
+            }
+            if (!res || res.status !== 'ok' || !res.action) {
+                notify((res && res.message) || _t('Could not open the form.'), 'danger');
+                return;
+            }
+            if (res.dropped && res.dropped.length) {
+                notify(_t('Left empty: %s').replace('%s', res.dropped.join(', ')), 'warning');
+            }
+            const overlay = document.getElementById('o_chatboo_persistent_overlay');
+            const prevZ = overlay ? overlay.style.zIndex : '';
+            if (overlay) {
+                overlay.style.zIndex = '1000';
+            }
+            const restore = () => this._restoreChatbooOverlayZ(overlay, prevZ);
+            const context = res.context || {};
+            const actionOpts = {
+                additional_context: context,
+                additionalContext: context,
+                on_close: restore,
+                onClose: restore,
+            };
+            try {
+                if (this.props.doAction) {
+                    await this.props.doAction(res.action, actionOpts);
+                } else if (this.env && this.env.services && this.env.services.action) {
+                    await this.env.services.action.doAction(res.action, actionOpts);
+                } else {
+                    restore();
+                }
+            } catch (e) {
+                restore();
+                throw e;
+            }
         }
 
         // A chat image opens full screen with zoom (pns_base);
@@ -1351,6 +1414,9 @@ odoo.define('pns_ai_chatboo.Chatboo', function (require) {
                 }
                 if (m.offtopic) {
                     out.offtopic = true;
+                }
+                if (m.result_note) {
+                    out.result_note = true;
                 }
                 if (m.turn) {
                     out.turn = m.turn;
@@ -2095,8 +2161,14 @@ odoo.define('pns_ai_chatboo.Chatboo', function (require) {
 
         _restorePendingVerifications() {
             // Same SoT as Security → Authorizations: live pending rows, not SSE memory.
+            // One at a time: two answers in flight would each sign the same card.
+            if (this._restoringCards) {
+                return this._restoringCards;
+            }
             var self = this;
-            return this._callJsonRoute('/pns_ai_mcp/verification/pending', {})
+            this._restoringCards = this._callJsonRoute('/pns_ai_mcp/verification/pending', {
+                held: this._heldCardIds(),
+            })
                 .then(function (res) {
                     var items = (res && res.items) || [];
                     for (var i = 0; i < items.length; i++) {
@@ -2108,7 +2180,23 @@ odoo.define('pns_ai_chatboo.Chatboo', function (require) {
                 })
                 .catch(function () {
                     return undefined;
+                })
+                .then(function () {
+                    self._restoringCards = null;
                 });
+            return this._restoringCards;
+        }
+
+        _heldCardIds(except) {
+            // Cards this screen paints with their token: the server leaves it alone.
+            var ids = [];
+            document.querySelectorAll('[id^="pns_verif_"]').forEach(function (el) {
+                var id = el.id.slice('pns_verif_'.length);
+                if (id && id !== except && el.dataset.confirmToken) {
+                    ids.push(id);
+                }
+            });
+            return ids;
         }
 
         // ══════════════════════════════════════════════════════════════════════
@@ -2165,6 +2253,56 @@ odoo.define('pns_ai_chatboo.Chatboo', function (require) {
             if (card) {
                 card.remove();
             }
+        }
+
+        _retryRefusedCard(evt, card, res, status, enable, again) {
+            // The card was refused, not the operation: nothing ran, so the AI is
+            // not told (it would propose the write again). The person already
+            // pressed Confirm: the card takes a fresh token and confirms once more.
+            const err = res && res.error;
+            if (err !== 'too_soon' && err !== 'bad_token' && err !== 'missing_token') {
+                return false;
+            }
+            const giveUp = function () {
+                status.style.color = '#c62828';
+                status.textContent = _t('Could not confirm the operation. Press Confirm again.');
+                enable();
+            };
+            if (!again) {
+                giveUp();
+                return true;
+            }
+            // A fresh token restarts the wait the server asks of a high-risk card.
+            const wait = evt.danger_level === 'high' ? 5500 : 0;
+            status.style.color = '#555';
+            status.textContent = _t('Confirming…');
+            if (err === 'too_soon') {
+                setTimeout(again, wait || 1000);
+                return true;
+            }
+            const self = this;
+            this._callJsonRoute('/pns_ai_mcp/verification/pending', {
+                held: this._heldCardIds(evt.verification_id),
+            })
+                .then(function (fresh) {
+                    const items = (fresh && fresh.items) || [];
+                    items.forEach(function (item) {
+                        if (item && item.verification_id) {
+                            self._showVerificationUI(item);
+                        }
+                    });
+                    const still = items.some(function (item) {
+                        return item && item.verification_id === evt.verification_id;
+                    });
+                    if (!still) {
+                        status.textContent = _t('This operation is no longer pending.');
+                        setTimeout(function () { card.remove(); }, 2500);
+                        return;
+                    }
+                    setTimeout(again, wait);
+                })
+                .catch(giveUp);
+            return true;
         }
 
         _showVerificationUI(evt) {
@@ -2259,8 +2397,12 @@ odoo.define('pns_ai_chatboo.Chatboo', function (require) {
                 confirmBtn.disabled = true; cancelBtn.disabled = true;
                 confirmBtn.style.opacity = '.6'; cancelBtn.style.opacity = '.6';
             };
+            const enable = function () {
+                confirmBtn.disabled = false; cancelBtn.disabled = false;
+                confirmBtn.style.opacity = '1'; cancelBtn.style.opacity = '1';
+            };
 
-            confirmBtn.addEventListener('click', function () {
+            const sendConfirm = function (retried) {
                 disable();
                 status.style.color = '#555';
                 status.textContent = _t('Confirming…');
@@ -2282,6 +2424,11 @@ odoo.define('pns_ai_chatboo.Chatboo', function (require) {
                         self.state.thinking = false;
                         self.state.disabled = false;
                         if (self._updateSystrayBadge) { self._updateSystrayBadge(); }
+                        if (!ok && self._retryRefusedCard(
+                            evt, card, res, status, enable,
+                            retried ? null : function () { sendConfirm(true); })) {
+                            return;
+                        }
                         if (!ok) {
                             status.style.color = busy ? '#9a6b00' : '#c62828';
                             status.textContent = busy
@@ -2343,7 +2490,8 @@ odoo.define('pns_ai_chatboo.Chatboo', function (require) {
                         self._finishVerificationOutcome(
                             evt, { success: false, error: String(e) }, 'confirm');
                     });
-            });
+            };
+            confirmBtn.addEventListener('click', function () { sendConfirm(false); });
 
             cancelBtn.addEventListener('click', function () {
                 disable();
@@ -2477,7 +2625,7 @@ odoo.define('pns_ai_chatboo.Chatboo', function (require) {
          * @returns {Promise<string>} Accumulated assistant response text
          * @throws {Error} On network failure or server error
          */
-        async _streamChat(text, historyForApi, images, files, imageNames) {
+        async _streamChat(text, historyForApi, images, files, imageNames, resultNote) {
             let acc = "";
             this._lastStreamMeta = null;
             this._lastStreamTiming = null;
@@ -2523,6 +2671,7 @@ odoo.define('pns_ai_chatboo.Chatboo', function (require) {
                     images: images,
                     imageNames: imageNames,
                     files: files,
+                    resultNote: !!resultNote,
                 });
                 // The body is not a form: Odoo reads csrf_token from the query.
                 const resp = await fetch(ChatbooTurn.streamUrl(odoo.csrf_token), {
@@ -2844,7 +2993,9 @@ odoo.define('pns_ai_chatboo.Chatboo', function (require) {
             this.state.statusLabel = '';
             this.scrollToBottom();
             try {
-                const txt = await this._streamChat(noteText, historyForApi);
+                const txt = await this._streamChat(
+                    noteText, historyForApi, null, null, null, true,
+                );
                 this.messages.push(
                     this._buildAssistantPayloadFromStream(txt, startTime, new Date()),
                 );
@@ -5197,16 +5348,8 @@ odoo.define('pns_ai_chatboo.Chatboo', function (require) {
         _formatContent(content) { return formatters.formatContent(content); }
         /** @see formatters.sanitizeHtml */
         _safeHtml(html) { return formatters.sanitizeHtml(html); }
-        /** @see formatters.formatMarkdown */
-        _formatMarkdown(content) { return formatters.formatMarkdown(content); }
-        /** @see formatters.formatCSV */
-        _formatCSV(lines) { return formatters.formatCSV(lines); }
         /** @see formatters.formatJsonWithLineBreaks */
         _formatJsonWithLineBreaks(obj, indent) { return formatters.formatJsonWithLineBreaks(obj, indent); }
-        /** @see formatters.formatNumber */
-        _formatNumber(value, locale) { return formatters.formatNumber(value, locale, formatters.DEFAULT_DECIMAL_PLACES); }
-        /** @see formatters.formatJsonAsTable */
-        _formatJsonAsTable(data) { return formatters.formatJsonAsTable(data); }
         /** @see formatters.escapeHtml */
         _escapeHtml(text) { return formatters.escapeHtml(text); }
 
@@ -5738,7 +5881,7 @@ odoo.define('pns_ai_chatboo.Chatboo', function (require) {
             <!-- Message list: flex fill so the last card stays above the prompt. -->
             <div class="o_chatboo_messages p-3 bg-100" t-ref="messages" style="flex: 1 1 auto; min-height: 0; overflow-y: auto;">
                 <t t-foreach="messages" t-as="msg" t-key="msg_index">
-                    <div t-attf-class="d-flex mb-2 {{ msg.role === 'user' ? 'justify-content-end' : 'justify-content-start' }}{{ msg.wideCanvas ? ' o_chatboo_message_row--chart' : '' }}"
+                    <div t-if="!msg.result_note" t-attf-class="d-flex mb-2 {{ msg.role === 'user' ? 'justify-content-end' : 'justify-content-start' }}{{ msg.wideCanvas ? ' o_chatboo_message_row--chart' : '' }}"
                          t-att-data-msg-index="msg_index"
                          t-att-data-turn="msg.context_info and msg.context_info.turn">
                         <div t-attf-class="o_chatboo_message card border-0 shadow-sm p-2 {{ msg.role === 'user' ? 'bg-primary text-white' : 'bg-white' }}{{ msg.wideCanvas ? ' o_chatboo_message--chart' : '' }}" t-att-data-ai-generated="msg.role === 'assistant' ? 'true' : undefined" style="border-radius: 8px; position: relative;">
@@ -5940,13 +6083,13 @@ odoo.define('pns_ai_chatboo.Chatboo', function (require) {
                             <t t-elif="msg.role === 'assistant' and !msg.model_details and !msg.local_ack">
                                 <div style="font-size: 0.85em; color: #dc3545;">
                                     <i class="fa fa-exclamation fw-bold" style="margin-right: 4px;"></i>
-                                    <span>Sin información del modelo</span>
+                                    <span t-esc="tipNoModelInfo"/>
                                 </div>
                             </t>
                             <t t-if="msg.sources and msg.sources.length">
                                 <div class="text-muted" style="font-size: 0.85em;">
                                     <i class="fa fa-globe" style="margin-right: 4px;"></i>
-                                    Fuente: <t t-esc="msg.sources.join(', ')"/>
+                                    <t t-esc="tipSource"/> <t t-esc="msg.sources.join(', ')"/>
                                 </div>
                             </t>
                             <t t-if="msg.records and msg.records.length">

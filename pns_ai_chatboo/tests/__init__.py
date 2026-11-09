@@ -4,3 +4,4 @@
 """Odoo TransactionCase suite for pns_ai_chatboo."""
 
 from . import test_chat_agent_composition
+from . import test_chatboo_perimeter

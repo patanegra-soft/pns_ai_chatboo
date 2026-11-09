@@ -779,6 +779,20 @@ msgid "Dataset cache time"
 msgstr "Hora de caché del dataset"
 
 #. module: pns_ai_chatboo
+#: model:ir.model.fields,field_description:pns_ai_chatboo.field_chatboo_session__last_query_company_ids
+msgid "Dataset companies (JSON)"
+msgstr "Empresas del dataset (JSON)"
+
+#. module: pns_ai_chatboo
+#: model:ir.model.fields,help:pns_ai_chatboo.field_chatboo_session__last_query_company_ids
+msgid ""
+"Companies last_query_data was read in. A turn in other companies queries "
+"again instead of reusing those rows."
+msgstr ""
+"Empresas en las que se leyó last_query_data. Un turno en otras empresas "
+"vuelve a consultar en vez de reutilizar esas filas."
+
+#. module: pns_ai_chatboo
 #: model:ir.model.fields,field_description:pns_ai_chatboo.field_chatboo_session__attached_documents
 msgid "Attached documents (text)"
 msgstr "Documentos adjuntos (texto)"
@@ -926,6 +940,11 @@ msgid "Screen context (JSON)"
 msgstr "Contexto de pantalla (JSON)"
 
 #. module: pns_ai_chatboo
+#: model:ir.model.fields,field_description:pns_ai_chatboo.field_chatboo_async_request__screen_company_ids
+msgid "Screen companies (JSON)"
+msgstr "Empresas de la pantalla (JSON)"
+
+#. module: pns_ai_chatboo
 #. openerp-web
 #: code:addons/pns_ai_chatboo/static/src/js/chatboo_component_v2.js:0
 msgid "Timeout waiting for confirmation (server busy or locked). Retry after cancelling stuck operations."
@@ -972,6 +991,18 @@ msgstr "Confirmando…"
 #: code:addons/pns_ai_chatboo/static/src/js/chatboo_component_v2.js:0
 msgid "Confirmed — applying…"
 msgstr "Confirmado — aplicando…"
+
+#. module: pns_ai_chatboo
+#. openerp-web
+#: code:addons/pns_ai_chatboo/static/src/js/chatboo_component_v2.js:0
+msgid "This operation is no longer pending."
+msgstr "Esta operación ya no está pendiente."
+
+#. module: pns_ai_chatboo
+#. openerp-web
+#: code:addons/pns_ai_chatboo/static/src/js/chatboo_component_v2.js:0
+msgid "Could not confirm the operation. Press Confirm again."
+msgstr "No se pudo confirmar la operación. Vuelve a pulsar Confirmar."
 
 #. module: pns_ai_chatboo
 #. openerp-web
@@ -1074,6 +1105,11 @@ msgstr "Archivos (JSON)"
 #: model:ir.model.fields,field_description:pns_ai_chatboo.field_chatboo_async_request__image_names
 msgid "Image names (JSON)"
 msgstr "Nombres de imágenes (JSON)"
+
+#. module: pns_ai_chatboo
+#: model:ir.model.fields,field_description:pns_ai_chatboo.field_chatboo_async_request__result_note
+msgid "Result note"
+msgstr "Nota de resultado"
 
 #. module: pns_ai_chatboo
 #. openerp-web
@@ -2461,3 +2497,132 @@ msgstr "(datos intermedios omitidos — pide de nuevo el listado)"
 #: code:addons/pns_ai_chatboo/static/src/js/chatboo_component_v2.js:0
 msgid "Unknown model"
 msgstr "Modelo desconocido"
+
+#. module: pns_ai_chatboo
+#: code:addons/pns_ai_chatboo/utils/form_draft.py:0
+msgid "That form is not available."
+msgstr "Ese formulario no está disponible."
+
+#. module: pns_ai_chatboo
+#: code:addons/pns_ai_chatboo/utils/form_draft.py:0
+msgid "You cannot edit that record."
+msgstr "No puedes editar ese registro."
+
+#. module: pns_ai_chatboo
+#: code:addons/pns_ai_chatboo/utils/form_draft.py:0
+msgid "You cannot create that kind of record."
+msgstr "No puedes crear ese tipo de registro."
+
+#. module: pns_ai_chatboo
+#. openerp-web
+#: code:addons/pns_ai_chatboo/static/src/js/chatboo_component_v2.js:0
+msgid "Could not open the form."
+msgstr "No se pudo abrir el formulario."
+
+#. module: pns_ai_chatboo
+#. openerp-web
+#: code:addons/pns_ai_chatboo/static/src/js/chatboo_component_v2.js:0
+msgid "Left empty: %s"
+msgstr "Se dejaron vacíos: %s"
+
+#. module: pns_ai_chatboo
+#. openerp-web
+#: code:addons/pns_ai_chatboo/static/src/js/chatboo_component_v2.js:0
+msgid "Source:"
+msgstr "Fuente:"
+
+#. module: pns_ai_chatboo
+#. openerp-web
+#: code:addons/pns_ai_chatboo/static/src/js/chatboo_component_v2.js:0
+msgid "No model information"
+msgstr "Sin información del modelo"
+
+#. module: pns_ai_chatboo
+#. openerp-web
+#: code:addons/pns_ai_chatboo/static/src/js/chatboo_charts.js:0
+msgid "Grouped bars"
+msgstr "Barras agrupadas"
+
+#. module: pns_ai_chatboo
+#. openerp-web
+#: code:addons/pns_ai_chatboo/static/src/js/chatboo_charts.js:0
+msgid "Stacked"
+msgstr "Apilado"
+
+#. module: pns_ai_chatboo
+#. openerp-web
+#: code:addons/pns_ai_chatboo/static/src/js/chatboo_charts.js:0
+msgid "Combined"
+msgstr "Combinado"
+
+#. module: pns_ai_chatboo
+#. openerp-web
+#: code:addons/pns_ai_chatboo/static/src/js/chatboo_charts.js:0
+msgid "Bars"
+msgstr "Barras"
+
+#. module: pns_ai_chatboo
+#. openerp-web
+#: code:addons/pns_ai_chatboo/static/src/js/chatboo_charts.js:0
+msgid "Lines"
+msgstr "Líneas"
+
+#. module: pns_ai_chatboo
+#. openerp-web
+#: code:addons/pns_ai_chatboo/static/src/js/chatboo_charts.js:0
+msgid "Area"
+msgstr "Área"
+
+#. module: pns_ai_chatboo
+#. openerp-web
+#: code:addons/pns_ai_chatboo/static/src/js/chatboo_charts.js:0
+msgid "Horizontal"
+msgstr "Horizontal"
+
+#. module: pns_ai_chatboo
+#. openerp-web
+#: code:addons/pns_ai_chatboo/static/src/js/chatboo_charts.js:0
+msgid "Radar"
+msgstr "Radar"
+
+#. module: pns_ai_chatboo
+#. openerp-web
+#: code:addons/pns_ai_chatboo/static/src/js/chatboo_charts.js:0
+msgid "Donut"
+msgstr "Quesito"
+
+#. module: pns_ai_chatboo
+#. openerp-web
+#: code:addons/pns_ai_chatboo/static/src/js/chatboo_charts.js:0
+msgid "Pie"
+msgstr "Tarta"
+
+#. module: pns_ai_chatboo
+#. openerp-web
+#: code:addons/pns_ai_chatboo/static/src/js/chatboo_charts.js:0
+msgid "Rose"
+msgstr "Rosa"
+
+#. module: pns_ai_chatboo
+#. openerp-web
+#: code:addons/pns_ai_chatboo/static/src/js/chatboo_charts.js:0
+msgid "Rotate donut / pie / rose"
+msgstr "Rotar quesito / tarta / rosa"
+
+#. module: pns_ai_chatboo
+#. openerp-web
+#: code:addons/pns_ai_chatboo/static/src/js/chatboo_charts.js:0
+msgid "Rotate type (combined, stacked, horizontal…)"
+msgstr "Rotar tipo (combinado, apilado, horizontal…)"
+
+#. module: pns_ai_chatboo
+#. openerp-web
+#: code:addons/pns_ai_chatboo/static/src/js/chatboo_charts.js:0
+msgid "Rotate combination (bar/line per series)"
+msgstr "Rotar combinación (barra/línea por serie)"
+
+#. module: pns_ai_chatboo
+#. openerp-web
+#: code:addons/pns_ai_chatboo/static/src/js/chatboo_charts.js:0
+msgid "Chart type"
+msgstr "Tipo de gráfico"

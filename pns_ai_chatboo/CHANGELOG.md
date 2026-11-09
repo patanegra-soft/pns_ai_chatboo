@@ -2,6 +2,21 @@
 
 What changes for people who use this module, one section per published version, newest first. The heading is the git tag.
 
+## owl1-2.1.585_owl2-2.1.585_owl3-2.1.585 (2026-11-09)
+
+- Paste a photo or a screenshot with Ctrl+V, like dropping a file: it goes with your question, and a pasted bill is registered the same way.
+- The confirmation card no longer loops: if the server refuses the card (old token, too soon) it takes a fresh token and confirms once more by itself, without asking the AI again. The outcome note after Confirm or Cancel is kept for the AI but not shown as your message.
+- Getting started says which providers to set up: one multimodal model to try it, one provider per role (Conversation, Vision, Design, Parser, Decision) for the best results, and how a broker such as OpenRouter gives you all of them with one key.
+- Vendor bills from a document, outside Europe too: combined taxes on one base, withholdings, the document's currency, and bills or receipts without the issuer's tax id.
+
+- Till receipts and card terminal slips: a receipt is drafted as a vendor bill (the base worked out from the printed rate, or a question); a card slip is never booked, Chatboo tells you whether the bill it paid is already there.
+
+- Odoo 20 is supported (new `owl3` stack); flat branches from 14.0 to 20.0.
+- Vendor bills from a document: drop the supplier's PDF, spreadsheet, photo or scan in the chat and say "register it". The plan creates the vendor if it is missing, drafts the bill with its lines and warns of duplicates; you confirm per document and the draft waits for the accountant. `/bill-draft` stays as a shortcut for vendors already in Contacts, and says so.
+- Chatboo works in the companies ticked in Odoo's company switcher, like any other screen, and does not reuse rows read in other companies.
+- New factory skills: `/sales-board` (movable cards with sales figures, charts and tables in the chat) and `/bill-draft` (opens the vendor bill form filled in from an attached bill, for a vendor you already have; nothing is saved until you press Save).
+- Chart type names, the "Source" line and the "no model information" note are now translated instead of always showing in Spanish.
+
 ## owl1-2.1.554_owl2-2.1.554 (2026-11-07)
 
 - The Apps subtitle says what people search for: open source, Odoo Community 14 and 19, chatbot, and the models it talks to (OpenAI, Claude, Ollama).

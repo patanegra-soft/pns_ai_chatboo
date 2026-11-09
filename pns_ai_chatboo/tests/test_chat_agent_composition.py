@@ -29,7 +29,7 @@ class TestChatAgentComposition(TransactionCase):
             default_skill_codes='@%s' % _AGENT_CODE,
         )
         codes = self.env['ai.skill'].default_skill_codes_for_agent(agent.code)
-        self.assertIn('sys_info', codes)
+        self.assertIn('users', codes)
 
     def test_engine_pack_is_imported(self):
         chat = self._agent()
@@ -49,12 +49,12 @@ class TestChatAgentComposition(TransactionCase):
             self.assertEqual(
                 self_chat.with_context(**ctx).composition_origin, 'own',
             )
-        sys_info = self.env['ai.skill'].search([
-            ('code', '=', 'sys_info'),
+        users = self.env['ai.skill'].search([
+            ('code', '=', 'users'),
         ], limit=1)
-        if sys_info:
+        if users:
             self.assertEqual(
-                sys_info.with_context(**ctx).composition_origin, 'own',
+                users.with_context(**ctx).composition_origin, 'own',
             )
 
     def test_factory_seed_does_not_name_foreign_modules(self):

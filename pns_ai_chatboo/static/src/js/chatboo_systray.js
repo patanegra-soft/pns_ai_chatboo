@@ -8,7 +8,6 @@ odoo.define('pns_ai_chatboo.chatboo_systray', function (require) {
 
     var SystrayMenu = require('web.SystrayMenu');
     var Widget = require('web.Widget');
-    var ActionManager = require('web.ActionManager');
     var core = require('web.core');
     var session = require('web.session');
     var _t = core._t;
@@ -265,7 +264,7 @@ odoo.define('pns_ai_chatboo.chatboo_systray', function (require) {
             opts = opts || {};
             return this._rpc({
                 route: '/pns_ai_mcp/verification/pending',
-                params: {},
+                params: { peek: true },
             }).then(function (res) {
                 var items = (res && res.items) || [];
                 if (!self._isOverlayHidden()) {
@@ -545,17 +544,10 @@ odoo.define('pns_ai_chatboo.chatboo_systray', function (require) {
         return ctx;
     }
 
-    // App / menu: show the overlay and do NOT push the client action
-    // (that empty action is the blank page on collapse).
-    ActionManager.include({
-        _executeClientAction: function (action, options) {
-            if (action && CHATBOO_CLIENT_TAGS[action.tag]) {
-                core.bus.trigger('chatboo_overlay_show', chatbooContextFromAction(action));
-                return $.when();
-            }
-            return this._super.apply(this, arguments);
-        },
-    });
+    // The app / menu click opens the overlay; how it is caught depends on the
+    // action manager: chatboo_open_o14.js (Odoo 14), chatboo_open_o15.js (15).
+    ChatbooSystrayItem.CLIENT_TAGS = CHATBOO_CLIENT_TAGS;
+    ChatbooSystrayItem.contextFromAction = chatbooContextFromAction;
 
     return ChatbooSystrayItem;
 
