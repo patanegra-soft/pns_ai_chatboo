@@ -75,7 +75,7 @@
                 </t>
 
                 <t t-foreach="state.messages" t-as="msg" t-key="msg_index">
-                    <div t-attf-class="d-flex mb-2 {{ msg.role === 'user' ? 'justify-content-end' : 'justify-content-start' }}{{ msg.wideCanvas ? ' o_chatboo_message_row--chart' : '' }}"
+                    <div t-if="!msg.result_note" t-attf-class="d-flex mb-2 {{ msg.role === 'user' ? 'justify-content-end' : 'justify-content-start' }}{{ msg.wideCanvas ? ' o_chatboo_message_row--chart' : '' }}"
                          t-att-data-msg-index="msg_index"
                          t-att-data-turn="msg.contextInfo and msg.contextInfo.turn">
                         <div t-attf-class="o_chatboo_message o_chatboo_bubble card border-0 shadow-sm p-2 {{ msg.role === 'user' ? 'bg-primary text-white o_chatboo_user' : 'bg-white o_chatboo_assistant' }}{{ msg.wideCanvas ? ' o_chatboo_message--chart' : '' }}"
@@ -268,7 +268,7 @@
                             <t t-if="msg.meta and msg.meta.sources and msg.meta.sources.length">
                                 <div class="text-muted" style="font-size:0.85em;">
                                     <i class="fa fa-link me-1"/>
-                                    Fuente: <t t-esc="msg.meta.sources.join(', ')"/>
+                                    <t t-esc="tipSource"/> <t t-esc="msg.meta.sources.join(', ')"/>
                                 </div>
                             </t>
                             <t t-if="msg.meta and msg.meta.records and msg.meta.records.length">

@@ -14,7 +14,8 @@ def test_controllers_keep_a_session_on_its_owner():
             _ROOT / 'stacks' / stack / 'pns_ai_chatboo'
             / 'controllers' / 'chatboo.py'
         ).read_text(encoding='utf-8')
-        assert 'session.user_id.id != request.env.uid' in src
+        # Reading the owner of someone else's row trips the record rule: search it.
+        assert '.user_id.id != request.env' not in src
         assert "('user_id', '=', request.env.uid)" in src
 
 

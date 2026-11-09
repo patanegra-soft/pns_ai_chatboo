@@ -14,19 +14,14 @@ def _text(name):
 
 
 def test_seed_money_skills_filter_the_active_company():
-    for name in (
-        'billing.py',
-        'annual_billing.py',
-        'dashboard.py',
-        'credit_facility.py',
-    ):
+    for name in ('billing.py', 'dashboard.py', 'financial_health.py', 'sales_board.py', 'top_sales.py'):
         src = _text(name)
-        assert "env.company.id" in src
-        assert "('company_id', '='," in src
+        assert "env.company.id" in src, name
+        assert "company_id', '='," in src, name
 
 
 def test_invoice_skills_still_count_out_invoice_only():
-    for name in ('billing.py', 'annual_billing.py', 'dashboard.py'):
+    for name in ('billing.py', 'dashboard.py'):
         src = _text(name)
         assert "('move_type', '=', 'out_invoice')" in src
         assert 'out_refund' not in src

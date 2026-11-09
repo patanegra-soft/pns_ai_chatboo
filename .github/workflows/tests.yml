@@ -1,4 +1,4 @@
-# Written by publish.sh: ["14.0", "19.0"] is the list of series in publish.conf.
+# Written by publish.sh: ["14.0", "15.0", "16.0", "17.0", "18.0", "19.0", "20.0"] is the list of series in publish.conf.
 # Unit tests without Odoo, then the module installed with its Odoo tests
 # on a clean, official Odoo image of each series.
 # Run workflow with a series (18.0) tries one that is not published yet.
@@ -41,7 +41,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        series: ${{ fromJSON(inputs.series && format('["{0}"]', inputs.series) || '["14.0", "19.0"]') }}
+        series: ${{ fromJSON(inputs.series && format('["{0}"]', inputs.series) || '["14.0", "15.0", "16.0", "17.0", "18.0", "19.0", "20.0"]') }}
     services:
       db:
         image: postgres:15

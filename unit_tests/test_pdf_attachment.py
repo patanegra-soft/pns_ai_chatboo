@@ -69,6 +69,13 @@ def test_pictures_are_prepared_by_pns_base():
 
 
 def test_only_the_owner_of_the_session_reads_its_documents():
-    body = _body(_SESSION, '_read_document')
+    body = _body(_SESSION, '_documents_of_this_turn')
     assert "self.env.context.get('ai_session_ref')" in body
     assert 'session.user_id.id != self.env.uid' in body
+    for helper in ('_read_document(', '_documents('):
+        assert 'self._documents_of_this_turn()' in _body(_SESSION, helper)
+
+
+def test_a_skill_slash_does_not_get_the_file_text_as_arguments():
+    body = _body(_JOB, '_process')
+    assert 'if turn_docs and self._prompt_runs_a_skill():' in body

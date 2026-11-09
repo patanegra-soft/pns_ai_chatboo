@@ -197,6 +197,19 @@ def test_i18n_restore_width_both_stacks():
         assert 'Restaurar ancho por defecto' in text
 
 
+def test_turn_end_focus_waits_for_enabled_prompt():
+    """Owl 3 may patch after the frame callback: focus() on a disabled box is lost."""
+    for stack in ('owl2', 'owl3'):
+        js = (
+            _ROOT / 'stacks' / stack / 'pns_ai_chatboo'
+            / 'static' / 'src' / 'js' / 'chatboo_app.js'
+        ).read_text(encoding='utf-8')
+        body = js.split('    _focusInput() {', 1)[1].split('\n    async _initSessions(', 1)[0]
+        guard = body.index('if (el.disabled)')
+        assert 'this._paintQueue.push(focus)' in body[guard:]
+        assert guard < body.index('el.focus(')
+
+
 def test_overlay_open_focuses_prompt_both_stacks():
     owl2 = (
         _ROOT / 'stacks' / 'owl2' / 'pns_ai_chatboo'

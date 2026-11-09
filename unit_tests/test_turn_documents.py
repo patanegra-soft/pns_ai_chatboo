@@ -72,6 +72,15 @@ def test_a_photo_kept_as_text_keeps_the_checksum_of_its_file():
     assert '- ticket.jpg (1 page)' in docs.note(kept)
 
 
+def test_the_listing_gives_names_and_page_counts_newest_last():
+    ticket = {'name': 'ticket.jpg', 'pages': ['Total 1,00 EUR']}
+    assert docs.listing([INVOICE, ticket, 'junk']) == [
+        {'name': 'factura.pdf', 'pages': 3},
+        {'name': 'ticket.jpg', 'pages': 1},
+    ]
+    assert docs.listing([]) == []
+
+
 def test_a_transcription_is_cut_at_its_page_marks():
     text = '=== PAGE 1 ===\nFactura 597970\n=== PAGE 3 ===\nTotal 9,61 EUR'
     assert docs.split_pages(text, 3) == ['Factura 597970', '', 'Total 9,61 EUR']

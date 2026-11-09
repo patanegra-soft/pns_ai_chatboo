@@ -613,7 +613,8 @@ def test_the_canvas_button_checks_the_owner_and_leaves_the_request():
             _ROOT / 'stacks' / stack / 'pns_ai_chatboo' / 'controllers' / 'chatboo.py'
         ).read_text(encoding='utf-8')
         own = ctrl.split('def _own_session', 1)[1].split('\n    def ', 1)[0]
-        assert 'session.user_id.id != request.env.uid' in own
+        assert "('user_id', '=', request.env.uid)" in own
+        assert '.search([' in own
         for route in ('/chatboo/canvas/build', '/chatboo/canvas/running'):
             body = ctrl.split("'%s'" % route, 1)[1].split('@http.route', 1)[0]
             assert 'self._user_may_use_chatboo()' in body
@@ -1280,7 +1281,7 @@ def test_every_page_prints_and_downloads():
         ctrl = (base / 'controllers' / 'chatboo.py').read_text(encoding='utf-8')
         route = ctrl.split("'/chatboo/canvas/<int:session_id>/download'", 1)[1]
         route = route.split('@http.route', 1)[0]
-        assert 'session.user_id.id != request.env.uid' in route
+        assert 'self._own_session(session_id)' in route
         assert 'content_disposition(' in route
         assert 'downloadable_page(session.canvas_design)' in route
         assert 'download_filename(session.canvas_title, session.canvas_design)' in route
@@ -1397,7 +1398,7 @@ def test_a_shared_page_is_a_fixed_copy_for_named_users():
         assert "methods=['POST']" in share
         assert 'csrf=False' not in share
         assert share.index('user_has_chatboo_access') < share.index('.sudo()')
-        assert share.index('session.user_id.id != request.env.uid') < share.index('.sudo()')
+        assert share.index('self._own_session(session_id)') < share.index('.sudo()')
         assert share.count('.sudo()') == 1
         assert 'pages.sudo().create(values)' in share
         assert 'redirect' not in share

@@ -5,8 +5,13 @@
 from __future__ import annotations
 
 import os
+import shutil
 import subprocess
 from pathlib import Path
+
+import pytest
+
+pytestmark = pytest.mark.skipif(not shutil.which('node'), reason='no node here')
 
 _JS = Path(__file__).resolve().parents[1] / 'common' / 'static' / 'src' / 'js' / 'chatboo_sse.js'
 

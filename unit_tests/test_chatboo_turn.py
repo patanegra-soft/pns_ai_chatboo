@@ -6,10 +6,13 @@ from __future__ import annotations
 
 import json
 import os
+import shutil
 import subprocess
 from pathlib import Path
 
 import pytest
+
+pytestmark = pytest.mark.skipif(not shutil.which('node'), reason='no node here')
 
 _ROOT = Path(__file__).resolve().parents[1]
 _JS_DIR = _ROOT / 'common' / 'static' / 'src' / 'js'

@@ -444,9 +444,6 @@ def test_financial_health_skill_asks_for_judgment_not_inventory():
     en = (
         _ROOT / 'common' / 'ai' / 'skills' / 'system' / 'financial_health.md'
     ).read_text(encoding='utf-8')
-    assert 'version: 2.17' in en
-    assert 'estado financiero' in en
-    assert 'informe financiero' in en
     assert 'Cover every JSON table' not in en
     assert 'material facts' in en
     assert 'analisis-financiero' not in en

@@ -9,7 +9,10 @@
 #   ./install_flat.sh 14.0 /tmp/addons-14
 #
 # Result: <addons_dir>/<module>/ with __manifest__.py at its root, ready for
-# addons_path. Odoo 14 uses stacks/owl1; Odoo 15 and later use stacks/owl2.
+# addons_path. Odoo 14 uses stacks/owl1, Odoo 16 to 19 stacks/owl2, and
+# Odoo 20 and later stacks/owl3. Odoo 15 has Owl 1 and the old views, so it
+# uses stacks/owl1 with its own manifest (__manifest_o15__.py: assets in the
+# manifest); a tree without that file gives Odoo 15 stacks/owl2.
 # The flat manifest carries the series in its version and the banner in
 # images, as the Odoo Apps Store reads them.
 # Odoo 13 and older are not supported (README, "Odoo versions").
@@ -18,11 +21,11 @@
 set -euo pipefail
 
 # Series with a published branch, written by publish.sh from publish.conf.
-TESTED_SERIES="14.0 19.0"
+TESTED_SERIES="14.0 15.0 16.0 17.0 18.0 19.0 20.0"
 
 die() { echo "Error: $*" >&2; exit 1; }
 
-[ $# -ge 2 ] || die "usage: $0 <odoo-series, e.g. 19.0> <addons_dir> [owl1|owl2]"
+[ $# -ge 2 ] || die "usage: $0 <odoo-series, e.g. 19.0> <addons_dir> [owl1|owl2|owl3]"
 
 SERIES="$1"
 DEST="$2"
@@ -33,7 +36,10 @@ major="${SERIES%%.*}"
 [[ "$major" =~ ^[0-9]+$ ]] || die "Odoo series must look like 19.0, got: $SERIES"
 [ "$major" -ge 14 ] || die "Odoo $SERIES is not supported: this suite starts at 14.0 (README, \"Odoo versions\")"
 if [ -z "$STACK" ]; then
-    if [ "$major" -eq 14 ]; then STACK=owl1; else STACK=owl2; fi
+    if [ "$major" -eq 14 ]; then STACK=owl1; elif [ "$major" -ge 20 ]; then STACK=owl3; else STACK=owl2; fi
+    if [ "$major" -eq 15 ] && compgen -G "$ROOT/stacks/owl1/*/__manifest_o15__.py" >/dev/null; then
+        STACK=owl1
+    fi
 fi
 if [ -n "$TESTED_SERIES" ] && [[ " $TESTED_SERIES " != *" $SERIES "* ]]; then
     echo "Warning: Odoo $SERIES is not tested yet (tested: $TESTED_SERIES). It may need changes." >&2
@@ -58,6 +64,13 @@ mkdir "$OUT"
 [ -d "$ROOT/common" ] && cp -a "$ROOT/common/." "$OUT/"
 [ -d "$ROOT/adapters" ] && cp -a "$ROOT/adapters" "$OUT/"
 cp -a "$SRC/." "$OUT/"
+if [ -f "$OUT/__manifest_o15__.py" ]; then
+    if [ "$major" -eq 15 ]; then
+        mv -f "$OUT/__manifest_o15__.py" "$OUT/__manifest__.py"
+    else
+        rm -f "$OUT/__manifest_o15__.py"
+    fi
+fi
 
 for f in README.md CHANGELOG.md LICENSE NOTICE CONTRIBUTING.md SECURITY.md; do
     if [ -f "$ROOT/$f" ] && [ ! -e "$OUT/$f" ]; then

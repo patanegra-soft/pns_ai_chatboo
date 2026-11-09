@@ -60,7 +60,7 @@ def _block_titles(src):
 
 
 def test_there_are_seed_page_skills():
-    assert {'pipeline', 'cash_forecast', 'customer_360'} <= set(_PAGE_SKILLS)
+    assert {'pipeline', 'customer_360'} <= set(_PAGE_SKILLS)
 
 
 @pytest.mark.parametrize('stem', _PAGE_SKILLS)

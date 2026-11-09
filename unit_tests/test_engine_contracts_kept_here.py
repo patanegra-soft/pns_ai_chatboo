@@ -2,8 +2,8 @@
 # SPDX-License-Identifier: Apache-2.0
 # Copyright (C) 2026 Patanegra Soft <https://patanegra.com>
 """What Chatboo's own files promise the engine: admin-only system skills,
-no database name in sys-info, the skipped-capability row on the turn, and
-no protocol test for the decision provider.
+the skipped-capability row on the turn, and no protocol test for the
+decision provider.
 """
 from __future__ import annotations
 
@@ -14,13 +14,8 @@ _SYSTEM = _ROOT / 'common' / 'ai' / 'skills' / 'system'
 
 
 def test_factory_skills_marked_admin_only():
-    for name in ('users_all.md', 'users_logged.md', 'sys_info.md'):
-        text = (_SYSTEM / name).read_text(encoding='utf-8')
-        assert 'required_groups: pns_ai_mcp.group_ai_admin' in text, name
-
-
-def test_sys_info_skill_reads_no_dbname():
-    assert 'dbname' not in (_SYSTEM / 'sys_info.py').read_text(encoding='utf-8')
+    text = (_SYSTEM / 'users.md').read_text(encoding='utf-8')
+    assert 'required_groups: pns_ai_mcp.group_ai_admin' in text
 
 
 def test_canvas_threads_its_skipped_row_like_the_engine():

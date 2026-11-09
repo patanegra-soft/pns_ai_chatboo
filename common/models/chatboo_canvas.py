@@ -2014,11 +2014,13 @@ def page_from_skill_code(code):
         ]
         if '_page_template' not in names:
             continue
-        value = node.value
-        if isinstance(value, ast.Constant) and isinstance(value.value, str):
-            return value.value
-        if isinstance(value, ast.Str):
-            return value.s
+        # literal_eval reads Str (3.7) and Constant (3.8+) alike.
+        try:
+            value = ast.literal_eval(node.value)
+        except (ValueError, TypeError):
+            continue
+        if isinstance(value, str):
+            return value
     return ''
 
 

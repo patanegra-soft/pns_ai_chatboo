@@ -13,7 +13,6 @@ const VENDOR = [
     "/pns_ai_chatboo/static/src/js/jspdf.umd.min.js",
     "/pns_ai_chatboo/static/src/js/jspdf.plugin.autotable.min.js",
     "/pns_ai_chatboo/static/src/js/jspdf_umd_post.js",
-    "/pns_ai_chatboo/static/src/js/jspdf_shim.js",
     "/pns_ai_chatboo/static/src/js/html2canvas.min.js",
     "/pns_ai_chatboo/static/src/js/chart.umd.min.js",
     "/pns_ai_chatboo/static/src/js/echarts.min.js",

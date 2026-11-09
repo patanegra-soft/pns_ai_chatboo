@@ -117,6 +117,11 @@ class ChatbooSession(models.Model):
         help="When last_query_data was cached; used to expire it (freshness "
              "TTL) so stale datasets are not reused nor kept forever.",
     )
+    last_query_company_ids = fields.Char(
+        string='Dataset companies (JSON)',
+        help="Companies last_query_data was read in. A turn in other "
+             "companies queries again instead of reusing those rows.",
+    )
     attached_documents = fields.Text(
         string='Attached documents (text)',
         copy=False,
@@ -778,13 +783,21 @@ class ChatbooSession(models.Model):
         except Exception:
             return []
 
-    def get_fresh_query_data(self):
+    def get_fresh_query_data(self, company_ids=None):
         """Return the cached rows of the last dataset ONLY if still fresh
-        (within the TTL); else None. Never raises: on any problem it
-        returns None and falls back gently to "no cache"."""
+        (within the TTL) and, given ``company_ids``, read in those same
+        companies; else None. Never raises: on any problem it returns None
+        and falls back gently to "no cache"."""
         self.ensure_one()
         if not self.last_query_data or not self.last_query_data_date:
             return None
+        if company_ids is not None:
+            try:
+                cached = json.loads(self.last_query_company_ids or '[]')
+            except (TypeError, ValueError):
+                cached = []
+            if sorted(cached) != sorted(company_ids):
+                return None
         ttl = self._query_data_ttl_hours()
         if ttl > 0:
             age = fields.Datetime.now() - self.last_query_data_date
@@ -816,7 +829,7 @@ class ChatbooSession(models.Model):
 
     @api.model
     def sandbox_helpers(self):
-        """``read_document`` for the sandbox of a Chatboo turn."""
+        """``documents`` / ``read_document`` and the page helpers for a Chatboo turn."""
         self._claim_page_turn()
         sessions = self
 
@@ -832,7 +845,11 @@ class ChatbooSession(models.Model):
         def read_document(name, page=None, find=None):
             return sessions._read_document(name, page=page, find=find)
 
+        def documents():
+            return sessions._documents()
+
         return {
+            'documents': documents,
             'read_document': read_document,
             'page_url': _wrap('page_url'),
             'page_edit': _wrap('page_edit'),
@@ -1281,12 +1298,20 @@ class ChatbooSession(models.Model):
         return bool(job_id) and self.env['chatboo.canvas.job'].browse(job_id)._is_cancel_requested()
 
     @api.model
-    def _read_document(self, name, page=None, find=None):
+    def _documents_of_this_turn(self):
         session_id = self.env.context.get('ai_session_ref')
         session = self.sudo().browse(int(session_id)).exists() if session_id else None
         if not session or session.user_id.id != self.env.uid:
-            return turn_documents.read([], name)
-        return turn_documents.read(session.get_documents(), name, page=page, find=find)
+            return []
+        return session.get_documents()
+
+    def _read_document(self, name, page=None, find=None):
+        return turn_documents.read(
+            self._documents_of_this_turn(), name, page=page, find=find,
+        )
+
+    def _documents(self):
+        return turn_documents.listing(self._documents_of_this_turn())
 
     # ── Records marked in the answer ────────────────────────────────
     # Ticking a row names a record without spelling it. The engine only

@@ -8,6 +8,10 @@ __pycache__/
 
 # local venv for the unit tests
 .venv/
+# jsdom for the HTML sanitizer test (npm install jsdom in unit_tests/)
+unit_tests/node_modules/
+unit_tests/package.json
+unit_tests/package-lock.json
 .last_odoo_test.log
 commit_msg.tmp
 # Apps icons under common/static/description/ (*.png, *.svg) must stay tracked.

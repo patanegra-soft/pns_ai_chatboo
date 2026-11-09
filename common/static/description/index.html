@@ -355,9 +355,8 @@
         <h3>Source code</h3>
         <p>On GitHub: <a href="https://github.com/patanegra-soft/pns_ai_chatboo">patanegra-soft/pns_ai_chatboo</a>.</p>
         <ul>
-          <li><code>main</code> is one tree for every series: shared code in <code>common/</code> and one stack per OWL generation (<code>owl1</code> for Odoo 14, <code>owl2</code> for 15 and later).</li>
-          <li><code>./install_flat.sh 19.0 &lt;dir&gt;</code> builds the flat module of a series. The branches <code>14.0</code> and <code>19.0</code> are that result, ready for the addons path.</li>
-          <li>Odoo 15.0 to 18.0: no branch, and not tested by people or by CI. Build them from <code>main</code> with <code>install_flat.sh</code> (also <code>pns_base</code> and <code>pns_ai_mcp</code>) and try them on a test database first.</li>
+          <li><code>main</code> is one tree for every series: shared code in <code>common/</code> and one stack per OWL generation (<code>owl1</code> for Odoo 14 and 15, <code>owl2</code> for 16 to 19, <code>owl3</code> for 20).</li>
+          <li><code>./install_flat.sh 19.0 &lt;dir&gt;</code> builds the flat module of a series. The branches <code>14.0</code> to <code>20.0</code> are that result, ready for the addons path.</li>
           <li>Tests without a database (<code>unit_tests/</code>, pytest) live in <code>main</code>. The Odoo tests are in <code>tests/</code>.</li>
         </ul>
         <p>Bugs: an issue, with the bug form. Ideas and questions: Discussions.</p>
@@ -497,9 +496,8 @@
         <h3>Código fuente</h3>
         <p>En GitHub: <a href="https://github.com/patanegra-soft/pns_ai_chatboo">patanegra-soft/pns_ai_chatboo</a>.</p>
         <ul>
-          <li><code>main</code> es un solo árbol para todas las versiones: código común en <code>common/</code> y una pila por generación de OWL (<code>owl1</code> para Odoo 14, <code>owl2</code> para la 15 y siguientes).</li>
-          <li><code>./install_flat.sh 19.0 &lt;dir&gt;</code> construye el módulo plano de una versión. Las ramas <code>14.0</code> y <code>19.0</code> son ese resultado, listas para el addons path.</li>
-          <li>Odoo 15.0 a 18.0: sin rama y sin probar, ni por personas ni por el CI. Se construyen desde <code>main</code> con <code>install_flat.sh</code> (también <code>pns_base</code> y <code>pns_ai_mcp</code>) y se prueban antes en una base de pruebas.</li>
+          <li><code>main</code> es un solo árbol para todas las versiones: código común en <code>common/</code> y una pila por generación de OWL (<code>owl1</code> para Odoo 14 y 15, <code>owl2</code> de la 16 a la 19, <code>owl3</code> para la 20).</li>
+          <li><code>./install_flat.sh 19.0 &lt;dir&gt;</code> construye el módulo plano de una versión. Las ramas de la <code>14.0</code> a la <code>20.0</code> son ese resultado, listas para el addons path.</li>
           <li>Los tests sin base de datos (<code>unit_tests/</code>, pytest) viven en <code>main</code>. Los tests de Odoo están en <code>tests/</code>.</li>
         </ul>
         <p>Errores: un issue, con el formulario de error. Ideas y preguntas: Discussions.</p>

@@ -20,11 +20,12 @@ def test_owl2_jspdf_load_order_forces_global():
     umd = '/pns_ai_chatboo/static/src/js/jspdf.umd.min.js'
     auto = '/pns_ai_chatboo/static/src/js/jspdf.plugin.autotable.min.js'
     post = '/pns_ai_chatboo/static/src/js/jspdf_umd_post.js'
-    shim = '/pns_ai_chatboo/static/src/js/jspdf_shim.js'
-    for token in (pre, umd, auto, post, shim):
+    for token in (pre, umd, auto, post):
         assert token in loader, token
-    assert loader.index(pre) < loader.index(umd) < loader.index(auto)
-    assert loader.index(auto) < loader.index(post) < loader.index(shim)
+    assert loader.index(pre) < loader.index(umd) < loader.index(auto) < loader.index(post)
+    # loadJS runs classic scripts: a file with `export` stops Odoo 20 cold.
+    assert 'jspdf_shim' not in loader
+    assert not (_OWL2 / 'static' / 'src' / 'js' / 'jspdf_shim.js').exists()
     manifest = (_OWL2 / '__manifest__.py').read_text(encoding='utf-8')
     assert 'jspdf.umd.min.js' not in manifest
     assert 'chart.umd.min.js' not in manifest

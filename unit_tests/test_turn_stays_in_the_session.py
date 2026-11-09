@@ -1,4 +1,6 @@
 # -*- coding: utf-8 -*-
+# SPDX-License-Identifier: Apache-2.0
+# Copyright (C) 2025-2026 Patanegra Soft <https://patanegra.com>
 """A finished PDF turn must stay on screen and in the session.
 
 The job was done and the model had answered. The client then reloaded the

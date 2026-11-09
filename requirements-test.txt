@@ -1,0 +1,4 @@
+# unit_tests/ run with pytest, without Odoo, in a plain virtualenv
+pytest>=7.0,<9
+# The Odoo images already ship it (Odoo core requirements)
+openpyxl

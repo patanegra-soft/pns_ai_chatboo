@@ -824,43 +824,43 @@
         var multi = meta.series.length >= 2;
         if (engine === ENGINE_ECHARTS) {
             if (multi && meta.periodBuckets) {
-                opts.push({ v: "bar", t: "Barras agrupadas" });
+                opts.push({ v: "bar", t: _t("Grouped bars") });
                 if (meta.stackedOk) {
-                    opts.push({ v: "stack", t: "Apilado" });
+                    opts.push({ v: "stack", t: _t("Stacked") });
                 }
-                opts.push({ v: "mix", t: "Combinado" });
+                opts.push({ v: "mix", t: _t("Combined") });
             } else if (multi) {
-                opts.push({ v: "mix", t: "Combinado" });
+                opts.push({ v: "mix", t: _t("Combined") });
             }
             if (!meta.periodBuckets || !multi) {
-                opts.push({ v: "bar", t: "Barras" });
+                opts.push({ v: "bar", t: _t("Bars") });
             }
-            opts.push({ v: "line", t: "Líneas" });
+            opts.push({ v: "line", t: _t("Lines") });
             if (multi) {
-                opts.push({ v: "area", t: "Área" });
+                opts.push({ v: "area", t: _t("Area") });
             }
             if (meta.stackedOk && !(multi && meta.periodBuckets)) {
-                opts.push({ v: "stack", t: "Apilado" });
+                opts.push({ v: "stack", t: _t("Stacked") });
             }
             if (meta.horizontalOk) {
-                opts.push({ v: "bar_h", t: "Horizontal" });
+                opts.push({ v: "bar_h", t: _t("Horizontal") });
             }
             if (meta.radarOk) {
-                opts.push({ v: "radar", t: "Radar" });
+                opts.push({ v: "radar", t: _t("Radar") });
             }
             if (meta.categoricalPieOk) {
-                opts.push({ v: "donut", t: "Quesito" }, { v: "pie", t: "Tarta" });
+                opts.push({ v: "donut", t: _t("Donut") }, { v: "pie", t: _t("Pie") });
                 if (meta.labels.length >= 3) {
-                    opts.push({ v: "rose", t: "Rosa" });
+                    opts.push({ v: "rose", t: _t("Rose") });
                 }
             }
         } else {
             if (multi) {
-                opts.push({ v: "mix", t: "Combinado" });
+                opts.push({ v: "mix", t: _t("Combined") });
             }
-            opts.push({ v: "bar", t: "Barras" }, { v: "line", t: "Líneas" });
+            opts.push({ v: "bar", t: _t("Bars") }, { v: "line", t: _t("Lines") });
             if (meta.pieOk) {
-                opts.push({ v: "pie", t: "Tarta" });
+                opts.push({ v: "pie", t: _t("Pie") });
             }
         }
         return opts;
@@ -924,19 +924,19 @@
             if (isPieLikeMode(currentMode)) {
                 return {
                     show: meta.categoricalPieOk,
-                    title: "Rotar quesito / tarta / rosa",
+                    title: _t("Rotate donut / pie / rose"),
                     icon: "pie",
                 };
             }
             return {
                 show: true,
-                title: "Rotar tipo (combinado, apilado, horizontal…)",
+                title: _t("Rotate type (combined, stacked, horizontal…)"),
                 icon: "combo",
             };
         }
         return {
             show: currentMode !== "pie",
-            title: "Rotar combinación (barra/línea por serie)",
+            title: _t("Rotate combination (bar/line per series)"),
             icon: "combo",
         };
     }
@@ -2107,7 +2107,7 @@
 
         var select = document.createElement("select");
         select.className = "form-select form-select-sm o_chatboo_chart_type";
-        select.setAttribute("aria-label", "Tipo de gráfico");
+        select.setAttribute("aria-label", _t("Chart type"));
         fillTypeSelect(select, engine, meta, meta.defaultMode);
 
         var rotate = document.createElement("button");

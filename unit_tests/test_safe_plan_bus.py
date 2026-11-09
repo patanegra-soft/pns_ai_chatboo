@@ -1,4 +1,6 @@
 # -*- coding: utf-8 -*-
+# SPDX-License-Identifier: Apache-2.0
+# Copyright (C) 2025-2026 Patanegra Soft <https://patanegra.com>
 """Chatboo toast drops when the Safe Plan row is no longer pending."""
 from pathlib import Path
 

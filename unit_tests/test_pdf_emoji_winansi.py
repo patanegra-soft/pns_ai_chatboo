@@ -61,7 +61,7 @@ def test_titles_prose_and_text_pdf_use_rich_line():
 
 def test_forecast_skill_still_emits_sky_emoji():
     text = _FORECAST.read_text(encoding='utf-8')
-    assert "function _cielo" in text or "def _cielo" in text
+    assert "def _sky" in text
     assert r"\u2600\ufe0f" in text
     assert r"\u26c5" in text
     assert 'pdfPrepareCell' not in text

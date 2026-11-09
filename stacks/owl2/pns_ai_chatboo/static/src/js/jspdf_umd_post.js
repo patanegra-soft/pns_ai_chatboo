@@ -1,4 +1,6 @@
 /** @odoo-module ignore */
+/* SPDX-License-Identifier: Apache-2.0 */
+/* Copyright (C) 2025-2026 Patanegra Soft <https://patanegra.com> */
 /**
  * Restore AMD / CommonJS after the jsPDF UMD and AutoTable have attached
  * to globalThis.jspdf (see jspdf_umd_pre.js).
