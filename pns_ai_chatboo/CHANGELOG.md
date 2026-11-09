@@ -2,6 +2,10 @@
 
 What changes for people who use this module, one section per published version, newest first. The heading is the git tag.
 
+## owl1-2.1.587_owl2-2.1.587_owl3-2.1.587 (2026-11-09)
+
+- Banners (Apps store, README and site) show the seven supported series, 14.0 to 20.0; the old ones still said 14 and 19. Images only.
+
 ## owl1-2.1.586_owl2-2.1.586_owl3-2.1.586 (2026-11-09)
 
 - README only: the vendor-bills section describes what Chatboo does on Odoo Community 14.0 to 20.0 with your own provider, without comparing with other products.
