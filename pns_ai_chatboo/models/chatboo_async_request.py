@@ -56,11 +56,17 @@ class ChatbooAsyncRequest(models.Model):
     _rec_name = 'id'
 
     prompt = fields.Text(string='Prompt', required=True)
+    # The prompt is the outcome of a confirmed/cancelled write, written by the
+    # chat for the AI: it is kept in the history but never painted as the user's.
+    result_note = fields.Boolean(string='Result note')
     history = fields.Text(string='History (JSON)')
     agent_code = fields.Char(string='Agent code')
     provider_id = fields.Integer(string='Provider id')
     # Light descriptor taken on the client (model, id, view) as JSON.
     screen_context = fields.Text(string='Screen context (JSON)')
+    # Companies ticked in the web switcher when the question was sent (JSON
+    # list, active one first). Kept on the job: a reclaimed turn runs there too.
+    screen_company_ids = fields.Char(string='Screen companies (JSON)')
     # Pictures of the turn (data URLs, JSON list). The base64 goes to the vision
     # provider ONLY in this turn and is purged with the job (GC 72h); it NEVER
     # enters the history sent to the LLM (anti-overflow rule). To SHOW them,
@@ -94,7 +100,7 @@ class ChatbooAsyncRequest(models.Model):
     @api.model
     def _enqueue(self, session_id, message, history=None, agent_code=None,
                  provider_id=None, screen_context=None, images=None, files=None,
-                 image_names=None):
+                 image_names=None, screen_company_ids=None, result_note=False):
         """Create the job as pending. Does not start the thread (see ``_spawn``)."""
         sc_json = False
         if screen_context:
@@ -108,10 +114,14 @@ class ChatbooAsyncRequest(models.Model):
             'session_id': int(session_id),
             'user_id': self.env.uid,
             'prompt': message or '',
+            'result_note': bool(result_note),
             'history': json.dumps(history or [], ensure_ascii=False),
             'agent_code': agent_code or False,
             'provider_id': int(provider_id) if provider_id else False,
             'screen_context': sc_json,
+            'screen_company_ids': (
+                json.dumps(list(screen_company_ids)) if screen_company_ids else False
+            ),
             'images': json.dumps(images, ensure_ascii=False) if images else False,
             'image_names': json.dumps(image_names, ensure_ascii=False) if image_names else False,
             'files': json.dumps(files, ensure_ascii=False) if files else False,
@@ -120,6 +130,19 @@ class ChatbooAsyncRequest(models.Model):
 
     def _on_crash(self, msg):
         self._finalize('', [], {}, error=msg)
+
+    def _screen_companies(self):
+        """What the switcher ticked when the question was sent (may be empty)."""
+        from odoo.addons.pns_ai_mcp.utils.one_company import screen_ids
+        try:
+            return screen_ids(json.loads(self.screen_company_ids or '[]'))
+        except (TypeError, ValueError):
+            return []
+
+    def _turn_company_ids(self):
+        """The companies this turn reads in, after the user's own are checked."""
+        from odoo.addons.pns_ai_mcp.utils.one_company import ai_companies
+        return ai_companies(self.env, self._screen_companies()).ids
 
     # ──────────────────────────── Run ────────────────────────────
 
@@ -155,8 +178,10 @@ class ChatbooAsyncRequest(models.Model):
             prior_query_code = None
         # Level 2: previous turn's dataset ONLY if still fresh (TTL). It is
         # sent again as previous_result to reformat without querying again.
+        # Rows read in other companies are not this screen's: query again.
         try:
-            prior_query_data = self.session_id.get_fresh_query_data()
+            prior_query_data = self.session_id.get_fresh_query_data(
+                self._turn_company_ids())
         except Exception:
             prior_query_data = None
         # Sticky skill: code + params of the session's active skill. The engine
@@ -216,6 +241,11 @@ class ChatbooAsyncRequest(models.Model):
         message_for_engine, inline_file_text, pdf_pages, turn_docs = (
             self._augment_prompt_with_files(self.prompt or '')
         )
+        # A skill slash keeps its words as its arguments; the file's text
+        # would land in them. The skill reads it with documents/read_document.
+        if turn_docs and self._prompt_runs_a_skill():
+            message_for_engine = self.prompt or ''
+            inline_file_text = False
         images = images + pdf_pages
 
         # Axis slashes: one-shot compose/footmode; showmode writes the session.
@@ -359,8 +389,10 @@ class ChatbooAsyncRequest(models.Model):
 
         try:
             from odoo.addons.pns_ai_mcp.utils.agent_engine import AgentEngine
+            from odoo.addons.pns_ai_mcp.utils.one_company import SCREEN_COMPANIES
             engine_env = self.env(context=dict(
                 self.env.context or {},
+                **{SCREEN_COMPANIES: self._screen_companies()},
                 ai_session_ref=self.session_id.id,
                 presentation_show_mode=(
                     self.session_id.presentation_show_mode or False
@@ -371,6 +403,7 @@ class ChatbooAsyncRequest(models.Model):
                     or False
                 ),
                 user_message=self.prompt or '',
+                turn_file_names=self._turn_file_names(),
                 inline_file_text=inline_file_text,
                 llm_remote_formatting_override=formatting_override,
                 turn_compose=turn_compose,
@@ -772,7 +805,7 @@ class ChatbooAsyncRequest(models.Model):
             try:
                 att = Attachment.create({
                     'name': att_name,
-                    'datas': b64,
+                    'raw': base64.b64decode(b64),
                     'mimetype': mimetype or 'image/png',
                     'res_model': 'chatboo.session',
                     'res_id': self.session_id.id,
@@ -835,7 +868,7 @@ class ChatbooAsyncRequest(models.Model):
                 if key in seen:
                     continue
                 seen.add(key)
-                raw = base64.b64decode(att.datas or b'')
+                raw = bytes(att.raw or b'')
                 if not raw:
                     continue
                 data_url = self._downscale_image_to_data_url(raw, att.mimetype)
@@ -999,6 +1032,17 @@ class ChatbooAsyncRequest(models.Model):
         return '\n\n'.join(
             '%s\n%s' % (turn_documents.PAGE_MARK % (index + 1), text)
             for index, text in enumerate(pages)
+        )
+
+    def _turn_file_names(self):
+        """Names of the files attached to this turn (not the pictures)."""
+        try:
+            files = json.loads(self.files) if self.files else []
+        except Exception:
+            files = []
+        return tuple(
+            f['name'] for f in files
+            if isinstance(f, dict) and isinstance(f.get('name'), str) and f['name']
         )
 
     def _augment_prompt_with_files(self, base_message):
@@ -1185,6 +1229,8 @@ class ChatbooAsyncRequest(models.Model):
             'content': self.prompt or '',
             'timestamp': wall,
         }
+        if self.result_note:
+            _user_msg['result_note'] = True
         _user_images = []
         _user_files = []
         if not reclaim:
@@ -1407,6 +1453,7 @@ class ChatbooAsyncRequest(models.Model):
                 session.write({
                     'last_query_data': json.dumps(query_data, default=str, ensure_ascii=False),
                     'last_query_data_date': fields.Datetime.now(),
+                    'last_query_company_ids': json.dumps(self._turn_company_ids()),
                 })
             except Exception:
                 _logger.debug(

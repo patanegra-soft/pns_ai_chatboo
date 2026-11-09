@@ -1,4 +1,6 @@
 /** @odoo-module ignore */
+/* SPDX-License-Identifier: Apache-2.0 */
+/* Copyright (C) 2025-2026 Patanegra Soft <https://patanegra.com> */
 /**
  * Force the jsPDF UMD onto globalThis. The Odoo 19 loader exposes AMD
  * (and sometimes CommonJS), so the vendor file never sets window.jspdf.

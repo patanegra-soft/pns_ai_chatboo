@@ -226,6 +226,7 @@ class ChatbooApp extends Component {
         this.tipHistory = _t("History");
         this.tipThinking = _t("Thinking…");
         this.tipConnecting = _t("Connecting…");
+        this.tipSource = _t("Source:");
         this.tipDownloadPdf = _t("Download as PDF");
         this.tipDownloadExcel = _t("Download as Excel");
         this.tipDownloadWord = _t("Download as Word");
@@ -438,6 +439,7 @@ class ChatbooApp extends Component {
                 this.props.onAppReady(this);
             }
             this._setupRefLinkHandler();
+            this._setupFormCardHandler();
             this._setupTtsClickAnchoring();
             this._applyCardWidthRatio(this._cardWidthRatio);
             this._drainPaintQueue();
@@ -806,7 +808,7 @@ class ChatbooApp extends Component {
     _focusInput() {
         // Focus after the OWL repaint (closing the history modal or loading a
         // session): otherwise focus would go to body.
-        this._afterPaint(() => {
+        const focus = () => {
             const overlay = document.getElementById("o_chatboo_persistent_overlay");
             if (overlay && (
                 overlay.style.display === "none"
@@ -818,12 +820,18 @@ class ChatbooApp extends Component {
             if (!el) {
                 return;
             }
+            if (el.disabled) {
+                // `thinking` not patched away yet: the browser ignores focus().
+                this._paintQueue.push(focus);
+                return;
+            }
             try {
                 el.focus({ preventScroll: true });
             } catch (_) {
                 el.focus();
             }
-        });
+        };
+        this._afterPaint(focus);
     }
 
     async _initSessions() {
@@ -1131,6 +1139,9 @@ class ChatbooApp extends Component {
             }
             if (m.offtopic) {
                 out.offtopic = true;
+            }
+            if (m.result_note) {
+                out.result_note = true;
             }
             if (m.local_ack) {
                 out.local_ack = true;
@@ -1464,9 +1475,8 @@ class ChatbooApp extends Component {
             files: files.length ? files : null,
         });
 
-        if (this.inputRef.el) {
-            this.inputRef.el.focus();
-        }
+        // The prompt is still disabled until Owl repaints without `thinking`.
+        this._focusInput();
     }
 
     // Cancels the running turn (button in the "Thinking…" bubble).
@@ -1580,6 +1590,7 @@ class ChatbooApp extends Component {
                     images: opts.images,
                     imageNames: opts.image_names,
                     files: opts.files,
+                    resultNote: !!opts.resultNote,
                 });
                 const resp = await fetch(ChatbooTurn.streamUrl(odoo.csrf_token), {
                     method: "POST",
@@ -1792,12 +1803,13 @@ class ChatbooApp extends Component {
         if (needsLlm) {
             const note = (res && res.followup_message)
                 || this._buildVerificationResultNote(evt, res, action);
-            this._runAssistantTurn(note);
+            this._runAssistantTurn(note, { resultNote: true });
         } else if (!ack && action !== "cancel") {
             // Legacy fallback: no server hints, ask the LLM (better than silence).
             this._runAssistantTurn(
                 (res && res.followup_message)
-                || this._buildVerificationResultNote(evt, res || { success: false }, action)
+                || this._buildVerificationResultNote(evt, res || { success: false }, action),
+                { resultNote: true }
             );
         }
     }
@@ -1823,8 +1835,14 @@ class ChatbooApp extends Component {
 
     _restorePendingVerifications() {
         // Same SoT as Security → Authorizations: live pending rows, not SSE memory.
+        // One at a time: two answers in flight would each sign the same card.
+        if (this._restoringCards) {
+            return this._restoringCards;
+        }
         const self = this;
-        return this._callJsonRoute("/pns_ai_mcp/verification/pending", {})
+        this._restoringCards = this._callJsonRoute("/pns_ai_mcp/verification/pending", {
+            held: this._heldCardIds(),
+        })
             .then(function (res) {
                 const items = (res && res.items) || [];
                 for (let i = 0; i < items.length; i++) {
@@ -1836,7 +1854,23 @@ class ChatbooApp extends Component {
             })
             .catch(function () {
                 return undefined;
+            })
+            .then(function () {
+                self._restoringCards = null;
             });
+        return this._restoringCards;
+    }
+
+    _heldCardIds(except) {
+        // Cards this screen paints with their token: the server leaves it alone.
+        const ids = [];
+        document.querySelectorAll('[id^="pns_verif_"]').forEach(function (el) {
+            const id = el.id.slice("pns_verif_".length);
+            if (id && id !== except && el.dataset.confirmToken) {
+                ids.push(id);
+            }
+        });
+        return ids;
     }
 
     _showChoiceList(evt) {
@@ -1876,6 +1910,56 @@ class ChatbooApp extends Component {
             return;
         }
         this._dropSafePlanCard(payload.verification_id, payload.status);
+    }
+
+    _retryRefusedCard(evt, card, res, status, enable, again) {
+        // The card was refused, not the operation: nothing ran, so the AI is
+        // not told (it would propose the write again). The person already
+        // pressed Confirm: the card takes a fresh token and confirms once more.
+        const err = res && res.error;
+        if (err !== "too_soon" && err !== "bad_token" && err !== "missing_token") {
+            return false;
+        }
+        const giveUp = function () {
+            status.style.color = "#c62828";
+            status.textContent = _t("Could not confirm the operation. Press Confirm again.");
+            enable();
+        };
+        if (!again) {
+            giveUp();
+            return true;
+        }
+        // A fresh token restarts the wait the server asks of a high-risk card.
+        const wait = evt.danger_level === "high" ? 5500 : 0;
+        status.style.color = "#555";
+        status.textContent = _t("Confirming…");
+        if (err === "too_soon") {
+            setTimeout(again, wait || 1000);
+            return true;
+        }
+        const self = this;
+        this._callJsonRoute("/pns_ai_mcp/verification/pending", {
+            held: this._heldCardIds(evt.verification_id),
+        })
+            .then(function (fresh) {
+                const items = (fresh && fresh.items) || [];
+                items.forEach(function (item) {
+                    if (item && item.verification_id) {
+                        self._showVerificationUI(item);
+                    }
+                });
+                const still = items.some(function (item) {
+                    return item && item.verification_id === evt.verification_id;
+                });
+                if (!still) {
+                    status.textContent = _t("This operation is no longer pending.");
+                    setTimeout(function () { card.remove(); }, 2500);
+                    return;
+                }
+                setTimeout(again, wait);
+            })
+            .catch(giveUp);
+        return true;
     }
 
     _showVerificationUI(evt) {
@@ -1953,8 +2037,12 @@ class ChatbooApp extends Component {
             confirmBtn.disabled = true; cancelBtn.disabled = true;
             confirmBtn.style.opacity = ".6"; cancelBtn.style.opacity = ".6";
         };
+        const enable = function () {
+            confirmBtn.disabled = false; cancelBtn.disabled = false;
+            confirmBtn.style.opacity = "1"; cancelBtn.style.opacity = "1";
+        };
 
-        confirmBtn.addEventListener("click", function () {
+        const sendConfirm = function (retried) {
             disable();
             status.style.color = "#555";
             status.textContent = _t("Confirming…");
@@ -1964,6 +2052,11 @@ class ChatbooApp extends Component {
             })
                 .then(function (res) {
                     const ok = res && res.success !== false;
+                    if (!ok && self._retryRefusedCard(
+                        evt, card, res, status, enable,
+                        retried ? null : function () { sendConfirm(true); })) {
+                        return;
+                    }
                     if (!ok) {
                         status.style.color = "#c62828";
                         status.textContent = _t("Error: ") + ((res && res.error) || "");
@@ -2007,7 +2100,8 @@ class ChatbooApp extends Component {
                     self._finishVerificationOutcome(
                         evt, { success: false, error: String(e) }, "confirm");
                 });
-        });
+        };
+        confirmBtn.addEventListener("click", function () { sendConfirm(false); });
 
         cancelBtn.addEventListener("click", function () {
             disable();
@@ -2073,6 +2167,7 @@ class ChatbooApp extends Component {
             htmlSrc,
             raw,
             offtopic: !!(m.offtopic || (localAck && !verifyAck)),
+            result_note: !!m.result_note,
             // Saved images of the turn: ir.attachment URLs (/web/image
             // with token) written by the worker. The DB already has them, so they
             // show directly and survive reloads and session switches.
@@ -2192,11 +2287,6 @@ class ChatbooApp extends Component {
      */
     _formatContent(text) {
         return markup(sharedFormatContent(text || "") || "");
-    }
-
-    /** @see chatboo_formatters.formatMarkdown */
-    _formatMarkdown(src) {
-        return markup(sharedFormatMarkdown(src || "") || "");
     }
 
     _now() {
@@ -2728,6 +2818,57 @@ class ChatbooApp extends Component {
             window.open(href, "_blank", "noopener");
         };
         el.addEventListener("click", this._refLinkHandler, true);
+    }
+
+    // A ``kind=form`` card: the form opens in a dialog with the proposed
+    // values. Closing it discards; only the person's Save writes.
+    _setupFormCardHandler() {
+        const el = this.messagesRef.el;
+        if (!el || this._formCardHandler) {
+            return;
+        }
+        this._formCardHandler = (ev) => {
+            ev.stopPropagation();
+            this._openFormCard(ev.detail || {});
+        };
+        el.addEventListener("chatboo-open-form", this._formCardHandler);
+    }
+
+    async _openFormCard(card) {
+        let res = null;
+        try {
+            res = await this._callJsonRoute("/chatboo/open-form", card);
+        } catch (e) {
+            res = null;
+        }
+        if (!res || res.status !== "ok" || !res.action) {
+            this.notification.add(
+                (res && res.message) || _t("Could not open the form."),
+                { type: "danger" }
+            );
+            return;
+        }
+        if (res.dropped && res.dropped.length) {
+            this.notification.add(
+                _t("Left empty: %s").replace("%s", res.dropped.join(", ")),
+                { type: "warning" }
+            );
+        }
+        const overlay = document.getElementById("o_chatboo_persistent_overlay");
+        const prevZ = overlay ? overlay.style.zIndex : "";
+        if (overlay) {
+            overlay.style.zIndex = "1000";
+        }
+        const restore = () => this._restoreChatbooOverlayZ(overlay, prevZ);
+        try {
+            await this.action.doAction(res.action, {
+                additionalContext: res.context || {},
+                onClose: restore,
+            });
+        } catch (e) {
+            restore();
+            throw e;
+        }
     }
 
     // A chat image opens full screen with zoom (pns_base); a PDF

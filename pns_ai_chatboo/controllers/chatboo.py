@@ -26,6 +26,7 @@ from ..utils.chatboo_product_icp import (
     upload_violation,
 )
 from ..utils.compat import JSON_ROUTE_TYPE
+from ..utils.form_draft import form_action
 from ..utils.fx_rates import get_usd_fx
 
 _logger = logging.getLogger(__name__)
@@ -52,11 +53,8 @@ class ChatbooController(http.Controller):
     def _chatboo_skill_ctx(self, session_id=None):
         if not session_id:
             return {}
-        try:
-            session = request.env['chatboo.session'].browse(int(session_id))
-        except (TypeError, ValueError):
-            return {}
-        if not session.exists() or session.user_id.id != request.env.uid:
+        session = self._own_session(session_id)
+        if not session:
             return {}
         return {'ai_session_ref': session.id}
 
@@ -78,6 +76,19 @@ class ChatbooController(http.Controller):
         except Exception:
             return False
 
+    def _screen_company_ids(self):
+        """Companies ticked in the web switcher, active one first.
+
+        The ``cids`` cookie: ``1,2`` up to Odoo 17, ``1-2`` from 18. The
+        engine keeps only the user's own companies.
+        """
+        try:
+            raw = request.httprequest.cookies.get('cids') or ''
+        except Exception:
+            return []
+        from odoo.addons.pns_ai_mcp.utils.one_company import screen_ids
+        return screen_ids(raw.replace('-', ',').split(','))
+
     def _with_user_prefs(self, payload):
         data = dict(payload or {})
         data['card_width_ratio'] = self._user_card_width_ratio()
@@ -85,14 +96,16 @@ class ChatbooController(http.Controller):
         data['canvas_available'] = self._canvas_available()
         return data
 
+    # Searched, not browsed: reading the owner of someone else's session
+    # trips the record rule, and the route would fail instead of not finding it.
     def _own_session(self, session_id):
         try:
-            session = request.env['chatboo.session'].browse(int(session_id))
+            session_id = int(session_id)
         except (TypeError, ValueError):
             return request.env['chatboo.session'].browse()
-        if not session.exists() or session.user_id.id != request.env.uid:
-            return request.env['chatboo.session'].browse()
-        return session
+        return request.env['chatboo.session'].search([
+            ('id', '=', session_id), ('user_id', '=', request.env.uid),
+        ], limit=1)
 
     # ──────────────────────────── Health / provider ────────────────────────────
 
@@ -299,11 +312,9 @@ class ChatbooController(http.Controller):
         if not self._user_may_use_chatboo():
             return self._chatboo_access_denied()
         try:
-            session = request.env['chatboo.session'].browse(int(session_id))
-            if not session.exists():
+            session = self._own_session(session_id)
+            if not session:
                 return {'status': 'error', 'message': 'Session not found'}
-            if session.user_id.id != request.env.user.id:
-                return {'status': 'error', 'message': 'Access denied'}
             session.update_last_used()
             return {
                 'status': 'ok',
@@ -328,11 +339,9 @@ class ChatbooController(http.Controller):
         if kind not in ('doc', 'pdf', 'html'):
             return {'status': 'error', 'message': 'Unsupported kind'}
         try:
-            session = request.env['chatboo.session'].browse(int(session_id))
-            if not session.exists():
+            session = self._own_session(session_id)
+            if not session:
                 return {'status': 'error', 'message': 'Session not found'}
-            if session.user_id.id != request.env.user.id:
-                return {'status': 'error', 'message': 'Access denied'}
             chip = session._fulfill_client_export(
                 filename, mimetype, datas, kind=kind,
             )
@@ -426,11 +435,9 @@ class ChatbooController(http.Controller):
             return self._chatboo_access_denied()
         import re
         try:
-            session = request.env['chatboo.session'].browse(int(session_id))
-            if not session.exists():
+            session = self._own_session(session_id)
+            if not session:
                 return {'status': 'error', 'message': 'Session not found'}
-            if session.user_id.id != request.env.user.id:
-                return {'status': 'error', 'message': 'Access denied'}
             # A turn finishing on this row must not hold the HTTP worker for good.
             request.env.cr.execute("SET LOCAL lock_timeout = '10s'")
 
@@ -464,11 +471,9 @@ class ChatbooController(http.Controller):
         try:
             if not new_name or not new_name.strip():
                 return {'status': 'error', 'message': _('Name cannot be empty')}
-            session = request.env['chatboo.session'].browse(int(session_id))
-            if not session.exists():
+            session = self._own_session(session_id)
+            if not session:
                 return {'status': 'error', 'message': 'Session not found'}
-            if session.user_id.id != request.env.user.id:
-                return {'status': 'error', 'message': 'Access denied'}
             session.name = new_name.strip()
             return {'status': 'ok', 'new_name': session.name}
         except Exception as e:
@@ -480,11 +485,9 @@ class ChatbooController(http.Controller):
         if not self._user_may_use_chatboo():
             return self._chatboo_access_denied()
         try:
-            session = request.env['chatboo.session'].browse(int(session_id))
-            if not session.exists():
+            session = self._own_session(session_id)
+            if not session:
                 return {'status': 'error', 'message': 'Session not found'}
-            if session.user_id.id != request.env.user.id:
-                return {'status': 'error', 'message': 'Access denied'}
             session.unlink()
             return {'status': 'ok'}
         except Exception as e:
@@ -498,12 +501,17 @@ class ChatbooController(http.Controller):
         try:
             if not session_ids or not isinstance(session_ids, list):
                 return {'status': 'error', 'message': _('A list of session IDs is required.')}
-            sessions = request.env['chatboo.session'].browse(session_ids)
-            if not sessions.exists():
+            try:
+                wanted = {int(sid) for sid in session_ids}
+            except (TypeError, ValueError):
+                return {'status': 'error', 'message': _('A list of session IDs is required.')}
+            sessions = request.env['chatboo.session'].search([
+                ('id', 'in', list(wanted)), ('user_id', '=', request.env.uid),
+            ])
+            if not sessions:
                 return {'status': 'error', 'message': _('The requested sessions were not found.')}
-            for session in sessions:
-                if session.user_id.id != request.env.user.id:
-                    return {'status': 'error', 'message': _('Access denied to one or more sessions.')}
+            if len(sessions) != len(wanted):
+                return {'status': 'error', 'message': _('Access denied to one or more sessions.')}
             count = len(sessions)
             sessions.unlink()
             return {'status': 'ok', 'deleted_count': count}
@@ -593,9 +601,9 @@ class ChatbooController(http.Controller):
             Async = request.env['chatboo.async.request']
             job = False
             if request_id:
-                job = Async.browse(int(request_id))
-                if not job.exists() or job.user_id.id != request.env.uid:
-                    job = False
+                job = Async.search([
+                    ('id', '=', int(request_id)), ('user_id', '=', request.env.uid),
+                ], limit=1)
             if not job and session_id:
                 job = Async.search([
                     ('user_id', '=', request.env.uid),
@@ -645,11 +653,9 @@ class ChatbooController(http.Controller):
         try:
             if not session_id:
                 return {'status': 'error', 'message': _('session_id is required.')}
-            session = request.env['chatboo.session'].browse(int(session_id))
-            if not session.exists():
+            session = self._own_session(session_id)
+            if not session:
                 return {'status': 'error', 'message': _('Session not found.')}
-            if session.user_id.id != request.env.uid:
-                return {'status': 'error', 'message': _('Access denied.')}
             action, warning = session.prepare_skill_capture_action(
                 skill_code_hint=(skill_code or '').strip() or None,
                 turn_id=(turn_id or '').strip() or None,
@@ -707,11 +713,9 @@ class ChatbooController(http.Controller):
         try:
             if not session_id:
                 return {'status': 'error', 'message': _('session_id is required.')}
-            session = request.env['chatboo.session'].browse(int(session_id))
-            if not session.exists():
+            session = self._own_session(session_id)
+            if not session:
                 return {'status': 'error', 'message': _('Session not found.')}
-            if session.user_id.id != request.env.uid:
-                return {'status': 'error', 'message': _('Access denied.')}
             action, picks = session.prepare_skill_edit_action(
                 (token or '').strip() or None,
                 param_prose=(param_prose or '').strip() or None,
@@ -724,6 +728,23 @@ class ChatbooController(http.Controller):
         except Exception as e:
             _logger.exception("Chatboo edit_skill: %s", e)
             return {'status': 'error', 'message': str(e)}
+
+    @http.route('/chatboo/open-form', type=JSON_ROUTE_TYPE, auth='user')
+    def open_form(self, action=None, model=None, res_id=None, values=None):
+        """The form a skill's card proposes. Nothing is saved until the person does."""
+        if not self._user_may_use_chatboo():
+            return self._chatboo_access_denied()
+        try:
+            act, context, dropped = form_action(
+                request.env, action=action, model=model, res_id=res_id,
+                values=values if isinstance(values, dict) else None,
+            )
+            return {'status': 'ok', 'action': act, 'context': context, 'dropped': dropped}
+        except UserError as e:
+            return {'status': 'error', 'message': str(e)}
+        except Exception as e:
+            _logger.exception("Chatboo open_form: %s", e)
+            return {'status': 'error', 'message': self._chatboo_failed()}
 
     # ──────────────────────────── Providers ─────────────────────────────────
 
@@ -815,11 +836,7 @@ class ChatbooController(http.Controller):
             # Make sure there is a session: the worker saves the turn in it, and
             # it is what the client reloads after an F5 (catch-up).
             Session = request.env['chatboo.session']
-            session = False
-            if session_id:
-                session = Session.browse(int(session_id))
-                if not session.exists() or session.user_id.id != request.env.uid:
-                    session = False
+            session = self._own_session(session_id) if session_id else False
             if not session:
                 session = Session.create({'user_id': request.env.uid})
             session_id = session.id
@@ -894,6 +911,8 @@ class ChatbooController(http.Controller):
                 agent_code=resolved_code, provider_id=provider_id,
                 screen_context=screen_context, images=images, files=files,
                 image_names=image_names,
+                screen_company_ids=self._screen_company_ids(),
+                result_note=bool(data.get('result_note')),
             )
             request.env.cr.commit()  # make the job visible to the worker cursor
             job._spawn()
@@ -999,7 +1018,6 @@ class ChatbooController(http.Controller):
     def _sse_headers(self):
         return [
             ('Cache-Control', 'no-cache'),
-            ('Connection', 'keep-alive'),
             ('X-Accel-Buffering', 'no'),
         ]
 
@@ -1137,8 +1155,8 @@ class ChatbooController(http.Controller):
     def chatboo_canvas(self, session_id, **kwargs):
         if not user_has_chatboo_access(request.env):
             return request.not_found()
-        session = request.env['chatboo.session'].browse(session_id)
-        if not session.exists() or session.user_id.id != request.env.uid:
+        session = self._own_session(session_id)
+        if not session:
             return request.not_found()
         from odoo.addons.pns_ai_chatboo.models.chatboo_canvas import canvas_page
         page = canvas_page(
@@ -1194,8 +1212,8 @@ class ChatbooController(http.Controller):
         """A fixed copy of this canvas for the people picked in the panel."""
         if not user_has_chatboo_access(request.env):
             return request.not_found()
-        session = request.env['chatboo.session'].browse(session_id)
-        if not session.exists() or session.user_id.id != request.env.uid:
+        session = self._own_session(session_id)
+        if not session:
             return request.not_found()
         if not (session.canvas_design or '').strip():
             return request.not_found()
@@ -1266,7 +1284,7 @@ class ChatbooController(http.Controller):
         shared = self._readable_page(page_id)
         if not shared or not (shared.design or '').strip():
             return request.not_found()
-        from odoo.http import content_disposition
+        from odoo.addons.pns_base.utils.compat import content_disposition
         from odoo.addons.pns_ai_chatboo.models.chatboo_canvas import (
             download_filename, downloadable_page,
         )
@@ -1289,12 +1307,12 @@ class ChatbooController(http.Controller):
         """The page as a file that opens anywhere, without Odoo."""
         if not user_has_chatboo_access(request.env):
             return request.not_found()
-        session = request.env['chatboo.session'].browse(session_id)
-        if not session.exists() or session.user_id.id != request.env.uid:
+        session = self._own_session(session_id)
+        if not session:
             return request.not_found()
         if not (session.canvas_design or '').strip():
             return request.not_found()
-        from odoo.http import content_disposition
+        from odoo.addons.pns_base.utils.compat import content_disposition
         from odoo.addons.pns_ai_chatboo.models.chatboo_canvas import (
             download_filename, downloadable_page,
         )

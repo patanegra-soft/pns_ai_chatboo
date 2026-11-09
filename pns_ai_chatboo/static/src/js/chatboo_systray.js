@@ -174,7 +174,7 @@ class ChatbooSystrayItem extends Component {
 
     async _refreshAuthCue({ notify = false, fallbackUnread = false, forceHidden = false } = {}) {
         try {
-            const res = await rpc("/pns_ai_mcp/verification/pending", {});
+            const res = await rpc("/pns_ai_mcp/verification/pending", { peek: true });
             const items = (res && res.items) || [];
             if (!forceHidden && !this._isOverlayHidden()) {
                 return false;
