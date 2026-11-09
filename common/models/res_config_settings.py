@@ -58,7 +58,8 @@ class ResConfigSettings(models.TransientModel):
     chatboo_upload_max_mb = fields.Integer(
         string='Upload limit (MB)',
         help="Max size of each picture or file sent to the chat. "
-             "Bigger ones are refused before the turn starts. 0 = no limit.",
+             "Bigger ones are refused before the turn starts. 0 = no per-file "
+             "limit; one message still carries at most 50 MB in all.",
         default=15,
     )
 

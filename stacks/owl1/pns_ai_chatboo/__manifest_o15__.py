@@ -7,7 +7,7 @@
 # template to inherit. The rest matches __manifest__.py.
 {
     'name': 'Chatboo — AI Chat Assistant',
-    'version': '2.1.587',
+    'version': '2.1.588',
     'category': 'Productivity',
     'summary': 'Open-source AI chatbot for Odoo Community 14 to 20: ask about your records in plain words with OpenAI, Claude or Ollama, and get tables, charts, PDF or Excel. Each user sees only what they may see.',
     'description': """

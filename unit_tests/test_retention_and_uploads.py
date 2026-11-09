@@ -54,14 +54,19 @@ def test_upload_limit_names_the_first_oversized_upload():
     assert icp.oversized_upload(env, None, files) == 'big.xlsx'
 
 
-def test_upload_limit_zero_falls_back_to_the_default():
+def test_upload_limit_zero_lifts_the_per_file_limit():
+    """0 in Settings means no per-file limit: only the per-message cap is left.
+    Absent or invalid means the default."""
     icp = _icp_module()
     env = _env({icp.ICP_UPLOAD_MAX_BYTES: '0'})
-    assert icp.upload_max_bytes(env) == icp.DEFAULT_UPLOAD_MAX_BYTES
-    big = 'data:image/png;base64,' + base64.b64encode(
+    assert icp.upload_setting_bytes(env) == 0
+    assert icp.upload_max_bytes(env) == icp.MAX_UPLOAD_TOTAL_BYTES
+    assert icp.read_product_settings(env)['upload_max_mb'] == 0
+    over_default = 'data:image/png;base64,' + base64.b64encode(
         b'x' * (icp.DEFAULT_UPLOAD_MAX_BYTES + 1)).decode()
-    assert icp.oversized_upload(env, [big], []) == ''
+    assert icp.oversized_upload(env, [over_default], []) is None
     assert icp.upload_max_bytes(_env({})) == icp.DEFAULT_UPLOAD_MAX_BYTES
+    assert icp.upload_max_bytes(_env({icp.ICP_UPLOAD_MAX_BYTES: 'x'})) == icp.DEFAULT_UPLOAD_MAX_BYTES
 
 
 def test_upload_violation_count_and_total():
