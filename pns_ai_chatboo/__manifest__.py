@@ -4,7 +4,7 @@
 # Odoo reads this file with ast.literal_eval — no module docstring before `{`.
 {
     'name': 'Chatboo — AI Chat Assistant',
-    'version': '17.0.2.1.585',
+    'version': '17.0.2.1.586',
     'images': ['static/description/banner_store.png'],
     'category': 'Productivity',
     'summary': 'Open-source AI chatbot for Odoo Community 14 to 20: ask about your records in plain words with OpenAI, Claude or Ollama, and get tables, charts, PDF or Excel. Each user sees only what they may see.',
