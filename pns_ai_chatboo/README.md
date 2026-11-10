@@ -85,7 +85,7 @@ A skill is a procedure written once, in code. Type `/` in the chat and pick one,
 - **It asks for what is missing.** The skill asks in the chat; `/top-sales` asks one question at a time. If your next message is about something else, the skill lets go and the chat carries on.
 - **It only reads.** Skill code runs in a read-only box, with the rights of the person who asks, in the active company. A skill that proposes a record opens its form; only Save writes.
 - **Each one its own screen.** A chart, cards you can move around the chat, or a full page.
-- **Yours too.** A good answer can be saved as a new skill from the chat. The ones in the module are a starting point; each client's own are written by their consultant.
+- **Yours too.** A good answer can be saved as a new skill from the chat. The ones in the module are examples to build your own from; each client's own are written by their consultant.
 
 #### /bill-draft — the vendor bill form, for a vendor you already have
 
@@ -327,7 +327,7 @@ Un skill es un procedimiento escrito una vez, en código. Escribe `/` en el chat
 - **Pregunta lo que le falta.** El skill lo pide en el chat; `/top-sales` pregunta de una en una. Si tu siguiente mensaje va de otra cosa, el skill se suelta y el chat sigue.
 - **Solo lee.** El código del skill corre en una caja de solo lectura, con los permisos de quien pregunta y en la empresa activa. Un skill que propone un registro abre su formulario; solo Guardar escribe.
 - **Cada uno con su pantalla.** Un gráfico, tarjetas que se mueven por el chat o una página entera.
-- **También los tuyos.** Una buena respuesta se guarda como skill nuevo desde el propio chat. Los que trae el módulo son un punto de partida; los de cada cliente los escribe su consultor.
+- **También los tuyos.** Una buena respuesta se guarda como skill nuevo desde el propio chat. Los que trae el módulo son ejemplos para construir los tuyos; los de cada cliente los escribe su consultor.
 
 #### /bill-draft — el formulario de factura, para un proveedor que ya tienes
 
