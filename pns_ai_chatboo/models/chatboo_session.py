@@ -848,9 +848,13 @@ class ChatbooSession(models.Model):
         def documents():
             return sessions._documents()
 
+        def read_attachment(attachment_id, page=None, find=None):
+            return sessions._read_attachment(attachment_id, page=page, find=find)
+
         return {
             'documents': documents,
             'read_document': read_document,
+            'read_attachment': read_attachment,
             'page_url': _wrap('page_url'),
             'page_edit': _wrap('page_edit'),
             'page_html': _wrap('page_html'),
@@ -1298,12 +1302,21 @@ class ChatbooSession(models.Model):
         return bool(job_id) and self.env['chatboo.canvas.job'].browse(job_id)._is_cancel_requested()
 
     @api.model
-    def _documents_of_this_turn(self):
+    def _session_of_this_turn(self):
+        """The session this turn runs in, only for its owner. Empty otherwise.
+
+        Helpers are published with ``sudo()``, which keeps the real uid, so
+        the owner check applies.
+        """
         session_id = self.env.context.get('ai_session_ref')
         session = self.sudo().browse(int(session_id)).exists() if session_id else None
         if not session or session.user_id.id != self.env.uid:
-            return []
-        return session.get_documents()
+            return self.browse()
+        return session
+
+    def _documents_of_this_turn(self):
+        session = self._session_of_this_turn()
+        return session.get_documents() if session else []
 
     def _read_document(self, name, page=None, find=None):
         return turn_documents.read(
@@ -1312,6 +1325,113 @@ class ChatbooSession(models.Model):
 
     def _documents(self):
         return turn_documents.listing(self._documents_of_this_turn())
+
+    # ── Attachments of an Odoo record ───────────────────────────────
+    # The clip already reads a file (printed text, or a scan transcribed by
+    # this agent's vision). An attachment of a task, an invoice or any
+    # record is the same file in another place: same reading, read as the
+    # asking user, kept on the session like a dropped file.
+
+    def _read_attachment(self, attachment_id, page=None, find=None):
+        """The text of an ``ir.attachment``, read once and kept on the session.
+
+        Odoo's own attachment check runs as the asking user (no ``sudo``):
+        who cannot open the record cannot read its files here either. A
+        sentence, never an exception, says why there is no text.
+        """
+        session = self._session_of_this_turn()
+        if not session:
+            return 'This turn carries no conversation to keep the document in.'
+        try:
+            att_id = int(attachment_id)
+        except (TypeError, ValueError):
+            return 'read_attachment wants the id of an ir.attachment.'
+        Attachment = self.env['ir.attachment'].with_user(self.env.uid)
+        att = Attachment.browse(att_id).exists()
+        if not att:
+            return 'There is no attachment %d.' % att_id
+        try:
+            self._check_attachment_read(att)
+            name = att.name or ('attachment-%d' % att_id)
+            checksum = att.checksum or ''
+            documents = session.get_documents()
+            kept = self._kept_attachment(documents, checksum)
+            if kept is None:
+                raw = bytes(att.raw or b'')
+                pages = self._attachment_pages(att, raw)
+                if not pages:
+                    return (
+                        '%s has no text that could be read (not a document, '
+                        'or a scan this agent could not transcribe).' % name
+                    )
+                kept = {'name': name, 'pages': pages}
+                if checksum:
+                    kept['checksum'] = checksum
+                documents = session._store_documents([kept])
+            return turn_documents.read(documents, kept['name'], page=page, find=find)
+        except AccessError:
+            return 'You cannot read attachment %d.' % att_id
+        except Exception as exc:
+            _logger.warning('Chatboo read_attachment %s failed', att_id, exc_info=True)
+            return 'Attachment %d could not be read: %s.' % (att_id, type(exc).__name__)
+
+    @staticmethod
+    def _check_attachment_read(att):
+        """Odoo's attachment access check, by the name each version gives it."""
+        for name in ('check', '_check'):
+            checker = getattr(att, name, None)
+            if callable(checker):
+                checker('read')
+                return
+        raise AccessError(_('The attachment access check is not available.'))
+
+    @staticmethod
+    def _kept_attachment(documents, checksum):
+        """The document already kept for this very file (same checksum), else None."""
+        for doc in documents:
+            if checksum and doc.get('checksum') == checksum:
+                return doc
+        return None
+
+    def _attachment_pages(self, att, raw):
+        from ..utils import document_reading
+        from ..utils.chatboo_product_icp import CHATBOO_AGENT_CODE
+        return document_reading.file_pages(
+            self.env, att.name or '', att.mimetype or '', raw,
+            agent_code=(self.env.context or {}).get('mcp_agent_code') or CHATBOO_AGENT_CODE,
+            tag='Chatboo read_attachment %s' % att.id,
+        )
+
+    def _store_documents(self, documents):
+        """Keep documents from inside a relaxaicode read. Returns what is kept.
+
+        That read runs on a READ ONLY cursor that is rolled back when the
+        tool returns, so the write goes on its own cursor and commits, the
+        same way the page design does (``_store_design``).
+        """
+        self.ensure_one()
+        from odoo import SUPERUSER_ID
+
+        new_cr = self.env.registry.cursor()
+        try:
+            env_w = api.Environment(new_cr, SUPERUSER_ID, {})
+            session = env_w['chatboo.session'].browse(self.id)
+            session.remember_documents(documents)
+            kept = session.get_documents()
+            new_cr.commit()
+            return kept
+        except Exception:
+            try:
+                new_cr.rollback()
+            except Exception:
+                pass
+            _logger.warning('Chatboo: could not keep the document', exc_info=True)
+            return turn_documents.merge(self.get_documents(), documents)
+        finally:
+            try:
+                new_cr.close()
+            except Exception:
+                pass
 
     # ── Records marked in the answer ────────────────────────────────
     # Ticking a row names a record without spelling it. The engine only
