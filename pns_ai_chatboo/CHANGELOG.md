@@ -2,6 +2,14 @@
 
 What changes for people who use this module, one section per published version, newest first. The heading is the git tag.
 
+## owl1-2.1.590_owl2-2.1.590_owl3-2.1.590 (2026-11-10)
+
+- More ways to ask for a page. Besides "page", "canvas" or "in a tab", a page now opens when you ask for a professional, executive or visual report, a panel or control panel, a presentation, an infographic or a visual summary (English and Spanish). The word "dashboard" is left to the skills that already answer to it.
+
+## owl1-2.1.589_owl2-2.1.589_owl3-2.1.589 (2026-11-09)
+
+- Chatboo reads the files attached to a record (a task, a bill, a contact), not only the ones dropped in the chat. Same reading: printed text page by page, and a scan or a photo transcribed once by the Vision provider. It reads as you: a file of a record you cannot open stays closed. The text is kept on the conversation, so a later question does not transcribe it again.
+
 ## owl1-2.1.588_owl2-2.1.588_owl3-2.1.588 (2026-11-09)
 
 - The upload limit in Settings now rules in the browser too. The chat refused any file over 10 MB with its own fixed number, whatever Settings said; now it reads the configured limit and names it in the message. 0 in Settings lifts the per-file limit (one message still carries at most 50 MB in all); before, 0 meant 15 MB.
