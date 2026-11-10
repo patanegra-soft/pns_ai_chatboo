@@ -344,8 +344,16 @@
           <p>Clone the branch of your series (<code>14.0</code> to <code>20.0</code>) of <code>pns_ai_chatboo</code>, <code>pns_ai_mcp</code> and <code>pns_base</code> into the addons path and install Chatboo from Apps. On Odoo 14, first run <code>pip install "openpyxl&gt;=3.1.2"</code>.</p>
         </li>
         <li>
-          <b>Set up the AI Engine.</b>
-          <p>Chatboo talks to the AI through <code>pns_ai_mcp</code>. Follow its <a href="https://github.com/patanegra-soft/pns_ai_mcp#getting-started">Getting started</a>: AI administrator, your access and one provider.</p>
+          <b>Become AI administrator.</b>
+          <p><i>Settings → Users</i>: give yourself <b>AI Administrator</b>. Log out and back in.</p>
+        </li>
+        <li>
+          <b>Get your API key.</b>
+          <p><i>AI Engine → Security → Users</i>: your row, tick <b>AI Conversational</b> and press <b>Generate API Key</b>.</p>
+        </li>
+        <li>
+          <b>Add a provider.</b>
+          <p><i>AI Engine → Connections → Providers</i>: protocol, endpoint, API key and model, with the <b>Conversation</b> role. Chatboo runs the model from Odoo, so it needs at least one.</p>
         </li>
       </ol>
       <p class="pb-tip"><b>Done.</b> Click the elephant in the top bar.</p>
@@ -485,8 +493,16 @@
           <p>Clona la rama de tu versión (de la <code>14.0</code> a la <code>20.0</code>) de <code>pns_ai_chatboo</code>, <code>pns_ai_mcp</code> y <code>pns_base</code> en el addons path e instala Chatboo desde Aplicaciones. En Odoo 14, antes, <code>pip install "openpyxl&gt;=3.1.2"</code>.</p>
         </li>
         <li>
-          <b>Configura el Motor de IA.</b>
-          <p>Chatboo habla con la IA a través de <code>pns_ai_mcp</code>. Sigue su <a href="https://github.com/patanegra-soft/pns_ai_mcp#puesta-en-marcha">puesta en marcha</a>: administrador de IA, tu acceso y un proveedor.</p>
+          <b>Hazte administrador de IA.</b>
+          <p><i>Ajustes → Usuarios</i>: date <b>IA Administrador</b>. Sal y vuelve a entrar.</p>
+        </li>
+        <li>
+          <b>Saca tu clave API.</b>
+          <p><i>Motor de IA → Seguridad → Usuarios</i>: tu fila, marca <b>IA Conversacional</b> y pulsa <b>Generar Clave API</b>.</p>
+        </li>
+        <li>
+          <b>Pon un proveedor.</b>
+          <p><i>Motor de IA → Conexiones → Proveedores</i>: protocolo, dirección, clave API y modelo, con el rol <b>Conversación</b>. Chatboo ejecuta el modelo desde Odoo, así que necesita al menos uno.</p>
         </li>
       </ol>
       <p class="pb-tip"><b>Listo.</b> Pulsa el elefante de la barra superior.</p>
