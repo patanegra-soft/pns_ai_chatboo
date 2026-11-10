@@ -43,6 +43,7 @@ are already on.
 - Tables whose cells open the record, and charts drawn in the chat.
 - Export an answer to PDF, Excel or Word, or copy it.
 - Attach, drop or paste (Ctrl+V) a spreadsheet, a Word file, a PDF, an image or plain text, and ask about it.
+- Ask about the files already attached to a record (a task, a bill, a contact): Chatboo reads them the same way, as you, and a scan is transcribed once by the Vision provider.
 - Answers can be read aloud.
 
 **Skills that cost nothing**
@@ -273,6 +274,7 @@ ya estás.
 - Tablas cuyas celdas abren el registro, y gráficos dibujados en el chat.
 - Exportar una respuesta a PDF, Excel o Word, o copiarla.
 - Adjuntar, soltar o pegar (Ctrl+V) un Excel, un Word, un PDF, una imagen o un texto, y preguntar sobre él.
+- Preguntar por los archivos que ya están adjuntos a un registro (una tarea, una factura, un contacto): Chatboo los lee igual, como tú, y un escaneado lo transcribe una vez el proveedor de Visión.
 - Las respuestas se pueden leer en voz alta.
 
 **Skills que no cuestan nada**

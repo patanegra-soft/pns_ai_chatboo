@@ -392,6 +392,17 @@ def test_a_pretty_page_in_any_word_order_finds_the_page_tab():
          'hazme una bonita página con el balance de sumas y saldos'),
         ('discovery_page_tab.json',
          'make me a nice page with the trial balance'),
+        # What people say instead of «page» or «canvas».
+        ('discovery_page_tab_es_ES.json',
+         'crea un informe profesional del balance de este año'),
+        ('discovery_page_tab_es_ES.json',
+         'crea panel con el balance por meses'),
+        ('discovery_page_tab_es_ES.json',
+         'dame un panel de control del balance'),
+        ('discovery_page_tab.json',
+         'build a professional report on the trial balance'),
+        ('discovery_page_tab.json',
+         'give me a control panel of the trial balance'),
     ):
         row = json.loads((found / name).read_text(encoding='utf-8'))
         entry = {'code': row['target'], 'triggers': row['triggers'],

@@ -17,8 +17,9 @@ from odoo import models, fields, api, _
 from odoo.exceptions import AccessError
 
 from .chatboo_job import _env_manage, _get_registry, _is_test_mode
-from ..utils import file_text, turn_documents
+from ..utils import document_reading, file_text, turn_documents
 from ..utils.chatboo_product_icp import CHATBOO_AGENT_CODE
+from ..utils.document_reading import NO_TEXT
 from ..utils.turn_deliverable import done_meta_has_deliverable
 
 _logger = logging.getLogger(__name__)
@@ -30,11 +31,6 @@ _DOMAIN_CODES_LEAVE = object()
 
 # How often progress is flushed to the database (seconds). Preview step.
 FLUSH_INTERVAL = 0.3
-# Attached PDF: pages whose printed text is read, and pages of a scan that
-# go as pictures (each one adds weight to the vision call).
-PDF_TEXT_PAGES = 200
-PDF_VISION_PAGES = 10
-NO_TEXT = 'NONE'
 # PostgreSQL lock_not_available: a ``lock_timeout`` ran out.
 _LOCK_NOT_AVAILABLE = '55P03'
 
@@ -909,77 +905,30 @@ class ChatbooAsyncRequest(models.Model):
     def _pdf_reading(self, b64):
         """``(page texts, pictures)`` of a PDF attachment; None if it is not a PDF.
 
-        Printed text comes page by page from pns_base. A scan has none: this
-        agent's vision chain transcribes it once. When that fails, its pages
-        go to this turn as pictures and nothing is kept for later turns.
+        The reading itself is ``document_reading.pdf_reading``, shared with
+        ``read_attachment``. When a scan cannot be transcribed, its pages go
+        to this turn as pictures and nothing is kept for later turns.
         """
-        import base64
-        from odoo.addons.pns_base.utils.pdf_io import (
-            is_pdf, pdf_page_texts, pdf_pictures,
-        )
-
         try:
             raw = base64.b64decode(b64 or '')
         except Exception:
             return None
-        if not is_pdf(raw):
-            return None
-        pages = pdf_page_texts(raw, pages=PDF_TEXT_PAGES)
-        if pages:
-            return pages, []
-        pictures = [
-            'data:image/jpeg;base64,%s' % base64.b64encode(jpeg).decode()
-            for jpeg in pdf_pictures(raw, pages=PDF_VISION_PAGES)
-        ]
-        pages = self._transcribe_pages(pictures)
-        return (pages, []) if pages else ([], pictures)
+        return document_reading.pdf_reading(
+            self.env, raw,
+            agent_code=self.agent_code or CHATBOO_AGENT_CODE,
+            provider_id=self.provider_id or None,
+            tag='Chatboo async job %s' % self.id,
+        )
 
     def _transcribe_pages(self, pictures, photos=False):
-        """The text of each picture, read by this agent's vision chain. [] on failure.
-
-        A scanned page is always transcribed. A photo only when its point is
-        its text; for any other the model writes ``NO_TEXT``.
-        """
-        if not pictures:
-            return []
-        if photos:
-            prompt = (
-                'These are %d pictures. Begin each one with a line like "%s", '
-                'counting from 1. If the picture is a document whose point is '
-                'its text (a ticket, an invoice, a letter, a form, a screenshot '
-                'of text), transcribe that text exactly as written, in its own '
-                'language. Otherwise write only %s. No comments and no summary.'
-                % (len(pictures), turn_documents.PAGE_MARK % 1, NO_TEXT)
-            )
-        else:
-            prompt = (
-                'Transcribe the text of these %d scanned pages exactly as written, '
-                'in their own language. Begin each page with a line like "%s", '
-                'counting from 1. No comments and no summary.'
-                % (len(pictures), turn_documents.PAGE_MARK % 1)
-            )
-        try:
-            code = self.env['ai.agent'].resolve_inference_agent_code(
-                self.agent_code or CHATBOO_AGENT_CODE,
-            )
-            response = self.env['ai.execution.engine'].sudo()._chat_completion(
-                code,
-                [{'role': 'user', 'content': prompt}],
-                images=pictures,
-                provider_id=self.provider_id or None,
-            )
-            content = response['choices'][0]['message']['content']
-        except Exception:
-            _logger.warning(
-                'Chatboo async job %s: scanned PDF transcription failed',
-                self.id, exc_info=True,
-            )
-            return []
-        if isinstance(content, list):
-            content = ''.join(
-                part.get('text', '') for part in content if isinstance(part, dict)
-            )
-        return turn_documents.split_pages(content, len(pictures))
+        """The text of each picture, read by this agent's vision chain. [] on failure."""
+        return document_reading.transcribe_pages(
+            self.env, pictures,
+            agent_code=self.agent_code or CHATBOO_AGENT_CODE,
+            provider_id=self.provider_id or None,
+            photos=photos,
+            tag='Chatboo async job %s' % self.id,
+        )
 
     def _image_documents(self):
         """This turn's photos whose point is their text, kept as documents.
