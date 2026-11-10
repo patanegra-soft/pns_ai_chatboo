@@ -203,10 +203,18 @@ NumPy). On 19 there is nothing extra.
 
 #### Odoo versions
 
-| Series | Status |
-| :--- | :--- |
-| 14.0 – 20.0 | Tested. Flat branch published. |
-| 13.0 and older | Not supported. |
+| Series | Stack | Status | Sheet |
+| :--- | :--- | :--- | :--- |
+| 14.0 | `owl1` | Tested. Flat branch published. | [Chatboo on Odoo 14](https://www.patanegra.com/chatboo-odoo-14.html) |
+| 15.0 | `owl1` | Tested. Flat branch published. | [Chatboo on Odoo 15](https://www.patanegra.com/chatboo-odoo-15.html) |
+| 16.0 | `owl2` | Tested. Flat branch published. | [Chatboo on Odoo 16](https://www.patanegra.com/chatboo-odoo-16.html) |
+| 17.0 | `owl2` | Tested. Flat branch published. | [Chatboo on Odoo 17](https://www.patanegra.com/chatboo-odoo-17.html) |
+| 18.0 | `owl2` | Tested. Flat branch published. | [Chatboo on Odoo 18](https://www.patanegra.com/chatboo-odoo-18.html) |
+| 19.0 | `owl2` | Tested. Flat branch published. | [Chatboo on Odoo 19](https://www.patanegra.com/chatboo-odoo-19.html) |
+| 20.0 | `owl3` | Tested. Flat branch published. | [Chatboo on Odoo 20](https://www.patanegra.com/chatboo-odoo-20.html) |
+| 13.0 and older | — | Not supported. | |
+
+Each sheet lists the module version, dependencies, Python libraries and notes for that series.
 
 Odoo 13 has no OWL, which the chat is built on. Odoo 8 to 12 run on a
 Python older than 3.7, which the engine needs. The suite keeps three stacks (`owl1` for 14.0 and 15.0, `owl2` for 16.0 to 19.0, `owl3` for 20.0 and later).
@@ -435,10 +443,18 @@ moderno). En la 19 no hace falta nada más.
 
 #### Versiones de Odoo
 
-| Versión | Estado |
-| :--- | :--- |
-| 14.0 – 20.0 | Probadas. Rama plana publicada. |
-| 13.0 y anteriores | No soportadas. |
+| Versión | Pila | Estado | Ficha |
+| :--- | :--- | :--- | :--- |
+| 14.0 | `owl1` | Probada. Rama plana publicada. | [Chatboo en Odoo 14](https://www.patanegra.com/es/chatboo-odoo-14.html) |
+| 15.0 | `owl1` | Probada. Rama plana publicada. | [Chatboo en Odoo 15](https://www.patanegra.com/es/chatboo-odoo-15.html) |
+| 16.0 | `owl2` | Probada. Rama plana publicada. | [Chatboo en Odoo 16](https://www.patanegra.com/es/chatboo-odoo-16.html) |
+| 17.0 | `owl2` | Probada. Rama plana publicada. | [Chatboo en Odoo 17](https://www.patanegra.com/es/chatboo-odoo-17.html) |
+| 18.0 | `owl2` | Probada. Rama plana publicada. | [Chatboo en Odoo 18](https://www.patanegra.com/es/chatboo-odoo-18.html) |
+| 19.0 | `owl2` | Probada. Rama plana publicada. | [Chatboo en Odoo 19](https://www.patanegra.com/es/chatboo-odoo-19.html) |
+| 20.0 | `owl3` | Probada. Rama plana publicada. | [Chatboo en Odoo 20](https://www.patanegra.com/es/chatboo-odoo-20.html) |
+| 13.0 y anteriores | — | No soportadas. | |
+
+Cada ficha dice la versión del módulo, las dependencias, las librerías Python y las notas de esa serie.
 
 Odoo 13 no tiene OWL, sobre el que está hecho el chat. De Odoo 8 a 12 usan un
 Python anterior al 3.7, que es el que necesita el motor. La suite mantiene tres pilas (`owl1` para la 14.0 y la 15.0, `owl2` de la 16.0 a la 19.0 y `owl3` para la 20.0 y siguientes).
