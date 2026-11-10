@@ -153,8 +153,16 @@
           <p style="margin: 0; color: #4a4643">Clone the branch of your series (<code style="font-family: ui-monospace, Consolas, Menlo, monospace; font-size: 0.88em; background-color: #ebe7e4; padding: 1px 6px; border-radius: 5px">14.0</code> to <code style="font-family: ui-monospace, Consolas, Menlo, monospace; font-size: 0.88em; background-color: #ebe7e4; padding: 1px 6px; border-radius: 5px">20.0</code>) of <code style="font-family: ui-monospace, Consolas, Menlo, monospace; font-size: 0.88em; background-color: #ebe7e4; padding: 1px 6px; border-radius: 5px">pns_ai_chatboo</code>, <code style="font-family: ui-monospace, Consolas, Menlo, monospace; font-size: 0.88em; background-color: #ebe7e4; padding: 1px 6px; border-radius: 5px">pns_ai_mcp</code> and <code style="font-family: ui-monospace, Consolas, Menlo, monospace; font-size: 0.88em; background-color: #ebe7e4; padding: 1px 6px; border-radius: 5px">pns_base</code> into the addons path and install Chatboo from Apps. On Odoo 14, first run <code style="font-family: ui-monospace, Consolas, Menlo, monospace; font-size: 0.88em; background-color: #ebe7e4; padding: 1px 6px; border-radius: 5px">pip install "openpyxl&gt;=3.1.2"</code>.</p>
         </li>
         <li style="position: relative; margin-bottom: 12px; padding: 18px 20px 18px 66px; border-radius: 16px; background-color: #fff; border: 1px solid #ebe7e4; counter-increment: pbstep">
-          <b style="display: block; margin-bottom: 4px">Set up the AI Engine.</b>
-          <p style="margin: 0; color: #4a4643">Chatboo talks to the AI through <code style="font-family: ui-monospace, Consolas, Menlo, monospace; font-size: 0.88em; background-color: #ebe7e4; padding: 1px 6px; border-radius: 5px">pns_ai_mcp</code>. Follow its <a href="https://github.com/patanegra-soft/pns_ai_mcp#getting-started" style="color: #1A1A1A">Getting started</a>: AI administrator, your access and one provider.</p>
+          <b style="display: block; margin-bottom: 4px">Become AI administrator.</b>
+          <p style="margin: 0; color: #4a4643"><i>Settings &#8594; Users</i>: give yourself <b style="display: block; margin-bottom: 4px">AI Administrator</b>. Log out and back in.</p>
+        </li>
+        <li style="position: relative; margin-bottom: 12px; padding: 18px 20px 18px 66px; border-radius: 16px; background-color: #fff; border: 1px solid #ebe7e4; counter-increment: pbstep">
+          <b style="display: block; margin-bottom: 4px">Get your API key.</b>
+          <p style="margin: 0; color: #4a4643"><i>AI Engine &#8594; Security &#8594; Users</i>: your row, tick <b style="display: block; margin-bottom: 4px">AI Conversational</b> and press <b style="display: block; margin-bottom: 4px">Generate API Key</b>.</p>
+        </li>
+        <li style="position: relative; margin-bottom: 12px; padding: 18px 20px 18px 66px; border-radius: 16px; background-color: #fff; border: 1px solid #ebe7e4; counter-increment: pbstep">
+          <b style="display: block; margin-bottom: 4px">Add a provider.</b>
+          <p style="margin: 0; color: #4a4643"><i>AI Engine &#8594; Connections &#8594; Providers</i>: protocol, endpoint, API key and model, with the <b style="display: block; margin-bottom: 4px">Conversation</b> role. Chatboo runs the model from Odoo, so it needs at least one.</p>
         </li>
       </ol>
       <p class="pb-tip" style="margin: 14px 0 0; padding: 14px 18px; border-radius: 14px; background-color: #1A1A1A; color: #e6e2e0"><b style="color: #F7E112">Done.</b> Click the elephant in the top bar.</p>
@@ -294,8 +302,16 @@
           <p style="margin: 0; color: #4a4643">Clona la rama de tu versi&#243;n (de la <code style="font-family: ui-monospace, Consolas, Menlo, monospace; font-size: 0.88em; background-color: #ebe7e4; padding: 1px 6px; border-radius: 5px">14.0</code> a la <code style="font-family: ui-monospace, Consolas, Menlo, monospace; font-size: 0.88em; background-color: #ebe7e4; padding: 1px 6px; border-radius: 5px">20.0</code>) de <code style="font-family: ui-monospace, Consolas, Menlo, monospace; font-size: 0.88em; background-color: #ebe7e4; padding: 1px 6px; border-radius: 5px">pns_ai_chatboo</code>, <code style="font-family: ui-monospace, Consolas, Menlo, monospace; font-size: 0.88em; background-color: #ebe7e4; padding: 1px 6px; border-radius: 5px">pns_ai_mcp</code> y <code style="font-family: ui-monospace, Consolas, Menlo, monospace; font-size: 0.88em; background-color: #ebe7e4; padding: 1px 6px; border-radius: 5px">pns_base</code> en el addons path e instala Chatboo desde Aplicaciones. En Odoo 14, antes, <code style="font-family: ui-monospace, Consolas, Menlo, monospace; font-size: 0.88em; background-color: #ebe7e4; padding: 1px 6px; border-radius: 5px">pip install "openpyxl&gt;=3.1.2"</code>.</p>
         </li>
         <li style="position: relative; margin-bottom: 12px; padding: 18px 20px 18px 66px; border-radius: 16px; background-color: #fff; border: 1px solid #ebe7e4; counter-increment: pbstep">
-          <b style="display: block; margin-bottom: 4px">Configura el Motor de IA.</b>
-          <p style="margin: 0; color: #4a4643">Chatboo habla con la IA a trav&#233;s de <code style="font-family: ui-monospace, Consolas, Menlo, monospace; font-size: 0.88em; background-color: #ebe7e4; padding: 1px 6px; border-radius: 5px">pns_ai_mcp</code>. Sigue su <a href="https://github.com/patanegra-soft/pns_ai_mcp#puesta-en-marcha" style="color: #1A1A1A">puesta en marcha</a>: administrador de IA, tu acceso y un proveedor.</p>
+          <b style="display: block; margin-bottom: 4px">Hazte administrador de IA.</b>
+          <p style="margin: 0; color: #4a4643"><i>Ajustes &#8594; Usuarios</i>: date <b style="display: block; margin-bottom: 4px">IA Administrador</b>. Sal y vuelve a entrar.</p>
+        </li>
+        <li style="position: relative; margin-bottom: 12px; padding: 18px 20px 18px 66px; border-radius: 16px; background-color: #fff; border: 1px solid #ebe7e4; counter-increment: pbstep">
+          <b style="display: block; margin-bottom: 4px">Saca tu clave API.</b>
+          <p style="margin: 0; color: #4a4643"><i>Motor de IA &#8594; Seguridad &#8594; Usuarios</i>: tu fila, marca <b style="display: block; margin-bottom: 4px">IA Conversacional</b> y pulsa <b style="display: block; margin-bottom: 4px">Generar Clave API</b>.</p>
+        </li>
+        <li style="position: relative; margin-bottom: 12px; padding: 18px 20px 18px 66px; border-radius: 16px; background-color: #fff; border: 1px solid #ebe7e4; counter-increment: pbstep">
+          <b style="display: block; margin-bottom: 4px">Pon un proveedor.</b>
+          <p style="margin: 0; color: #4a4643"><i>Motor de IA &#8594; Conexiones &#8594; Proveedores</i>: protocolo, direcci&#243;n, clave API y modelo, con el rol <b style="display: block; margin-bottom: 4px">Conversaci&#243;n</b>. Chatboo ejecuta el modelo desde Odoo, as&#237; que necesita al menos uno.</p>
         </li>
       </ol>
       <p class="pb-tip" style="margin: 14px 0 0; padding: 14px 18px; border-radius: 14px; background-color: #1A1A1A; color: #e6e2e0"><b style="color: #F7E112">Listo.</b> Pulsa el elefante de la barra superior.</p>
