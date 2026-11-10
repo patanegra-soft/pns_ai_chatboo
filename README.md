@@ -131,6 +131,7 @@ Every user, archived included, with type, last login and whether they are connec
 
 - **No AI of its own.** Providers, agents and approvals live in the AI Engine. Without a provider with the **Conversation** role, the chat has no one to ask.
 - **Not for every user by default.** Only users with **AI Conversational** and a generated API key can use it.
+- **Not a website chatbot.** It talks to Odoo's internal users about their ERP data, not to the visitors of your website.
 - **No changes without a person.** The AI proposes; a user with **AI Writer** presses Confirm.
 - **Not before 14.0.** Tested and published from 14.0 to 20.0; 13.0 and older do not run (see *Odoo versions*).
 
@@ -372,6 +373,7 @@ Todos los usuarios, archivados incluidos, con su tipo, último acceso y si está
 
 - **No trae IA propia.** Los proveedores, los agentes y las aprobaciones viven en el Motor de IA. Sin un proveedor con el rol **Conversación**, el chat no tiene a quién preguntar.
 - **No es para todos los usuarios de entrada.** Solo lo usan quienes tienen **IA Conversacional** y una clave API generada.
+- **No es un chatbot de web.** Habla con los usuarios internos de Odoo sobre los datos de su ERP, no con los visitantes de tu web.
 - **No cambia nada sin una persona.** La IA propone; un usuario con **IA Escritor** pulsa Confirmar.
 - **No antes de la 14.0.** Probado y publicado de la 14.0 a la 20.0; la 13.0 y anteriores no funcionan (ver *Versiones de Odoo*).
 

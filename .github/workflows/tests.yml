@@ -44,7 +44,9 @@ jobs:
         series: ${{ fromJSON(inputs.series && format('["{0}"]', inputs.series) || '["14.0", "15.0", "16.0", "17.0", "18.0", "19.0", "20.0"]') }}
     services:
       db:
-        image: postgres:15
+        # Odoo 20 uses any_value(), PostgreSQL 16+. Odoo 14 and 15 stay on the
+        # PostgreSQL they were written for; every later series takes the current one.
+        image: postgres:${{ (matrix.series == '14.0' || matrix.series == '15.0') && '15' || '17' }}
         env:
           POSTGRES_USER: odoo
           POSTGRES_PASSWORD: odoo
