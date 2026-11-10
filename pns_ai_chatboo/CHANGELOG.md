@@ -2,6 +2,12 @@
 
 What changes for people who use this module, one section per published version, newest first. The heading is the git tag.
 
+## owl1-2.1.591_owl2-2.1.591_owl3-2.1.591 (2026-11-10)
+
+Store listing only; the module code is the one of 2.1.590.
+
+- New Odoo Apps cover: icon, headline and one line of facts (free, Apache 2.0, Odoo Community 14.0 to 20.0). The previous cover carried a paragraph and the series chips, unreadable at the size of the store grid.
+
 ## owl1-2.1.590_owl2-2.1.590_owl3-2.1.590 (2026-11-10)
 
 - More ways to ask for a page. Besides "page", "canvas" or "in a tab", a page now opens when you ask for a professional, executive or visual report, a panel or control panel, a presentation, an infographic or a visual summary (English and Spanish). The word "dashboard" is left to the skills that already answer to it.
