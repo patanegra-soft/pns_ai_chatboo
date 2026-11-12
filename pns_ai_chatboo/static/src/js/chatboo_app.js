@@ -453,7 +453,7 @@ class ChatbooApp extends Component {
             }
         });
 
-        const busService = useService("bus_service");
+        const busService = this.env.services.bus_service;
         // Odoo 19 dropped the public "notification" event. subscribe() is the
         // channel that still delivers pns_chatboo_sync (Odoo 17 and 19).
         this._chatbooSyncFromSubscribe = typeof busService.subscribe === "function";
