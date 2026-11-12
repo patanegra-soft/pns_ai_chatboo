@@ -1,0 +1,5 @@
+# Finales de línea: LF en el repositorio y en disco, también en Windows.
+# Sin esto, core.autocrlf=true marca como modificados ficheros sin cambios.
+* text=auto eol=lf
+*.bat text eol=crlf
+*.cmd text eol=crlf

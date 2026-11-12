@@ -2,6 +2,12 @@
 
 What changes for people who use this module, one section per published version, newest first. The heading is the git tag.
 
+## owl1-2.1.593_owl2-2.1.593_owl3-2.1.593 (2026-11-12)
+
+- Odoo 17: the Chatboo icon in the top bar loads again ("methods is not iterable").
+- Odoo 16: the chat, its icon and its floating window load again; their screen templates were missing there.
+- README and Apps page: getting started is complete on its own (AI administrator, API key, provider), and each Odoo version links to its page on www.patanegra.com.
+
 ## owl1-2.1.591_owl2-2.1.591_owl3-2.1.591 (2026-11-10)
 
 Store listing only; the module code is the one of 2.1.590.

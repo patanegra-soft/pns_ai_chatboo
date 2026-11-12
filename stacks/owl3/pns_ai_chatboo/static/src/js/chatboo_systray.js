@@ -42,7 +42,7 @@ class ChatbooSystrayItem extends Component {
             }
         });
 
-        const busService = useService("bus_service");
+        const busService = this.env.services.bus_service;
         // Odoo 19 dropped the public "notification" event.
         this._chatbooSyncFromSubscribe = typeof busService.subscribe === "function";
         if (this._chatbooSyncFromSubscribe) {

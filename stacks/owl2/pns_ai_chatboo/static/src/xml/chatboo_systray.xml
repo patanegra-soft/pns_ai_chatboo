@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!-- OWL2 template for the Chatboo systray launcher (Odoo 17+). -->
 <templates xml:space="preserve">
-    <t t-name="pns_ai_chatboo.ChatbooSystrayItem">
+    <t t-name="pns_ai_chatboo.ChatbooSystrayItem" owl="1">
         <div t-if="state.visible"
              class="o_chatboo_systray_item d-flex align-items-center"
              data-pns-layer-toggle="1"
