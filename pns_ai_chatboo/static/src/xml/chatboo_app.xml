@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <templates xml:space="preserve">
 
-    <t t-name="pns_ai_chatboo.ChatbooApp">
+    <t t-name="pns_ai_chatboo.ChatbooApp" owl="1">
         <div class="o_content o_chatboo_container o_chatboo_app d-flex flex-column h-100 position-relative"
              t-on-dragenter="(ev) => this._onDragOver(ev)"
              t-on-dragover="(ev) => this._onDragOver(ev)"
