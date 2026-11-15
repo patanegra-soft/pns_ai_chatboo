@@ -2,6 +2,10 @@
 
 What changes for people who use this module, one section per published version, newest first. The heading is the git tag.
 
+## owl1-2.1.594_owl2-2.1.594_owl3-2.1.594 (2026-11-15)
+
+- The elephant in the top bar now says "Ask Chatboo" when you point at it, and screen readers read it in the user's language.
+
 ## owl1-2.1.593_owl2-2.1.593_owl3-2.1.593 (2026-11-12)
 
 - Odoo 17: the Chatboo icon in the top bar loads again ("methods is not iterable").
