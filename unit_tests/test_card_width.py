@@ -242,15 +242,15 @@ def test_systray_and_composer_have_no_hover_noise():
         / 'static' / 'src' / 'xml' / 'chatboo_systray.xml'
     ).read_text(encoding='utf-8')
     assert 'href=' not in owl1_tray
-    assert 'title="Chatboo"' in owl1_tray
+    assert 'title="Ask Chatboo"' in owl1_tray
     assert '<button' not in owl1_tray
     assert 'dropdown-toggle o-no-caret' in owl1_tray
-    assert 'aria-label="Open Chatboo AI"' in owl1_tray
+    assert 'aria-label="Ask Chatboo"' in owl1_tray
     owl2_tray = (
         _ROOT / 'stacks' / 'owl2' / 'pns_ai_chatboo'
         / 'static' / 'src' / 'xml' / 'chatboo_systray.xml'
     ).read_text(encoding='utf-8')
-    assert 'title="Chatboo"' in owl2_tray
+    assert 'title="Ask Chatboo"' in owl2_tray
     owl1 = (
         _ROOT / 'stacks' / 'owl1' / 'pns_ai_chatboo'
         / 'static' / 'src' / 'js' / 'chatboo_component_v2.js'

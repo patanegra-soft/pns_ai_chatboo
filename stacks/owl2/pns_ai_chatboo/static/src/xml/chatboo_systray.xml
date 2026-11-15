@@ -6,8 +6,8 @@
              class="o_chatboo_systray_item d-flex align-items-center"
              data-pns-layer-toggle="1"
              t-on-click="onClick"
-             title="Chatboo"
-             aria-label="Open Chatboo AI"
+             title="Ask Chatboo"
+             aria-label="Ask Chatboo"
              role="button">
             <div class="o_chatboo_icon_wrap">
                 <img src="/pns_ai_chatboo/static/description/icon.png"
