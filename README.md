@@ -1,16 +1,14 @@
 # Chatboo (pns_ai_chatboo)
 
-![AI for all your clients, without leaving Odoo](common/static/description/banner.png)
+![AI chat inside your Odoo](common/static/description/banner.png)
 
 **[English](#english) · [Español](#español) · [www.patanegra.com](https://www.patanegra.com/chatboo.html)**
 
 ## English
 
-**AI for all your clients, without leaving Odoo.** Chatboo opens an AI chat
-on top of the screen your client is already using. It knows what is on that
-screen, answers with the user's own permissions, and goes away with one
-click. It runs on the AI Engine ([`pns_ai_mcp`](https://github.com/patanegra-soft/pns_ai_mcp)).
-Odoo **14.0** to **20.0**.
+**An AI assistant inside your Odoo.** It knows what is on the screen
+you have open, and goes away with one click when you are done. It runs on
+the AI Engine ([`pns_ai_mcp`](https://github.com/patanegra-soft/pns_ai_mcp)).
 
 ### The pain
 
@@ -246,13 +244,11 @@ Security: [SECURITY.md](SECURITY.md). Bugs, ideas and questions: [CONTRIBUTING.m
 
 ## Español
 
-![IA para todos tus clientes, sin salir de Odoo](common/static/description/banner_es.png)
+![Chat de IA dentro de tu Odoo](common/static/description/banner_es.png)
 
-**IA para todos tus clientes, sin salir de Odoo.** Chatboo abre un chat de IA
-encima de la pantalla que tu cliente ya está usando. Sabe qué hay en esa
-pantalla, responde con los permisos del propio usuario y se quita con un
-clic. Funciona sobre el Motor de IA ([`pns_ai_mcp`](https://github.com/patanegra-soft/pns_ai_mcp)).
-Odoo **14.0** a **20.0**.
+**Un asistente de IA dentro de tu Odoo.** Sabe qué hay en la pantalla
+que tienes abierta y se quita con un clic cuando acabas. Funciona sobre el
+Motor de IA ([`pns_ai_mcp`](https://github.com/patanegra-soft/pns_ai_mcp)).
 
 ### El dolor
 
