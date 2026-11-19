@@ -750,41 +750,30 @@ class ChatbooController(http.Controller):
 
     @http.route('/chatboo/providers', type=JSON_ROUTE_TYPE, auth='user')
     def list_providers(self):
-        """Providers the picker may offer: conversation, or no usage tick.
+        """Providers the picker may offer: the engine's conversation chain.
 
-        A vision-only or audio-only row stays out. Archived providers are
-        skipped. The first one left is the default.
+        The agent's chain, or every active provider when it has none, as the
+        engine resolves a text turn. A pick off this list would be ignored
+        there. The first one is the default.
         """
         if not self._user_may_use_chatboo():
             return self._chatboo_access_denied()
         try:
-            Provider = request.env['ai.provider']
-            default_provider_id = None
-            providers = Provider.browse()
+            providers = request.env['ai.provider'].browse()
             try:
                 agent_code = request.env['ai.agent'].resolve_inference_agent_code(
                     CHATBOO_AGENT_CODE,
                 )
-                engine = request.env['ai.execution.engine']
-                failovers = engine.get_failovers(agent_code)
-                if failovers:
-                    provider_ids = []
-                    for fo in failovers:
-                        p = fo.provider_id
-                        if p and p.id not in provider_ids:
-                            provider_ids.append(p.id)
-                    providers = Provider.browse(provider_ids)
-                    if providers:
-                        default_provider_id = providers[0].id
+                providers = request.env['ai.execution.engine'].get_providers_for_agent(
+                    agent_code, need='conversation',
+                )
+            except UserError:
+                pass
             except Exception:
                 _logger.exception("Chatboo providers: failover chain failed")
-                providers = Provider.browse()
-            providers = self._for_the_picker(providers)
-            if not providers or default_provider_id not in providers.ids:
-                default_provider_id = providers[:1].id or None
             return {
                 'status': 'ok',
-                'default_provider_id': default_provider_id,
+                'default_provider_id': providers[:1].id or None,
                 'providers': [self._serialize_provider(p) for p in providers],
             }
         except Exception:
@@ -1089,10 +1078,6 @@ class ChatbooController(http.Controller):
             'alias': (getattr(provider, 'alias', None) or '').strip() or None,
             'display': label,
         }
-
-    def _for_the_picker(self, providers):
-        """Conversation, or no usage tick. Vision-, audio- and decision-only stay out."""
-        return providers.filtered(lambda provider: provider._fits('conversation'))
 
     def _picker_label(self, provider, host, model):
         """Alias in the picker. With none, the provider name."""
