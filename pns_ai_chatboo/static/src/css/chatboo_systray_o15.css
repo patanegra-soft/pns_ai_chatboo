@@ -1,0 +1,20 @@
+/* Odoo 15 only (__manifest_o15__.py). Its navbar centres a legacy systray
+ * item when it is a <div> (.o_menu_systray > div > a); the elephant is the
+ * Odoo 14 <li>, so it gets the same box here: full bar height, centred. */
+.o_main_navbar .o_menu_systray > li.o_chatboo_systray_item {
+    list-style: none;
+}
+.o_main_navbar .o_menu_systray > li.o_chatboo_systray_item,
+.o_main_navbar .o_menu_systray > li.o_chatboo_systray_item > a {
+    position: relative;
+    display: flex;
+    align-items: center;
+    height: 46px;
+}
+.o_main_navbar .o_menu_systray > li.o_chatboo_systray_item > a {
+    padding: 0 10px;
+    cursor: pointer;
+}
+.o_main_navbar .o_menu_systray > li.o_chatboo_systray_item > a:hover {
+    background-color: rgba(0, 0, 0, 0.08);
+}
