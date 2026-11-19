@@ -2,6 +2,12 @@
 
 What changes for people who use this module, one section per published version, newest first. The heading is the git tag.
 
+## owl1-2.1.597_owl2-2.1.597_owl3-2.1.597 (2026-11-19)
+
+- The provider picker offers the providers the chat really uses: the agent's conversation chain or, with no chain, every active conversation provider. Before, with no chain, a second provider could not be picked.
+- Odoo 15: the elephant in the top bar is centred.
+- Spanish: settings, shared canvas pages and export texts are translated, and Odoo 16 now loads the Spanish catalogue.
+
 ## owl1-2.1.594_owl2-2.1.594_owl3-2.1.594 (2026-11-15)
 
 - The elephant in the top bar now says "Ask Chatboo" when you point at it, and screen readers read it in the user's language.
