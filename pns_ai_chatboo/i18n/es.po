@@ -13,7 +13,6 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: \n"
 
-
 #. module: pns_ai_chatboo
 msgid "Chatboo Assistant"
 msgstr "Asistente Chatboo"
@@ -123,8 +122,13 @@ msgstr "No se pudo borrar la sesión."
 #. module: pns_ai_chatboo
 #. odoo-python
 #: code:addons/pns_ai_chatboo/models/chatboo_session.py:0
-msgid "Could not delete the session: a background Chatboo job still locks related data. Wait a few seconds, or restart the Odoo service, then try again."
-msgstr "No se pudo borrar la sesión: un trabajo de Chatboo en segundo plano aún bloquea datos relacionados. Espera unos segundos o reinicia el servicio Odoo e inténtalo de nuevo."
+msgid ""
+"Could not delete the session: a background Chatboo job still locks related "
+"data. Wait a few seconds, or restart the Odoo service, then try again."
+msgstr ""
+"No se pudo borrar la sesión: un trabajo de Chatboo en segundo plano aún "
+"bloquea datos relacionados. Espera unos segundos o reinicia el servicio Odoo"
+" e inténtalo de nuevo."
 
 #. module: pns_ai_chatboo
 #. odoo-javascript
@@ -183,20 +187,30 @@ msgstr "La petición expiró o el servidor se reinició."
 #. module: pns_ai_chatboo
 #. odoo-python
 #: code:addons/pns_ai_chatboo/models/chatboo_async_request.py:0
-msgid "The model returned no content. Check the AI provider (endpoint reachable, model loaded) and the server log."
-msgstr "El modelo no devolvió contenido. Revisa el proveedor de IA (endpoint accesible, modelo cargado) y el registro del servidor."
+msgid ""
+"The model returned no content. Check the AI provider (endpoint reachable, "
+"model loaded) and the server log."
+msgstr ""
+"El modelo no devolvió contenido. Revisa el proveedor de IA (endpoint "
+"accesible, modelo cargado) y el registro del servidor."
 
 #. module: pns_ai_chatboo
 #. odoo-python
 #: code:addons/pns_ai_chatboo/models/chatboo_async_request.py:0
 msgid "The conversation could not be saved before the reply. Try again."
-msgstr "No se pudo guardar la conversación antes de la respuesta. Vuelve a intentarlo."
+msgstr ""
+"No se pudo guardar la conversación antes de la respuesta. Vuelve a "
+"intentarlo."
 
 #. module: pns_ai_chatboo
 #. odoo-python
 #: code:addons/pns_ai_chatboo/models/chatboo_async_request.py:0
-msgid "The reply could not be saved in the conversation because it is busy. Reload the chat and ask again."
-msgstr "La respuesta no se pudo guardar en la conversación porque está ocupada. Recarga el chat y vuelve a preguntar."
+msgid ""
+"The reply could not be saved in the conversation because it is busy. Reload "
+"the chat and ask again."
+msgstr ""
+"La respuesta no se pudo guardar en la conversación porque está ocupada. "
+"Recarga el chat y vuelve a preguntar."
 
 #. module: pns_ai_chatboo
 #. odoo-python
@@ -208,7 +222,8 @@ msgstr "(respuesta incompleta: interrumpida por un reinicio del servidor)"
 #. odoo-python
 #: code:addons/pns_ai_chatboo/models/chatboo_async_request.py:0
 msgid "The response was interrupted by a server restart. Please resend."
-msgstr "La respuesta se interrumpió por un reinicio del servidor. Vuelve a enviarla."
+msgstr ""
+"La respuesta se interrumpió por un reinicio del servidor. Vuelve a enviarla."
 
 #. module: pns_ai_chatboo
 #. odoo-python
@@ -223,8 +238,12 @@ msgid "A Chatboo job can only run in your own session."
 msgstr "Un trabajo de Chatboo solo puede ejecutarse en tu propia sesión."
 
 #. module: pns_ai_chatboo
-msgid "No AI provider is configured for the \"%s\" role. Assign at least one AI provider to this role before using the assistant."
-msgstr "No hay ningún proveedor de IA configurado para el rol «%s». Asigna al menos un proveedor de IA a este rol antes de usar el asistente."
+msgid ""
+"No AI provider is configured for the \"%s\" role. Assign at least one AI "
+"provider to this role before using the assistant."
+msgstr ""
+"No hay ningún proveedor de IA configurado para el rol «%s». Asigna al menos "
+"un proveedor de IA a este rol antes de usar el asistente."
 
 #. module: pns_ai_chatboo
 #. odoo-python
@@ -234,7 +253,9 @@ msgstr "El cuerpo no es un JSON válido"
 
 #. module: pns_ai_chatboo
 #: model:ir.model.fields,field_description:pns_ai_chatboo.field_chatboo_async_request__error
+#: model:ir.model.fields,field_description:pns_ai_chatboo.field_chatboo_job_mixin__error
 #: model:ir.model.fields.selection,name:pns_ai_chatboo.selection__chatboo_async_request__state__error
+#: model:ir.model.fields.selection,name:pns_ai_chatboo.selection__chatboo_job_mixin__state__error
 msgid "Error"
 msgstr "Error"
 
@@ -328,8 +349,8 @@ msgstr "mensajes"
 
 #. module: pns_ai_chatboo
 #. odoo-javascript
-#: code:addons/pns_ai_chatboo/static/src/js/chatboo_systray.js:0
 #: code:addons/pns_ai_chatboo/static/src/js/chatboo_dashboard.js:0
+#: code:addons/pns_ai_chatboo/static/src/js/chatboo_systray.js:0
 msgid "Close"
 msgstr "Cerrar"
 
@@ -351,7 +372,8 @@ msgstr "Pregunta a Chatboo... (↑↓ para el historial)"
 
 #. module: pns_ai_chatboo
 msgid "Send in the background — you will get a notification when it is ready"
-msgstr "Enviar en segundo plano — recibirás una notificación cuando esté listo"
+msgstr ""
+"Enviar en segundo plano — recibirás una notificación cuando esté listo"
 
 #. module: pns_ai_chatboo
 msgid "Save"
@@ -365,6 +387,7 @@ msgstr "Cancelar"
 
 #. module: pns_ai_chatboo
 #: model:ir.model.fields,field_description:pns_ai_chatboo.field_chatboo_async_request__cancel_requested
+#: model:ir.model.fields,field_description:pns_ai_chatboo.field_chatboo_job_mixin__cancel_requested
 msgid "Cancel requested"
 msgstr "Cancelación solicitada"
 
@@ -408,7 +431,9 @@ msgstr "Ancho de tarjeta Chatboo"
 #. module: pns_ai_chatboo
 #: model:ir.model.fields,help:pns_ai_chatboo.field_res_users__chatboo_card_width_ratio
 msgid "0 = default (two thirds of the chat canvas). Else 0–1 of that canvas."
-msgstr "0 = valor por defecto (dos tercios del lienzo del chat). Si no, 0–1 de ese lienzo."
+msgstr ""
+"0 = valor por defecto (dos tercios del lienzo del chat). Si no, 0–1 de ese "
+"lienzo."
 
 #. module: pns_ai_chatboo
 #: model:ir.model.fields,field_description:pns_ai_chatboo.field_res_users__chatboo_show_series_stats
@@ -553,14 +578,22 @@ msgstr "Este comando no lleva argumentos. La ayuda es determinista (sin IA)."
 #. module: pns_ai_chatboo
 #. odoo-javascript
 #: code:addons/pns_ai_chatboo/static/src/js/chatboo_app.js:0
-msgid "Empty arguments run with the built-in default. Help is deterministic (no AI)."
-msgstr "Sin argumentos se ejecuta con el default del comando. La ayuda es determinista (sin IA)."
+msgid ""
+"Empty arguments run with the built-in default. Help is deterministic (no "
+"AI)."
+msgstr ""
+"Sin argumentos se ejecuta con el default del comando. La ayuda es "
+"determinista (sin IA)."
 
 #. module: pns_ai_chatboo
 #. odoo-javascript
 #: code:addons/pns_ai_chatboo/static/src/js/chatboo_app.js:0
-msgid "This command asks for arguments when none are given. Help is deterministic (no AI)."
-msgstr "Este comando pide argumentos si no se indican. La ayuda es determinista (sin IA)."
+msgid ""
+"This command asks for arguments when none are given. Help is deterministic "
+"(no AI)."
+msgstr ""
+"Este comando pide argumentos si no se indican. La ayuda es determinista (sin"
+" IA)."
 
 #. module: pns_ai_chatboo
 #. odoo-javascript
@@ -687,6 +720,7 @@ msgstr "Nombre de sesión"
 
 #. module: pns_ai_chatboo
 #: model:ir.model.fields,field_description:pns_ai_chatboo.field_chatboo_async_request__user_id
+#: model:ir.model.fields,field_description:pns_ai_chatboo.field_chatboo_job_mixin__user_id
 #: model:ir.model.fields,field_description:pns_ai_chatboo.field_chatboo_session__user_id
 msgid "User"
 msgstr "Usuario"
@@ -715,6 +749,7 @@ msgstr "Último uso"
 #. odoo-javascript
 #: code:addons/pns_ai_chatboo/static/src/js/chatboo_app.js:0
 #: model:ir.model.fields,field_description:pns_ai_chatboo.field_chatboo_async_request__session_id
+#: model:ir.model.fields,field_description:pns_ai_chatboo.field_chatboo_job_mixin__session_id
 msgid "Session"
 msgstr "Sesión"
 
@@ -740,6 +775,7 @@ msgstr "ID de proveedor"
 
 #. module: pns_ai_chatboo
 #: model:ir.model.fields,field_description:pns_ai_chatboo.field_chatboo_async_request__state
+#: model:ir.model.fields,field_description:pns_ai_chatboo.field_chatboo_job_mixin__state
 msgid "State"
 msgstr "Estado"
 
@@ -770,11 +806,13 @@ msgstr "Visto por el cliente"
 
 #. module: pns_ai_chatboo
 #: model:ir.model.fields,field_description:pns_ai_chatboo.field_chatboo_async_request__started_at
+#: model:ir.model.fields,field_description:pns_ai_chatboo.field_chatboo_job_mixin__started_at
 msgid "Started at"
 msgstr "Iniciado el"
 
 #. module: pns_ai_chatboo
 #: model:ir.model.fields,field_description:pns_ai_chatboo.field_chatboo_async_request__finished_at
+#: model:ir.model.fields,field_description:pns_ai_chatboo.field_chatboo_job_mixin__finished_at
 msgid "Finished at"
 msgstr "Finalizado el"
 
@@ -839,8 +877,12 @@ msgstr "Retención de sesiones (días)"
 #: model:ir.model.fields,help:pns_ai_chatboo.field_ai_agent__chatboo_history_retention_days
 #: model:ir.model.fields,help:pns_ai_chatboo.field_res_config_settings__chatboo_history_retention_days
 #: model_terms:ir.ui.view,arch_db:pns_ai_chatboo.res_config_settings_view_form_chatboo_mcp
-msgid "The chat you reopen: messages, tables on screen, and uploaded files. Deleted after this many days with no use. 0 = keep."
-msgstr "El chat que vuelves a abrir: mensajes, tablas en pantalla y ficheros subidos. Se borra tras estos días sin uso. 0 = no borrar."
+msgid ""
+"The chat you reopen: messages, tables on screen, and uploaded files. Deleted"
+" after this many days with no use. 0 = keep."
+msgstr ""
+"El chat que vuelves a abrir: mensajes, tablas en pantalla y ficheros "
+"subidos. Se borra tras estos días sin uso. 0 = no borrar."
 
 #. module: pns_ai_chatboo
 #: model:ir.model.fields,field_description:pns_ai_chatboo.field_ai_agent__chatboo_download_max_mb
@@ -851,8 +893,12 @@ msgstr "Límite de descarga (MB)"
 #. module: pns_ai_chatboo
 #: model:ir.model.fields,help:pns_ai_chatboo.field_ai_agent__chatboo_download_max_mb
 #: model:ir.model.fields,help:pns_ai_chatboo.field_res_config_settings__chatboo_download_max_mb
-msgid "Max size of a session file chip (named PDF/Excel/Word). The bubble Excel icon does not use this limit. 0 = no limit."
-msgstr "Tamaño máximo del chip de fichero de sesión (PDF/Excel/Word pedido). El icono Excel de la burbuja no usa este tope. 0 = sin límite."
+msgid ""
+"Max size of a session file chip (named PDF/Excel/Word). The bubble Excel "
+"icon does not use this limit. 0 = no limit."
+msgstr ""
+"Tamaño máximo del chip de fichero de sesión (PDF/Excel/Word pedido). El "
+"icono Excel de la burbuja no usa este tope. 0 = sin límite."
 
 #. module: pns_ai_chatboo
 #: model_terms:ir.ui.view,arch_db:pns_ai_chatboo.res_config_settings_view_form_chatboo_mcp
@@ -876,8 +922,14 @@ msgstr "Decimales"
 
 #. module: pns_ai_chatboo
 #: model:ir.model.fields,help:pns_ai_chatboo.field_res_config_settings__chatboo_xlsx_float_decimals
-msgid "Decimal places of decimal numbers in the chat table, PDF, Word and Excel. Integers stay whole. Equal to the company currency (EUR 2, KWD 3, JPY 0), it follows the currency. 0–10."
-msgstr "Cifras decimales de los números con decimales en la tabla del chat, el PDF, el Word y el Excel. Los enteros se quedan enteros. Si coincide con la moneda de la empresa (EUR 2, KWD 3, JPY 0), sigue a la moneda. 0–10."
+msgid ""
+"Decimal places of decimal numbers in the chat table, PDF, Word and Excel. "
+"Integers stay whole. Equal to the company currency (EUR 2, KWD 3, JPY 0), it"
+" follows the currency. 0–10."
+msgstr ""
+"Cifras decimales de los números con decimales en la tabla del chat, el PDF, "
+"el Word y el Excel. Los enteros se quedan enteros. Si coincide con la moneda"
+" de la empresa (EUR 2, KWD 3, JPY 0), sigue a la moneda. 0–10."
 
 #. module: pns_ai_chatboo
 #: model:ir.model.fields,field_description:pns_ai_chatboo.field_res_config_settings__chatboo_xlsx_thousands
@@ -886,8 +938,13 @@ msgstr "Separador de millares en Excel"
 
 #. module: pns_ai_chatboo
 #: model:ir.model.fields,help:pns_ai_chatboo.field_res_config_settings__chatboo_xlsx_thousands
-msgid "Show thousand separators on every numeric Excel cell (integers, floats, and formulas). Separators follow the spreadsheet locale."
-msgstr "Muestra el separador de millares en todas las celdas numéricas de Excel (enteros, flotantes y fórmulas). Los separadores siguen la región de la hoja."
+msgid ""
+"Show thousand separators on every numeric Excel cell (integers, floats, and "
+"formulas). Separators follow the spreadsheet locale."
+msgstr ""
+"Muestra el separador de millares en todas las celdas numéricas de Excel "
+"(enteros, flotantes y fórmulas). Los separadores siguen la región de la "
+"hoja."
 
 #. module: pns_ai_chatboo
 #: model:ir.model.fields.selection,name:pns_ai_chatboo.selection__res_config_settings__chatboo_chart_engine__echarts
@@ -918,8 +975,12 @@ msgstr "¿Cancelar la generación?"
 #. module: pns_ai_chatboo
 #. odoo-javascript
 #: code:addons/pns_ai_chatboo/static/src/js/chatboo_app.js:0
-msgid "The response in progress will be stopped. Any text received so far may be kept in the chat."
-msgstr "Se detendrá la respuesta en curso. El texto recibido hasta ahora puede conservarse en el chat."
+msgid ""
+"The response in progress will be stopped. Any text received so far may be "
+"kept in the chat."
+msgstr ""
+"Se detendrá la respuesta en curso. El texto recibido hasta ahora puede "
+"conservarse en el chat."
 
 #. module: pns_ai_chatboo
 #. odoo-javascript
@@ -981,8 +1042,11 @@ msgstr "Confirmado — aplicación pendiente (Autorizaciones si hace falta)"
 #. module: pns_ai_chatboo
 #. odoo-javascript
 #: code:addons/pns_ai_chatboo/static/src/js/chatboo_app.js:0
-msgid "No AI provider is assigned. Ask an administrator to assign one to the agent."
-msgstr "No hay ningún proveedor de IA asignado. Pide a un administrador que asigne uno al agente."
+msgid ""
+"No AI provider is assigned. Ask an administrator to assign one to the agent."
+msgstr ""
+"No hay ningún proveedor de IA asignado. Pide a un administrador que asigne "
+"uno al agente."
 
 #. module: pns_ai_chatboo
 #: model:ir.model.fields,field_description:pns_ai_chatboo.field_chatboo_session__active_skill_code
@@ -1001,8 +1065,19 @@ msgstr "Packs de dominio del último turno"
 
 #. module: pns_ai_chatboo
 #: model:ir.model.fields,help:pns_ai_chatboo.field_chatboo_session__last_domain_codes
-msgid "JSON object of domain pack codes injected last Chatboo turn and how many turns each has been on the table ({code: n}). A legacy JSON list is still read. The next turn unions them with this sentence's discovery hits. A skill invoke adds the skill's domain context packs when it has any. Slashes never clear the list. Cleared on a new session. Not shown to the user."
-msgstr "Objeto JSON de códigos de pack de dominio inyectados en el último turno de Chatboo y cuántos turnos lleva cada uno ({code: n}). Una lista JSON antigua se sigue leyendo. El siguiente turno los une a los aciertos de discovery de esta frase. Invocar un skill añade sus packs de dominio si los tiene. Los slash no vacían la lista. Se limpia en una sesión nueva. No se muestra al usuario."
+msgid ""
+"JSON object of domain pack codes injected last Chatboo turn and how many "
+"turns each has been on the table ({code: n}). A legacy JSON list is still "
+"read. The next turn unions them with this sentence's discovery hits. A skill"
+" invoke adds the skill's domain context packs when it has any. Slashes never"
+" clear the list. Cleared on a new session. Not shown to the user."
+msgstr ""
+"Objeto JSON de códigos de pack de dominio inyectados en el último turno de "
+"Chatboo y cuántos turnos lleva cada uno ({code: n}). Una lista JSON antigua "
+"se sigue leyendo. El siguiente turno los une a los aciertos de discovery de "
+"esta frase. Invocar un skill añade sus packs de dominio si los tiene. Los "
+"slash no vacían la lista. Se limpia en una sesión nueva. No se muestra al "
+"usuario."
 
 #. module: pns_ai_chatboo
 #: model:ir.model.fields,field_description:pns_ai_chatboo.field_chatboo_session__staged_assistant_files
@@ -1011,8 +1086,12 @@ msgstr "Descargas del asistente en espera"
 
 #. module: pns_ai_chatboo
 #: model:ir.model.fields,help:pns_ai_chatboo.field_chatboo_session__staged_assistant_files
-msgid "Temporary JSON list of download chips until the assistant message of the current turn is saved. Not shown to the user."
-msgstr "Lista JSON temporal de chips de descarga hasta que se guarde el mensaje del asistente del turno actual. No se muestra al usuario."
+msgid ""
+"Temporary JSON list of download chips until the assistant message of the "
+"current turn is saved. Not shown to the user."
+msgstr ""
+"Lista JSON temporal de chips de descarga hasta que se guarde el mensaje del "
+"asistente del turno actual. No se muestra al usuario."
 
 #. module: pns_ai_chatboo
 #: model:ir.model.fields,field_description:pns_ai_chatboo.field_chatboo_session__presentation_show_mode
@@ -1021,8 +1100,16 @@ msgstr "Modo de presentación"
 
 #. module: pns_ai_chatboo
 #: model:ir.model.fields,help:pns_ai_chatboo.field_chatboo_session__presentation_show_mode
-msgid "Session showmode: show-table (table first) or show-chart (chart first). From Chatboo Settings at session start; updated by /show-table, /show-chart or phrasing. Suspended under compose-model. Not shown to the user; not an LLM selector."
-msgstr "Showmode de sesión: show-table (tabla primero) o show-chart (gráfico primero). Desde Ajustes de Chatboo al crear la sesión; lo actualizan /show-table, /show-chart o el phrasing. En suspenso bajo compose-model. No se muestra al usuario; no es un selector del LLM."
+msgid ""
+"Session showmode: show-table (table first) or show-chart (chart first). From"
+" Chatboo Settings at session start; updated by /show-table, /show-chart or "
+"phrasing. Suspended under compose-model. Not shown to the user; not an LLM "
+"selector."
+msgstr ""
+"Showmode de sesión: show-table (tabla primero) o show-chart (gráfico "
+"primero). Desde Ajustes de Chatboo al crear la sesión; lo actualizan /show-"
+"table, /show-chart o el phrasing. En suspenso bajo compose-model. No se "
+"muestra al usuario; no es un selector del LLM."
 
 #. module: pns_ai_chatboo
 #. odoo-javascript
@@ -1101,21 +1188,28 @@ msgstr "Chatboo no ha podido completar esa petición."
 #. module: pns_ai_chatboo
 #. odoo-python
 #: code:addons/pns_ai_chatboo/controllers/chatboo.py:0
-msgid "No AI provider is configured for the \"%s\" agent. Assign at least one AI provider to this agent before using the assistant."
-msgstr "No hay ningún proveedor de IA configurado para el agente «%s». Asigna al menos un proveedor de IA a este agente antes de usar el asistente."
+msgid ""
+"No AI provider is configured for the \"%s\" agent. Assign at least one AI "
+"provider to this agent before using the assistant."
+msgstr ""
+"No hay ningún proveedor de IA configurado para el agente «%s». Asigna al "
+"menos un proveedor de IA a este agente antes de usar el asistente."
 
 #. module: pns_ai_chatboo
 #: model:ir.model.fields.selection,name:pns_ai_chatboo.selection__chatboo_async_request__state__pending
+#: model:ir.model.fields.selection,name:pns_ai_chatboo.selection__chatboo_job_mixin__state__pending
 msgid "Pending"
 msgstr "Pendiente"
 
 #. module: pns_ai_chatboo
 #: model:ir.model.fields.selection,name:pns_ai_chatboo.selection__chatboo_async_request__state__running
+#: model:ir.model.fields.selection,name:pns_ai_chatboo.selection__chatboo_job_mixin__state__running
 msgid "Running"
 msgstr "En ejecución"
 
 #. module: pns_ai_chatboo
 #: model:ir.model.fields.selection,name:pns_ai_chatboo.selection__chatboo_async_request__state__done
+#: model:ir.model.fields.selection,name:pns_ai_chatboo.selection__chatboo_job_mixin__state__done
 msgid "Done"
 msgstr "Hecho"
 
@@ -1131,14 +1225,32 @@ msgstr "Configuración"
 
 #. module: pns_ai_chatboo
 #: model_terms:ir.ui.view,arch_db:pns_ai_chatboo.res_config_settings_view_form_chatboo_mcp
-msgid "Conversational client (pns_ai_chatboo · inference · code pns_ai_chatboo). Product preferences below; use Configuration for providers, contexts and skills."
-msgstr "Cliente conversacional (pns_ai_chatboo · inference · código pns_ai_chatboo). Preferencias de producto abajo; usa Configuración para proveedores, contextos y skills."
+msgid ""
+"Conversational client (pns_ai_chatboo · inference · code pns_ai_chatboo). "
+"Product preferences below; use Configuration for providers, contexts and "
+"skills."
+msgstr ""
+"Cliente conversacional (pns_ai_chatboo · inference · código pns_ai_chatboo)."
+" Preferencias de producto abajo; usa Configuración para proveedores, "
+"contextos y skills."
 
 #. module: pns_ai_chatboo
 #. odoo-javascript
 #: code:addons/pns_ai_chatboo/static/src/js/chatboo_app.js:0
-msgid "Capture a turn as an instance skill (extra, with you as author). The line starts with the turn chip (filled from the last turn; you can change it). Then the slash name. Settings prefixes apply. If you already own that slash, the wizard replaces it. Words after the name fill the parameter description in the wizard. The turn chip is not a skill parameter. Help: /create-skill ?"
-msgstr "Captura un turno como skill de instancia (extra, con tu autoría). La línea empieza por el chip de turno (el último; lo puedes cambiar). Luego el slash. Se aplican los prefijos de Ajustes. Si ese slash ya es tuyo, el asistente lo reemplaza. Las palabras tras el nombre rellenan la descripción de parámetros del asistente. El chip de turno no es un parámetro del skill. Ayuda: /create-skill ?"
+msgid ""
+"Capture a turn as an instance skill (extra, with you as author). The line "
+"starts with the turn chip (filled from the last turn; you can change it). "
+"Then the slash name. Settings prefixes apply. If you already own that slash,"
+" the wizard replaces it. Words after the name fill the parameter description"
+" in the wizard. The turn chip is not a skill parameter. Help: /create-skill "
+"?"
+msgstr ""
+"Captura un turno como skill de instancia (extra, con tu autoría). La línea "
+"empieza por el chip de turno (el último; lo puedes cambiar). Luego el slash."
+" Se aplican los prefijos de Ajustes. Si ese slash ya es tuyo, el asistente "
+"lo reemplaza. Las palabras tras el nombre rellenan la descripción de "
+"parámetros del asistente. El chip de turno no es un parámetro del skill. "
+"Ayuda: /create-skill ?"
 
 #. module: pns_ai_chatboo
 #. odoo-javascript
@@ -1149,20 +1261,32 @@ msgstr "Edita el id de turno y el slash si hace falta y pulsa Intro"
 #. module: pns_ai_chatboo
 #. odoo-javascript
 #: code:addons/pns_ai_chatboo/static/src/js/chatboo_app.js:0
-msgid "Confirm turn id and slash name. Edit if needed, then press Enter to open the wizard."
-msgstr "Confirma el id de turno y el slash. Edita si hace falta y pulsa Intro para abrir el asistente."
+msgid ""
+"Confirm turn id and slash name. Edit if needed, then press Enter to open the"
+" wizard."
+msgstr ""
+"Confirma el id de turno y el slash. Edita si hace falta y pulsa Intro para "
+"abrir el asistente."
 
 #. module: pns_ai_chatboo
 #. odoo-javascript
 #: code:addons/pns_ai_chatboo/static/src/js/chatboo_app.js:0
-msgid "Turn id is required. Paste or type the 4-character chip, then the slash name."
-msgstr "El id de turno es obligatorio. Pega o escribe el chip de 4 caracteres y luego el slash."
+msgid ""
+"Turn id is required. Paste or type the 4-character chip, then the slash "
+"name."
+msgstr ""
+"El id de turno es obligatorio. Pega o escribe el chip de 4 caracteres y "
+"luego el slash."
 
 #. module: pns_ai_chatboo
 #. odoo-javascript
 #: code:addons/pns_ai_chatboo/static/src/js/chatboo_app.js:0
-msgid "Proposed slash name from that turn (instance prefix applied). Edit if needed, then press Enter to open the wizard."
-msgstr "Slash propuesto a partir de ese turno (con prefijo de instancia). Edita si hace falta y pulsa Intro para abrir el asistente."
+msgid ""
+"Proposed slash name from that turn (instance prefix applied). Edit if "
+"needed, then press Enter to open the wizard."
+msgstr ""
+"Slash propuesto a partir de ese turno (con prefijo de instancia). Edita si "
+"hace falta y pulsa Intro para abrir el asistente."
 
 #. module: pns_ai_chatboo
 #. odoo-javascript
@@ -1180,7 +1304,9 @@ msgstr "Pega o escribe el chip de 4 caracteres y luego el slash"
 #. odoo-javascript
 #: code:addons/pns_ai_chatboo/static/src/js/chatboo_app.js:0
 msgid "4-character MCP turn chip. Required. Auto-filled from the last turn."
-msgstr "Chip de turno MCP de 4 caracteres. Obligatorio. Se rellena con el último turno."
+msgstr ""
+"Chip de turno MCP de 4 caracteres. Obligatorio. Se rellena con el último "
+"turno."
 
 #. module: pns_ai_chatboo
 #. odoo-javascript
@@ -1198,13 +1324,18 @@ msgstr "Nombre del slash. Se aplica el prefijo de Ajustes."
 #. odoo-javascript
 #: code:addons/pns_ai_chatboo/static/src/js/chatboo_app.js:0
 msgid "Parameter description in prose. Fills the wizard. Not the turn chip."
-msgstr "Descripción de parámetros en prosa. Rellena el asistente. No es el chip de turno."
+msgstr ""
+"Descripción de parámetros en prosa. Rellena el asistente. No es el chip de "
+"turno."
 
 #. module: pns_ai_chatboo
 #. odoo-javascript
 #: code:addons/pns_ai_chatboo/static/src/js/chatboo_app.js:0
-msgid "Delete a skill you created. Empty opens the picker. Help: /delete-skill ?"
-msgstr "Borra un skill que hayas creado. Vacío abre el selector. Ayuda: /delete-skill ?"
+msgid ""
+"Delete a skill you created. Empty opens the picker. Help: /delete-skill ?"
+msgstr ""
+"Borra un skill que hayas creado. Vacío abre el selector. Ayuda: /delete-"
+"skill ?"
 
 #. module: pns_ai_chatboo
 #. odoo-javascript
@@ -1221,8 +1352,11 @@ msgstr "abre el selector"
 #. module: pns_ai_chatboo
 #. odoo-javascript
 #: code:addons/pns_ai_chatboo/static/src/js/chatboo_app.js:0
-msgid "Rename a skill you created. Empty opens the picker. Help: /rename-skill ?"
-msgstr "Renombra un skill que hayas creado. Vacío abre el selector. Ayuda: /rename-skill ?"
+msgid ""
+"Rename a skill you created. Empty opens the picker. Help: /rename-skill ?"
+msgstr ""
+"Renombra un skill que hayas creado. Vacío abre el selector. Ayuda: /rename-"
+"skill ?"
 
 #. module: pns_ai_chatboo
 #. odoo-javascript
@@ -1306,13 +1440,16 @@ msgstr "Acceso denegado."
 #. odoo-python
 #: code:addons/pns_ai_chatboo/models/chatboo_session.py:0
 msgid "When to use: describe the user request this skill answers."
-msgstr "Cuándo usar: describe la petición del usuario a la que responde este skill."
+msgstr ""
+"Cuándo usar: describe la petición del usuario a la que responde este skill."
 
 #. module: pns_ai_chatboo
 #. odoo-python
 #: code:addons/pns_ai_chatboo/models/chatboo_session.py:0
 msgid "Parameters: list the user-facing parameters (e.g. period, employee)."
-msgstr "Parámetros: lista los parámetros visibles para el usuario (p. ej. periodo, empleado)."
+msgstr ""
+"Parámetros: lista los parámetros visibles para el usuario (p. ej. periodo, "
+"empleado)."
 
 #. module: pns_ai_chatboo
 #. odoo-python
@@ -1323,8 +1460,13 @@ msgstr "Salida: explica cómo presentar el resultado."
 #. module: pns_ai_chatboo
 #. odoo-python
 #: code:addons/pns_ai_chatboo/models/chatboo_session.py:0
-msgid "The Code must fetch live data on each run (api_call / relaxaicode). Do NOT rely on cached session rows (last_query_data) or pasted row literals."
-msgstr "El Code debe obtener datos en vivo en cada ejecución (api_call / relaxaicode). NO uses filas cacheadas de sesión (last_query_data) ni literales pegados."
+msgid ""
+"The Code must fetch live data on each run (api_call / relaxaicode). Do NOT "
+"rely on cached session rows (last_query_data) or pasted row literals."
+msgstr ""
+"El Code debe obtener datos en vivo en cada ejecución (api_call / "
+"relaxaicode). NO uses filas cacheadas de sesión (last_query_data) ni "
+"literales pegados."
 
 #. module: pns_ai_chatboo
 #. odoo-python
@@ -1335,14 +1477,22 @@ msgstr "Ejecuta el Code capturado con relaxaicode; no recalcules su lógica."
 #. module: pns_ai_chatboo
 #. odoo-python
 #: code:addons/pns_ai_chatboo/models/chatboo_session.py:0
-msgid "The captured code contains pasted row literals (e.g. data = [{...}, ...]). Replace that block with live api_call fetches before publishing the skill."
-msgstr "El código capturado contiene filas pegadas (p. ej. data = [{...}, ...]). Sustituye ese bloque por api_call en vivo antes de publicar el skill."
+msgid ""
+"The captured code contains pasted row literals (e.g. data = [{...}, ...]). "
+"Replace that block with live api_call fetches before publishing the skill."
+msgstr ""
+"El código capturado contiene filas pegadas (p. ej. data = [{...}, ...]). "
+"Sustituye ese bloque por api_call en vivo antes de publicar el skill."
 
 #. module: pns_ai_chatboo
 #. odoo-python
 #: code:addons/pns_ai_chatboo/models/chatboo_session.py:0
-msgid "The captured code may contain hardcoded rows. Replace them with live api_call fetches before publishing the skill."
-msgstr "El código capturado puede contener filas hardcodeadas. Sustitúyelas por api_call en vivo antes de publicar el skill."
+msgid ""
+"The captured code may contain hardcoded rows. Replace them with live "
+"api_call fetches before publishing the skill."
+msgstr ""
+"El código capturado puede contener filas hardcodeadas. Sustitúyelas por "
+"api_call en vivo antes de publicar el skill."
 
 #. module: pns_ai_chatboo
 #. odoo-python
@@ -1377,8 +1527,12 @@ msgstr "Capturar skill desde chat"
 #. module: pns_ai_chatboo
 #. odoo-python
 #: code:addons/pns_ai_chatboo/models/chatboo_session.py:0
-msgid "WARNING: the captured Code may contain hardcoded row literals from a one-off answer. Replace them with live api_call fetches before publishing."
-msgstr "AVISO: el Code capturado puede contener filas literales de una respuesta puntual. Sustitúyelas por api_call en vivo antes de publicar."
+msgid ""
+"WARNING: the captured Code may contain hardcoded row literals from a one-off"
+" answer. Replace them with live api_call fetches before publishing."
+msgstr ""
+"AVISO: el Code capturado puede contener filas literales de una respuesta "
+"puntual. Sustitúyelas por api_call en vivo antes de publicar."
 
 #. module: pns_ai_chatboo
 #. odoo-python
@@ -1401,8 +1555,11 @@ msgstr "El chip de turno es obligatorio: /create-skill VWVN slash-name"
 #. module: pns_ai_chatboo
 #. odoo-python
 #: code:addons/pns_ai_chatboo/models/chatboo_session.py:0
-msgid "Invalid turn id %s. Use the 4-character code from the chip (e.g. VWVN)."
-msgstr "Id de turno %s no válido. Usa el código de 4 caracteres del chip (p. ej. VWVN)."
+msgid ""
+"Invalid turn id %s. Use the 4-character code from the chip (e.g. VWVN)."
+msgstr ""
+"Id de turno %s no válido. Usa el código de 4 caracteres del chip (p. ej. "
+"VWVN)."
 
 #. module: pns_ai_chatboo
 #. odoo-python
@@ -1431,8 +1588,12 @@ msgstr "El skill /%s no tiene Code capturable."
 #. module: pns_ai_chatboo
 #. odoo-python
 #: code:addons/pns_ai_chatboo/models/chatboo_session.py:0
-msgid "This turn ran /%s. The wizard has that skill's Code and Procedure (not a new query)."
-msgstr "Este turno ejecutó /%s. El asistente trae el Code y el Procedure de ese skill (no una consulta nueva)."
+msgid ""
+"This turn ran /%s. The wizard has that skill's Code and Procedure (not a new"
+" query)."
+msgstr ""
+"Este turno ejecutó /%s. El asistente trae el Code y el Procedure de ese "
+"skill (no una consulta nueva)."
 
 #. module: pns_ai_chatboo
 #. odoo-python
@@ -1443,20 +1604,28 @@ msgstr "Este turno ejecutó /%s. El asistente lo captura como /%s."
 #. module: pns_ai_chatboo
 #. odoo-python
 #: code:addons/pns_ai_chatboo/models/chatboo_session.py:0
-msgid "This skill opens the page from that turn. Each run fills it with live rows and does not call Design."
-msgstr "Este skill abre la página de ese turno. Cada ejecución la rellena con filas nuevas y no llama a Diseño."
+msgid ""
+"This skill opens the page from that turn. Each run fills it with live rows "
+"and does not call Design."
+msgstr ""
+"Este skill abre la página de ese turno. Cada ejecución la rellena con filas "
+"nuevas y no llama a Diseño."
 
 #. module: pns_ai_chatboo
 #. odoo-python
 #: code:addons/pns_ai_chatboo/models/skill_capture_wizard.py:0
 msgid "This page mixed data into the design. It cannot be saved as a skill."
-msgstr "Esta página mezcló los datos con el diseño. No se puede guardar como skill."
+msgstr ""
+"Esta página mezcló los datos con el diseño. No se puede guardar como skill."
 
 #. module: pns_ai_chatboo
 #. odoo-python
 #: code:addons/pns_ai_chatboo/models/skill_capture_wizard.py:0
-msgid "This page mixed data into the design (%s). It cannot be saved as a skill."
-msgstr "Esta página mezcló los datos con el diseño (%s). No se puede guardar como skill."
+msgid ""
+"This page mixed data into the design (%s). It cannot be saved as a skill."
+msgstr ""
+"Esta página mezcló los datos con el diseño (%s). No se puede guardar como "
+"skill."
 
 #. module: pns_ai_chatboo
 #: model:ir.model.fields,field_description:pns_ai_chatboo.field_chatboo_session__canvas_turn
@@ -1622,12 +1791,6 @@ msgstr "tokens facturados"
 #. module: pns_ai_chatboo
 #. odoo-javascript
 #: code:addons/pns_ai_chatboo/static/src/js/chatboo_app.js:0
-msgid "last turn"
-msgstr "último turno"
-
-#. module: pns_ai_chatboo
-#. odoo-javascript
-#: code:addons/pns_ai_chatboo/static/src/js/chatboo_app.js:0
 msgid "COST"
 msgstr "COSTE"
 
@@ -1664,8 +1827,12 @@ msgstr "Realizadas"
 #. module: pns_ai_chatboo
 #. odoo-javascript
 #: code:addons/pns_ai_chatboo/static/src/js/chatboo_app.js:0
-msgid "Billed tokens sum every internal LLM call in each reply (tools, ReAct, etc.)."
-msgstr "Los tokens facturados suman cada llamada interna al LLM de cada respuesta (herramientas, ReAct, etc.)."
+msgid ""
+"Billed tokens sum every internal LLM call in each reply (tools, ReAct, "
+"etc.)."
+msgstr ""
+"Los tokens facturados suman cada llamada interna al LLM de cada respuesta "
+"(herramientas, ReAct, etc.)."
 
 #. module: pns_ai_chatboo
 #. odoo-javascript
@@ -1682,8 +1849,12 @@ msgstr "máximo por llamada al LLM"
 #. module: pns_ai_chatboo
 #. odoo-javascript
 #: code:addons/pns_ai_chatboo/static/src/js/chatboo_app.js:0
-msgid "Each reply may use several internal calls. This cap is per call, not the chat stored on disk."
-msgstr "Cada respuesta puede usar varias llamadas internas. Este tope es por llamada, no el chat guardado en disco."
+msgid ""
+"Each reply may use several internal calls. This cap is per call, not the "
+"chat stored on disk."
+msgstr ""
+"Cada respuesta puede usar varias llamadas internas. Este tope es por "
+"llamada, no el chat guardado en disco."
 
 #. module: pns_ai_chatboo
 #. odoo-javascript
@@ -1784,8 +1955,8 @@ msgstr "No se pudo borrar el skill."
 #. module: pns_ai_chatboo
 #. odoo-python
 #. odoo-javascript
-#: code:addons/pns_ai_chatboo/static/src/js/chatboo_app.js:0
 #: code:addons/pns_ai_chatboo/models/ai_skill.py:0
+#: code:addons/pns_ai_chatboo/static/src/js/chatboo_app.js:0
 msgid "Skill /%s deleted."
 msgstr "Skill /%s borrado."
 
@@ -1798,16 +1969,22 @@ msgstr "No se pudo renombrar el skill."
 #. module: pns_ai_chatboo
 #. odoo-python
 #. odoo-javascript
-#: code:addons/pns_ai_chatboo/static/src/js/chatboo_app.js:0
 #: code:addons/pns_ai_chatboo/models/ai_skill.py:0
+#: code:addons/pns_ai_chatboo/static/src/js/chatboo_app.js:0
 msgid "Skill renamed: /%s → /%s"
 msgstr "Skill renombrado: /%s → /%s"
 
 #. module: pns_ai_chatboo
 #. odoo-javascript
 #: code:addons/pns_ai_chatboo/static/src/js/chatboo_app.js:0
-msgid "Open the skill wizard on a skill you created. Empty opens the picker. Stem, prefixed slash, or a word from the name. Help text and parameters are edited in the wizard. Help: /edit-skill ?"
-msgstr "Abre el asistente de un skill que hayas creado. Vacío abre el selector. Stem, slash con prefijo o una palabra del nombre. La ayuda y los parámetros se editan en el asistente. Ayuda: /edit-skill ?"
+msgid ""
+"Open the skill wizard on a skill you created. Empty opens the picker. Stem, "
+"prefixed slash, or a word from the name. Help text and parameters are edited"
+" in the wizard. Help: /edit-skill ?"
+msgstr ""
+"Abre el asistente de un skill que hayas creado. Vacío abre el selector. "
+"Stem, slash con prefijo o una palabra del nombre. La ayuda y los parámetros "
+"se editan en el asistente. Ayuda: /edit-skill ?"
 
 #. module: pns_ai_chatboo
 #. odoo-javascript
@@ -1860,8 +2037,12 @@ msgstr "Abre primero una sesión de chat."
 #. module: pns_ai_chatboo
 #. odoo-python
 #: code:addons/pns_ai_chatboo/models/chatboo_session.py:0
-msgid "Describe the parameters for /%s. The next message (no slash) is the contract."
-msgstr "Describe los parámetros de /%s. El siguiente mensaje (sin slash) es el contrato."
+msgid ""
+"Describe the parameters for /%s. The next message (no slash) is the "
+"contract."
+msgstr ""
+"Describe los parámetros de /%s. El siguiente mensaje (sin slash) es el "
+"contrato."
 
 #. module: pns_ai_chatboo
 #. odoo-python
@@ -1876,8 +2057,12 @@ msgstr "Skill pendiente de parámetros"
 
 #. module: pns_ai_chatboo
 #: model:ir.model.fields,help:pns_ai_chatboo.field_chatboo_session__pending_param_skill_id
-msgid "Unused. Kept so existing databases keep the column. Parameter prose lives in the skill wizard."
-msgstr "Sin uso. Se mantiene para no tocar la columna en bases ya instaladas. La prosa de parámetros vive en el asistente."
+msgid ""
+"Unused. Kept so existing databases keep the column. Parameter prose lives in"
+" the skill wizard."
+msgstr ""
+"Sin uso. Se mantiene para no tocar la columna en bases ya instaladas. La "
+"prosa de parámetros vive en el asistente."
 
 #. module: pns_ai_chatboo
 #. odoo-python
@@ -1894,8 +2079,11 @@ msgstr "Editar skill"
 #. module: pns_ai_chatboo
 #. odoo-javascript
 #: code:addons/pns_ai_chatboo/static/src/js/chatboo_app.js:0
-msgid "No turn in this session. Run a query first, or pass the 4-character chip."
-msgstr "No hay turno en esta sesión. Lanza una consulta primero, o pasa el chip de 4 caracteres."
+msgid ""
+"No turn in this session. Run a query first, or pass the 4-character chip."
+msgstr ""
+"No hay turno en esta sesión. Lanza una consulta primero, o pasa el chip de 4"
+" caracteres."
 
 #. module: pns_ai_chatboo
 #. odoo-javascript
@@ -1913,7 +2101,8 @@ msgstr "Elegir vistas"
 #. odoo-javascript
 #: code:addons/pns_ai_chatboo/static/src/js/chatboo_choice_list.js:0
 msgid "Mark the screens that should receive this change. Confirm comes next."
-msgstr "Marca las pantallas que deben recibir este cambio. Después viene Confirmar."
+msgstr ""
+"Marca las pantallas que deben recibir este cambio. Después viene Confirmar."
 
 #. module: pns_ai_chatboo
 #. odoo-javascript
@@ -1955,15 +2144,29 @@ msgstr "Mostrar el icono de Chatboo en la barra de navegación superior."
 #: model:ir.model.fields,help:pns_ai_chatboo.field_ai_agent__chatboo_dataset_cache_max_mb
 #: model:ir.model.fields,help:pns_ai_chatboo.field_res_config_settings__chatboo_dataset_cache_max_mb
 #: model_terms:ir.ui.view,arch_db:pns_ai_chatboo.res_config_settings_view_form_chatboo_mcp
-msgid "Copy of the last table, kept aside so the next message can reorder it without a new query. Those rows stay out of the prompt: sending the whole table every turn used to fill it. A heavier list is skipped. 0 = no size cap."
-msgstr "Copia de la última tabla, guardada aparte para que el siguiente mensaje pueda reordenarla sin consultar otra vez. Esas filas se quedan fuera del prompt: antes se reenviaba la tabla entera en cada turno y se llenaba. Si la lista pesa más, no se copia. 0 = sin tope."
+msgid ""
+"Copy of the last table, kept aside so the next message can reorder it "
+"without a new query. Those rows stay out of the prompt: sending the whole "
+"table every turn used to fill it. A heavier list is skipped. 0 = no size "
+"cap."
+msgstr ""
+"Copia de la última tabla, guardada aparte para que el siguiente mensaje "
+"pueda reordenarla sin consultar otra vez. Esas filas se quedan fuera del "
+"prompt: antes se reenviaba la tabla entera en cada turno y se llenaba. Si la"
+" lista pesa más, no se copia. 0 = sin tope."
 
 #. module: pns_ai_chatboo
 #: model:ir.model.fields,help:pns_ai_chatboo.field_ai_agent__chatboo_query_data_ttl_hours
 #: model:ir.model.fields,help:pns_ai_chatboo.field_res_config_settings__chatboo_query_data_ttl_hours
 #: model_terms:ir.ui.view,arch_db:pns_ai_chatboo.res_config_settings_view_form_chatboo_mcp
-msgid "After this the aside copy is dropped. Tables already on screen and files you uploaded stay in the session. A later \"same list, but…\" runs the query again. 0 = the copy lasts as long as the session."
-msgstr "Pasado este tiempo se tira esa copia. Las tablas que ya ves en pantalla y los ficheros que subiste siguen en la sesión. Un «la misma lista, pero…» más tarde vuelve a consultar. 0 = la copia dura lo que dure la sesión."
+msgid ""
+"After this the aside copy is dropped. Tables already on screen and files you"
+" uploaded stay in the session. A later \"same list, but…\" runs the query "
+"again. 0 = the copy lasts as long as the session."
+msgstr ""
+"Pasado este tiempo se tira esa copia. Las tablas que ya ves en pantalla y "
+"los ficheros que subiste siguen en la sesión. Un «la misma lista, pero…» más"
+" tarde vuelve a consultar. 0 = la copia dura lo que dure la sesión."
 
 #. module: pns_ai_chatboo
 #: model:ir.model.fields,help:pns_ai_chatboo.field_chatboo_session__name
@@ -1978,7 +2181,9 @@ msgstr "Propietario de la sesión"
 #. module: pns_ai_chatboo
 #: model:ir.model.fields,help:pns_ai_chatboo.field_chatboo_session__messages
 msgid "JSON with the full message history (role, content, timestamp, ...)"
-msgstr "JSON con el historial completo de mensajes (rol, contenido, marca de tiempo, …)"
+msgstr ""
+"JSON con el historial completo de mensajes (rol, contenido, marca de tiempo,"
+" …)"
 
 #. module: pns_ai_chatboo
 #: model:ir.model.fields,help:pns_ai_chatboo.field_chatboo_session__input_history
@@ -1988,7 +2193,9 @@ msgstr "Array JSON con el historial de prompts del usuario (readline)"
 #. module: pns_ai_chatboo
 #: model:ir.model.fields,help:pns_ai_chatboo.field_chatboo_session__conversation_id
 msgid "Conversation id kept across turns to preserve historical context"
-msgstr "Identificador de conversación que se conserva entre turnos para mantener el contexto histórico"
+msgstr ""
+"Identificador de conversación que se conserva entre turnos para mantener el "
+"contexto histórico"
 
 #. module: pns_ai_chatboo
 #: model:ir.model.fields,help:pns_ai_chatboo.field_chatboo_session__last_used_date
@@ -2002,43 +2209,104 @@ msgstr "Última pantalla superpuesta de Chatboo (action_id, view_type, model)."
 
 #. module: pns_ai_chatboo
 #: model:ir.model.fields,help:pns_ai_chatboo.field_chatboo_session__last_query_code
-msgid "Python code of the last relaxaicode call that produced data in this session. It is re-injected as a hint on the next turn so the model REUSES/adapts it for reformat/reorder follow-ups ('same list but…', 'sort by…') instead of re-deriving the query from scratch — the main source of turn-to-turn variability (see docs). Not shown to the user."
-msgstr "Código Python de la última llamada relaxaicode que produjo datos en esta sesión. Se reinyecta como pista en el siguiente turno para que el modelo lo REUTILICE o adapte en reformateos y reordenaciones («la misma lista pero…», «ordena por…») en lugar de rederivar la consulta desde cero — la principal fuente de variabilidad entre turnos (véase la documentación). No se muestra al usuario."
+msgid ""
+"Python code of the last relaxaicode call that produced data in this session."
+" It is re-injected as a hint on the next turn so the model REUSES/adapts it "
+"for reformat/reorder follow-ups ('same list but…', 'sort by…') instead of "
+"re-deriving the query from scratch — the main source of turn-to-turn "
+"variability (see docs). Not shown to the user."
+msgstr ""
+"Código Python de la última llamada relaxaicode que produjo datos en esta "
+"sesión. Se reinyecta como pista en el siguiente turno para que el modelo lo "
+"REUTILICE o adapte en reformateos y reordenaciones («la misma lista pero…», "
+"«ordena por…») en lugar de rederivar la consulta desde cero — la principal "
+"fuente de variabilidad entre turnos (véase la documentación). No se muestra "
+"al usuario."
 
 #. module: pns_ai_chatboo
 #: model:ir.model.fields,help:pns_ai_chatboo.field_chatboo_session__last_query_data
-msgid "JSON with the ROWS of the last successful data query in this session (size-capped). Re-injected as 'previous_result' into the next relaxaicode namespace so reformat/reorder follow-ups transform the SAME data server-side instead of re-querying — no extra tokens, mirroring a code-interpreter kernel. Auto-expired by age (see query_data_ttl_hours) and purged by cron. Never shown to the user."
-msgstr "JSON con las FILAS de la última consulta de datos correcta de esta sesión (con tope de tamaño). Se reinyecta como previous_result en el siguiente espacio de nombres relaxaicode para que los reformateos y reordenaciones transformen los MISMOS datos en el servidor en lugar de volver a consultar — sin tokens extra, como un kernel de intérprete. Caduca por antigüedad (véase query_data_ttl_hours) y el cron lo elimina. Nunca se muestra al usuario."
+msgid ""
+"JSON with the ROWS of the last successful data query in this session (size-"
+"capped). Re-injected as 'previous_result' into the next relaxaicode "
+"namespace so reformat/reorder follow-ups transform the SAME data server-side"
+" instead of re-querying — no extra tokens, mirroring a code-interpreter "
+"kernel. Auto-expired by age (see query_data_ttl_hours) and purged by cron. "
+"Never shown to the user."
+msgstr ""
+"JSON con las FILAS de la última consulta de datos correcta de esta sesión "
+"(con tope de tamaño). Se reinyecta como previous_result en el siguiente "
+"espacio de nombres relaxaicode para que los reformateos y reordenaciones "
+"transformen los MISMOS datos en el servidor en lugar de volver a consultar —"
+" sin tokens extra, como un kernel de intérprete. Caduca por antigüedad "
+"(véase query_data_ttl_hours) y el cron lo elimina. Nunca se muestra al "
+"usuario."
 
 #. module: pns_ai_chatboo
 #: model:ir.model.fields,help:pns_ai_chatboo.field_chatboo_session__last_query_data_date
-msgid "When last_query_data was cached; used to expire it (freshness TTL) so stale datasets are not reused nor kept forever."
-msgstr "Cuándo se cacheó last_query_data; se usa para caducarlo (TTL de frescura) y que los conjuntos obsoletos no se reutilicen ni se conserven para siempre."
+msgid ""
+"When last_query_data was cached; used to expire it (freshness TTL) so stale "
+"datasets are not reused nor kept forever."
+msgstr ""
+"Cuándo se cacheó last_query_data; se usa para caducarlo (TTL de frescura) y "
+"que los conjuntos obsoletos no se reutilicen ni se conserven para siempre."
 
 #. module: pns_ai_chatboo
 #: model:ir.model.fields,help:pns_ai_chatboo.field_chatboo_session__attached_documents
-msgid "JSON with the text of the files the user attached in this session, page by page. Later turns get a short note and the model reads the part it needs with read_document. Not shown to the user."
-msgstr "JSON con el texto de los ficheros que el usuario adjuntó en esta sesión, página a página. Los turnos siguientes reciben una nota corta y el modelo lee la parte que necesita con read_document. No se muestra al usuario."
+msgid ""
+"JSON with the text of the files the user attached in this session, page by "
+"page. Later turns get a short note and the model reads the part it needs "
+"with read_document. Not shown to the user."
+msgstr ""
+"JSON con el texto de los ficheros que el usuario adjuntó en esta sesión, "
+"página a página. Los turnos siguientes reciben una nota corta y el modelo "
+"lee la parte que necesita con read_document. No se muestra al usuario."
 
 #. module: pns_ai_chatboo
 #: model:ir.model.fields,help:pns_ai_chatboo.field_chatboo_session__active_skill_code
-msgid "Code of the skill kept 'sticky' for this session. While set, a follow-up (natural language or `/<same code> args`) is judged by the AI: if it refines the same task, the skill re-runs with merged params; if it's a new topic, this is cleared. A bare `/<code>` (no args) starts fresh. Not shown to the user."
-msgstr "Código de la habilidad que queda «pegada» en esta sesión. Mientras esté asignado, un seguimiento (lenguaje natural o `/<mismo código> args`) lo juzga la IA: si refina la misma tarea, la habilidad se reejecuta con los parámetros fusionados; si es un tema nuevo, se limpia. Un `/<código>` suelto (sin argumentos) empieza de cero. No se muestra al usuario."
+msgid ""
+"Code of the skill kept 'sticky' for this session. While set, a follow-up "
+"(natural language or `/<same code> args`) is judged by the AI: if it refines"
+" the same task, the skill re-runs with merged params; if it's a new topic, "
+"this is cleared. A bare `/<code>` (no args) starts fresh. Not shown to the "
+"user."
+msgstr ""
+"Código de la habilidad que queda «pegada» en esta sesión. Mientras esté "
+"asignado, un seguimiento (lenguaje natural o `/<mismo código> args`) lo "
+"juzga la IA: si refina la misma tarea, la habilidad se reejecuta con los "
+"parámetros fusionados; si es un tema nuevo, se limpia. Un `/<código>` suelto"
+" (sin argumentos) empieza de cero. No se muestra al usuario."
 
 #. module: pns_ai_chatboo
 #: model:ir.model.fields,help:pns_ai_chatboo.field_chatboo_session__active_skill_params
-msgid "JSON with the current parameters of active_skill_code. The AI merges each refinement onto these (add/remove/change) so the conversation can rotate params over the previous state without a turn limit. Not shown to the user."
-msgstr "JSON con los parámetros actuales de active_skill_code. La IA fusiona cada refinamiento (añadir/quitar/cambiar) para rotar parámetros sobre el estado anterior sin límite de turnos. No se muestra al usuario."
+msgid ""
+"JSON with the current parameters of active_skill_code. The AI merges each "
+"refinement onto these (add/remove/change) so the conversation can rotate "
+"params over the previous state without a turn limit. Not shown to the user."
+msgstr ""
+"JSON con los parámetros actuales de active_skill_code. La IA fusiona cada "
+"refinamiento (añadir/quitar/cambiar) para rotar parámetros sobre el estado "
+"anterior sin límite de turnos. No se muestra al usuario."
 
 #. module: pns_ai_chatboo
 #: model:ir.model.fields,help:pns_ai_chatboo.field_res_config_settings__chatboo_chart_engine
-msgid "Library used to render charts under server-built tables. ECharts is recommended for combined bar/line charts."
-msgstr "Biblioteca usada para pintar gráficos bajo las tablas generadas en el servidor. Se recomienda ECharts para gráficos combinados de barras y líneas."
+msgid ""
+"Library used to render charts under server-built tables. ECharts is "
+"recommended for combined bar/line charts."
+msgstr ""
+"Biblioteca usada para pintar gráficos bajo las tablas generadas en el "
+"servidor. Se recomienda ECharts para gráficos combinados de barras y líneas."
 
 #. module: pns_ai_chatboo
 #: model:ir.model.fields,help:pns_ai_chatboo.field_res_config_settings__chatboo_default_show_mode
-msgid "Starting showmode for each new Chatboo conversation: show-table or show-chart. Stays until /show-table, /show-chart or phrasing (“show as chart” / “show as table”). Suspended under compose-model. Not a per-turn LLM choice."
-msgstr "Modo de presentación inicial de cada conversación nueva de Chatboo: show-table o show-chart. Se mantiene hasta /show-table, /show-chart o una frase («muéstralo como gráfico» / «muéstralo como tabla»). Se suspende con compose-model. No es una elección del LLM por turno."
+msgid ""
+"Starting showmode for each new Chatboo conversation: show-table or show-"
+"chart. Stays until /show-table, /show-chart or phrasing (“show as chart” / "
+"“show as table”). Suspended under compose-model. Not a per-turn LLM choice."
+msgstr ""
+"Modo de presentación inicial de cada conversación nueva de Chatboo: show-"
+"table o show-chart. Se mantiene hasta /show-table, /show-chart o una frase "
+"(«muéstralo como gráfico» / «muéstralo como tabla»). Se suspende con "
+"compose-model. No es una elección del LLM por turno."
 
 #. module: pns_ai_chatboo
 #: model:ir.model.fields,field_description:pns_ai_chatboo.field_chatboo_session__last_screen_context
@@ -2047,15 +2315,15 @@ msgstr "Último contexto de pantalla (JSON)"
 
 #. module: pns_ai_chatboo
 #. odoo-javascript
-#: code:addons/pns_ai_chatboo/static/src/js/chatboo_export.js:0
 #: code:addons/pns_ai_chatboo/static/src/js/chatboo_charts.js:0
+#: code:addons/pns_ai_chatboo/static/src/js/chatboo_export.js:0
 msgid "Series statistics"
 msgstr "Estadística de series"
 
 #. module: pns_ai_chatboo
 #. odoo-javascript
-#: code:addons/pns_ai_chatboo/static/src/js/chatboo_export.js:0
 #: code:addons/pns_ai_chatboo/static/src/js/chatboo_charts.js:0
+#: code:addons/pns_ai_chatboo/static/src/js/chatboo_export.js:0
 msgid "Statistics"
 msgstr "Estadísticas"
 
@@ -2067,50 +2335,50 @@ msgstr "Gráfico"
 
 #. module: pns_ai_chatboo
 #. odoo-javascript
-#: code:addons/pns_ai_chatboo/static/src/js/chatboo_export.js:0
 #: code:addons/pns_ai_chatboo/static/src/js/chatboo_charts.js:0
+#: code:addons/pns_ai_chatboo/static/src/js/chatboo_export.js:0
 msgid "n"
 msgstr "n"
 
 #. module: pns_ai_chatboo
 #. odoo-javascript
-#: code:addons/pns_ai_chatboo/static/src/js/chatboo_export.js:0
 #: code:addons/pns_ai_chatboo/static/src/js/chatboo_charts.js:0
+#: code:addons/pns_ai_chatboo/static/src/js/chatboo_export.js:0
 msgid "Min"
 msgstr "Mín"
 
 #. module: pns_ai_chatboo
 #. odoo-javascript
-#: code:addons/pns_ai_chatboo/static/src/js/chatboo_export.js:0
 #: code:addons/pns_ai_chatboo/static/src/js/chatboo_charts.js:0
+#: code:addons/pns_ai_chatboo/static/src/js/chatboo_export.js:0
 msgid "Max"
 msgstr "Máx"
 
 #. module: pns_ai_chatboo
 #. odoo-javascript
-#: code:addons/pns_ai_chatboo/static/src/js/chatboo_export.js:0
 #: code:addons/pns_ai_chatboo/static/src/js/chatboo_charts.js:0
+#: code:addons/pns_ai_chatboo/static/src/js/chatboo_export.js:0
 msgid "Mean"
 msgstr "Media"
 
 #. module: pns_ai_chatboo
 #. odoo-javascript
-#: code:addons/pns_ai_chatboo/static/src/js/chatboo_export.js:0
 #: code:addons/pns_ai_chatboo/static/src/js/chatboo_charts.js:0
+#: code:addons/pns_ai_chatboo/static/src/js/chatboo_export.js:0
 msgid "Median"
 msgstr "Mediana"
 
 #. module: pns_ai_chatboo
 #. odoo-javascript
-#: code:addons/pns_ai_chatboo/static/src/js/chatboo_export.js:0
 #: code:addons/pns_ai_chatboo/static/src/js/chatboo_charts.js:0
+#: code:addons/pns_ai_chatboo/static/src/js/chatboo_export.js:0
 msgid "Std. dev."
 msgstr "Desv. típ."
 
 #. module: pns_ai_chatboo
 #. odoo-javascript
-#: code:addons/pns_ai_chatboo/static/src/js/chatboo_export.js:0
 #: code:addons/pns_ai_chatboo/static/src/js/chatboo_charts.js:0
+#: code:addons/pns_ai_chatboo/static/src/js/chatboo_export.js:0
 msgid "Sum"
 msgstr "Suma"
 
@@ -2122,21 +2390,22 @@ msgstr "Límite de subida (MB)"
 
 #. module: pns_ai_chatboo
 #: model:ir.model.fields,help:pns_ai_chatboo.field_ai_agent__chatboo_upload_max_mb
-#: model:ir.model.fields,help:pns_ai_chatboo.field_res_config_settings__chatboo_upload_max_mb
-msgid "Max size of each picture or file sent to the chat. Bigger ones are refused before the turn starts. 0 = no limit."
-msgstr "Tamaño máximo de cada imagen o fichero que se envía al chat. Los mayores se rechazan antes de empezar el turno. 0 = sin límite."
+msgid ""
+"Max size of each picture or file sent to the chat. Bigger ones are refused "
+"before the turn starts. 0 = no limit."
+msgstr ""
+"Tamaño máximo de cada imagen o fichero que se envía al chat. Los mayores se "
+"rechazan antes de empezar el turno. 0 = sin límite."
 
 #. module: pns_ai_chatboo
 #. odoo-python
 #: code:addons/pns_ai_chatboo/controllers/chatboo.py:0
-#, python-format
 msgid "\"%(name)s\" is larger than the upload limit (%(mb)s MB)."
 msgstr "«%(name)s» supera el límite de subida (%(mb)s MB)."
 
 #. module: pns_ai_chatboo
 #. odoo-python
 #: code:addons/pns_ai_chatboo/controllers/chatboo.py:0
-#, python-format
 msgid "A file is larger than the upload limit (%s MB)."
 msgstr "Un fichero supera el límite de subida (%s MB)."
 
@@ -2216,7 +2485,8 @@ msgstr "Página no encontrada"
 #. odoo-python
 #: code:addons/pns_ai_chatboo/models/chatboo_canvas_job.py:0
 msgid "No page was built: the server restarted while it was being laid out."
-msgstr "No se ha creado la página: el servidor se reinició mientras se creaba."
+msgstr ""
+"No se ha creado la página: el servidor se reinició mientras se creaba."
 
 #. module: pns_ai_chatboo
 #. odoo-python
@@ -2260,16 +2530,21 @@ msgid "Chatboo shared page"
 msgstr "Página compartida de Chatboo"
 
 #. module: pns_ai_chatboo
+#: model:ir.model.fields,field_description:pns_ai_chatboo.field_chatboo_canvas_job__title
 #: model:ir.model.fields,field_description:pns_ai_chatboo.field_chatboo_canvas_page__name
 msgid "Title"
 msgstr "Título"
 
 #. module: pns_ai_chatboo
+#. odoo-python
+#: code:addons/pns_ai_chatboo/models/chatboo_canvas.py:0
 #: model:ir.model.fields,field_description:pns_ai_chatboo.field_chatboo_canvas_page__design
 msgid "Page"
 msgstr "Página"
 
 #. module: pns_ai_chatboo
+#. odoo-python
+#: code:addons/pns_ai_chatboo/models/chatboo_canvas.py:0
 #: model:ir.model.fields,field_description:pns_ai_chatboo.field_chatboo_canvas_page__user_ids
 msgid "Shared with"
 msgstr "Compartida con"
@@ -2425,7 +2700,6 @@ msgstr "Mostrar de nuevo"
 msgid "Show all"
 msgstr "Mostrar todas"
 
-
 #. module: pns_ai_chatboo
 #. odoo-python
 #: code:addons/pns_ai_chatboo/controllers/chatboo.py:0
@@ -2447,20 +2721,30 @@ msgstr "Preparar y descargar"
 #. module: pns_ai_chatboo
 #: model:ir.model.fields,field_description:pns_ai_chatboo.field_ai_agent__chatboo_allow_remote_voices
 #: model:ir.model.fields,field_description:pns_ai_chatboo.field_res_config_settings__chatboo_allow_remote_voices
-#: model_terms:ir.ui.view,arch_db:pns_ai_chatboo.res_config_settings_view_form_chatboo_mcp
 msgid "Allow remote voices"
 msgstr "Permitir voces remotas"
 
 #. module: pns_ai_chatboo
 #: model:ir.model.fields,help:pns_ai_chatboo.field_ai_agent__chatboo_allow_remote_voices
 #: model:ir.model.fields,help:pns_ai_chatboo.field_res_config_settings__chatboo_allow_remote_voices
-msgid "Unchecked: Chatboo only reads aloud with a voice installed on this computer. Checked: if none is installed, the browser may send the text to its vendor (Google, Microsoft, …)."
-msgstr "Desmarcada: Chatboo solo lee en voz alta con una voz instalada en este equipo. Marcada: si no hay ninguna, el navegador puede enviar el texto a su fabricante (Google, Microsoft, …)."
+msgid ""
+"Unchecked: Chatboo only reads aloud with a voice installed on this computer."
+" Checked: if none is installed, the browser may send the text to its vendor "
+"(Google, Microsoft, …)."
+msgstr ""
+"Desmarcada: Chatboo solo lee en voz alta con una voz instalada en este "
+"equipo. Marcada: si no hay ninguna, el navegador puede enviar el texto a su "
+"fabricante (Google, Microsoft, …)."
 
 #. module: pns_ai_chatboo
 #: model_terms:ir.ui.view,arch_db:pns_ai_chatboo.res_config_settings_view_form_chatboo_mcp
-msgid "If no voice is installed on this computer, the browser may send the text to its vendor (Google, Microsoft, …). Off: only a local voice is used."
-msgstr "Si no hay una voz instalada en este equipo, el navegador puede enviar el texto a su fabricante (Google, Microsoft, …). Apagada: solo se usa una voz local."
+msgid ""
+"If no voice is installed on this computer, the browser may send the text to "
+"its vendor (Google, Microsoft, …). Off: only a local voice is used."
+msgstr ""
+"Si no hay una voz instalada en este equipo, el navegador puede enviar el "
+"texto a su fabricante (Google, Microsoft, …). Apagada: solo se usa una voz "
+"local."
 
 #. module: pns_ai_chatboo
 #. odoo-javascript
@@ -2659,3 +2943,113 @@ msgstr "Rotar combinación (barra/línea por serie)"
 #: code:addons/pns_ai_chatboo/static/src/js/chatboo_charts.js:0
 msgid "Chart type"
 msgstr "Tipo de gráfico"
+
+#. module: pns_ai_chatboo
+#. odoo-javascript
+#: code:addons/pns_ai_chatboo/static/src/js/chatboo_export.js:0
+msgid "PDF downloaded:"
+msgstr "PDF descargado:"
+
+#. module: pns_ai_chatboo
+#. odoo-javascript
+#: code:addons/pns_ai_chatboo/static/src/js/chatboo_export.js:0
+msgid "Table"
+msgstr "Tabla"
+
+#. module: pns_ai_chatboo
+#. odoo-javascript
+#: code:addons/pns_ai_chatboo/static/src/js/chatboo_export.js:0
+msgid "Excel downloaded:"
+msgstr "Excel descargado:"
+
+#. module: pns_ai_chatboo
+#. odoo-python
+#: code:addons/pns_ai_chatboo/models/chatboo_session.py:0
+msgid "The attachment access check is not available."
+msgstr "La comprobación de acceso a los adjuntos no está disponible."
+
+#. module: pns_ai_chatboo
+#: model:ir.model.fields,field_description:pns_ai_chatboo.field_chatboo_canvas_job__msg_index
+msgid "Answer"
+msgstr "Respuesta"
+
+#. module: pns_ai_chatboo
+#: model:ir.model.fields,field_description:pns_ai_chatboo.field_chatboo_canvas_job__tables
+msgid "Tables (JSON)"
+msgstr "Tablas (JSON)"
+
+#. module: pns_ai_chatboo
+#: model:ir.model.fields,field_description:pns_ai_chatboo.field_chatboo_canvas_job__instruction
+msgid "Instruction"
+msgstr "Instrucción"
+
+#. module: pns_ai_chatboo
+#: model:ir.model.fields,field_description:pns_ai_chatboo.field_chatboo_canvas_job__url
+msgid "Page URL"
+msgstr "URL de la página"
+
+#. module: pns_ai_chatboo
+#: model:ir.model.fields,field_description:pns_ai_chatboo.field_chatboo_session__canvas_open
+msgid "Canvas open"
+msgstr "Lienzo abierto"
+
+#. module: pns_ai_chatboo
+#: model:ir.model.fields,field_description:pns_ai_chatboo.field_chatboo_session__canvas_design
+msgid "Canvas design"
+msgstr "Diseño del lienzo"
+
+#. module: pns_ai_chatboo
+#: model:ir.model.fields,field_description:pns_ai_chatboo.field_chatboo_session__canvas_rev
+msgid "Canvas revision"
+msgstr "Revisión del lienzo"
+
+#. module: pns_ai_chatboo
+#: model:ir.model.fields,field_description:pns_ai_chatboo.field_chatboo_session__canvas_title
+msgid "Canvas title"
+msgstr "Título del lienzo"
+
+#. module: pns_ai_chatboo
+#: model:ir.model.fields,help:pns_ai_chatboo.field_chatboo_session__canvas_title
+msgid ""
+"Title of the answer the page was laid out from. The browser tab shows it."
+msgstr ""
+"Título de la respuesta con la que se maquetó la página. Lo muestra la "
+"pestaña del navegador."
+
+#. module: pns_ai_chatboo
+#: model:ir.model.fields,help:pns_ai_chatboo.field_chatboo_session__canvas_turn
+msgid ""
+"Turn chip of the page that is open. /create-skill of that turn keeps the "
+"page."
+msgstr ""
+"Chip del turno de la página abierta. /create-skill de ese turno conserva la "
+"página."
+
+#. module: pns_ai_chatboo
+#: model:ir.model.fields,field_description:pns_ai_chatboo.field_chatboo_session__marked_refs
+msgid "Marked records"
+msgstr "Registros marcados"
+
+#. module: pns_ai_chatboo
+#: model:ir.model.fields,help:pns_ai_chatboo.field_chatboo_session__marked_refs
+msgid ""
+"JSON list of {model, id, label} for the rows the user ticked in the last "
+"answer. They travel with the next sentence so the model takes them as its "
+"subject instead of searching the name again. Spent by the turn that carries "
+"them. Not shown."
+msgstr ""
+"Lista JSON de {model, id, label} de las filas que el usuario marcó en la "
+"última respuesta. Viajan con la frase siguiente para que el modelo las tome "
+"como sujeto en vez de volver a buscar el nombre. Las gasta el turno que las "
+"lleva. No se muestra."
+
+#. module: pns_ai_chatboo
+#: model:ir.model.fields,help:pns_ai_chatboo.field_res_config_settings__chatboo_upload_max_mb
+msgid ""
+"Max size of each picture or file sent to the chat. Bigger ones are refused "
+"before the turn starts. 0 = no per-file limit; one message still carries at "
+"most 50 MB in all."
+msgstr ""
+"Tamaño máximo de cada imagen o archivo enviado al chat. Los más grandes se "
+"rechazan antes de empezar el turno. 0 = sin límite por archivo; un mensaje "
+"lleva como mucho 50 MB en total."
