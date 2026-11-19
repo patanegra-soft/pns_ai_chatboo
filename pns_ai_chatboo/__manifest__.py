@@ -7,7 +7,7 @@
 # template to inherit. The rest matches __manifest__.py.
 {
     'name': 'Chatboo — AI Chat Assistant',
-    'version': '15.0.2.1.594',
+    'version': '15.0.2.1.597',
     'images': ['static/description/banner_store.png'],
     'category': 'Productivity',
     'summary': 'Open-source AI chatbot for Odoo Community 14 to 20: ask about your records in plain words with OpenAI, Claude or Ollama, and get tables, charts, PDF or Excel. Each user sees only what they may see.',
@@ -57,6 +57,7 @@ turn endpoint (SSE streaming) and the user interface.
             'pns_ai_chatboo/static/src/js/chatboo_component_v2.js',
             'pns_ai_chatboo/static/src/js/chatboo_systray.js',
             'pns_ai_chatboo/static/src/js/chatboo_open_o15.js',
+            'pns_ai_chatboo/static/src/css/chatboo_systray_o15.css',
         ],
         'web.assets_qweb': [
             'pns_ai_chatboo/static/src/xml/chatboo_systray.xml',
