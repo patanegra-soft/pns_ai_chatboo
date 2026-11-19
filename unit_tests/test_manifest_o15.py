@@ -51,7 +51,9 @@ def test_o15_assets_are_assets_xml_without_o14_hooks():
     m14 = _manifest('__manifest__.py')
     assets = _manifest('__manifest_o15__.py')['assets']
     js = OWL1 / 'static' / 'src' / 'js'
+    css = OWL1 / 'static' / 'src' / 'css'
     o15 = ['%s/static/src/js/%s' % (MODULE, p.name) for p in sorted(js.glob('*_o15.js'))]
+    o15 += ['%s/static/src/css/%s' % (MODULE, p.name) for p in sorted(css.glob('*_o15.css'))]
     want = [p for p in _backend_from_assets_xml() if not p.endswith('_o14.js')] + o15
     assert assets['web.assets_backend'] == want
     qweb = ['%s/%s' % (MODULE, p) for p in m14.get('qweb', [])]

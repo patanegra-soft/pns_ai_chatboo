@@ -721,7 +721,7 @@ def test_a_page_in_the_making_shows_the_dots_and_can_be_cancelled():
     assert request_cancel.index('self.user_id.id != self.env.uid') < request_cancel.index('sudo()')
     for stack, app, po in (
         ('owl1', 'chatboo_component_v2.js', 'es.po'),
-        ('owl2', 'chatboo_app.js', 'es_ES.po'),
+        ('owl2', 'chatboo_app.js', 'es.po'),
     ):
         base = _ROOT / 'stacks' / stack / 'pns_ai_chatboo'
         js = (base / 'static' / 'src' / 'js' / app).read_text(encoding='utf-8')
@@ -765,7 +765,7 @@ def test_the_bubble_shows_one_view_and_its_buttons():
     assert 'mountCanvasButtons(root)' in hydrate
     for stack, app, po in (
         ('owl1', 'chatboo_component_v2.js', 'es.po'),
-        ('owl2', 'chatboo_app.js', 'es_ES.po'),
+        ('owl2', 'chatboo_app.js', 'es.po'),
     ):
         base = _ROOT / 'stacks' / stack / 'pns_ai_chatboo'
         js = (base / 'static' / 'src' / 'js' / app).read_text(encoding='utf-8')
@@ -1284,7 +1284,7 @@ def test_every_page_prints_and_downloads():
     fn = _CANVAS.split('def download_filename', 1)[1].split('\ndef ', 1)[0]
     assert "_('Canvas')" not in fn
     assert 'do not add your own' in mod.DESIGN_SYSTEM
-    for stack, po in (('owl1', 'es.po'), ('owl2', 'es_ES.po')):
+    for stack, po in (('owl1', 'es.po'), ('owl2', 'es.po')):
         base = _ROOT / 'stacks' / stack / 'pns_ai_chatboo'
         catalog = (base / 'i18n' / po).read_text(encoding='utf-8')
         assert 'msgid "Print / PDF"\nmsgstr "Imprimir / PDF"' in catalog
@@ -1373,7 +1373,7 @@ def test_every_page_has_a_day_and_a_night_theme():
         assert '#pns-theme:focus svg' not in page
     # Our wrapping is added when shown, never stored with the design.
     assert 'pns-theme' not in design
-    for stack, po in (('owl1', 'es.po'), ('owl2', 'es_ES.po')):
+    for stack, po in (('owl1', 'es.po'), ('owl2', 'es.po')):
         catalog = (
             _ROOT / 'stacks' / stack / 'pns_ai_chatboo' / 'i18n' / po
         ).read_text(encoding='utf-8')
@@ -1427,7 +1427,7 @@ def test_a_shared_page_is_a_fixed_copy_for_named_users():
             encoding='utf-8',
         ) == (_ROOT / 'stacks' / 'owl2' / 'pns_ai_chatboo' / 'views'
               / 'chatboo_canvas_page_views.xml').read_text(encoding='utf-8')
-        po = 'es.po' if stack == 'owl1' else 'es_ES.po'
+        po = 'es.po' if stack == 'owl1' else 'es.po'
         catalog = (base / 'i18n' / po).read_text(encoding='utf-8')
         assert 'msgid "Shared with"\nmsgstr "Compartida con"' in catalog
         owner = catalog.split('\nmsgid "Owner"', 1)[0].rsplit('#. module', 1)[1]
@@ -1490,7 +1490,7 @@ def test_sharing_is_picking_names_and_the_ai_admin_sees_every_page():
         assert 'parent="pns_ai_mcp.menu_ai_security"' in views
         assert '<field name="view_mode">tree,form</field>' in views
         assert views.count('name="action_unshare"') == 2
-        po = 'es.po' if stack == 'owl1' else 'es_ES.po'
+        po = 'es.po' if stack == 'owl1' else 'es.po'
         catalog = (base / 'i18n' / po).read_text(encoding='utf-8')
         assert 'msgid "Shared pages"\nmsgstr "Páginas compartidas"' in catalog
         assert 'msgid "Stop sharing"\nmsgstr "Dejar de compartir"' in catalog
@@ -1544,7 +1544,7 @@ def test_someone_added_to_a_shared_page_hears_about_it():
         shown = js.split('_showSharedPage', 2)[2]
         assert "/chatboo/page/" in shown.split('Open page', 1)[0]
         assert "'noopener'" in shown or '"noopener"' in shown
-    for stack, po in (('owl1', 'es.po'), ('owl2', 'es_ES.po')):
+    for stack, po in (('owl1', 'es.po'), ('owl2', 'es.po')):
         catalog = (_ROOT / 'stacks' / stack / 'pns_ai_chatboo' / 'i18n' / po).read_text(
             encoding='utf-8',
         )

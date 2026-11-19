@@ -5,7 +5,7 @@
 import re
 from pathlib import Path
 
-PO = Path(__file__).resolve().parents[1] / 'stacks' / 'owl2' / 'pns_ai_chatboo' / 'i18n' / 'es_ES.po'
+PO = Path(__file__).resolve().parents[1] / 'stacks' / 'owl2' / 'pns_ai_chatboo' / 'i18n' / 'es.po'
 
 
 def test_owl2_code_terms_carry_the_loader_flag():

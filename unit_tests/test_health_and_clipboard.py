@@ -26,6 +26,8 @@ def test_health_and_providers_do_not_leak():
         providers = _body(src, 'list_providers', '\n    # ')
         assert "Provider.sudo().search" not in providers
         assert 'self._chatboo_failed()' in providers
+        assert "get_providers_for_agent(\n                    agent_code, need='conversation'," in providers
+        assert 'get_failovers' not in providers
         stream = _body(src, 'chat_stream', '\n    def _sse_headers')
         assert "{'error': str(e)}" not in stream
         assert 'self._chatboo_failed()' in stream

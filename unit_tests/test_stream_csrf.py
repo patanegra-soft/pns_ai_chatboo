@@ -46,7 +46,7 @@ def test_a_stale_token_says_reload_instead_of_http_400(stack):
     if stack == 'owl1':
         assert 'Communication Error: ${error.message' not in src
         assert src.count('Communication Error: ${this._escapeHtml(error.message') == 2
-    po = 'es.po' if stack == 'owl1' else 'es_ES.po'
+    po = 'es.po' if stack == 'owl1' else 'es.po'
     catalog = (base / 'i18n' / po).read_text(encoding='utf-8')
     entry = catalog.split('msgid "Your session has changed. Reload the page (F5)."', 1)
     assert 'code:addons/pns_ai_chatboo/static/src/js/%s:0' % _JS[stack] in entry[0].rsplit('#. module', 1)[1]

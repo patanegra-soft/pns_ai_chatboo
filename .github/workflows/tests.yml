@@ -90,7 +90,15 @@ jobs:
           fi
           curl -fsSLo /tmp/chrome.deb https://dl.google.com/linux/direct/google-chrome-stable_current_amd64.deb
           apt-get update -qq
-          apt-get install -y -qq /tmp/chrome.deb >/dev/null
+          if ! apt-get install -y -qq /tmp/chrome.deb >/dev/null; then
+            # A Debian release out of support leaves the mirrors (its lists may
+            # stay, its packages do not) and lives on in archive.debian.org.
+            echo "::notice::Odoo ${series}: Debian packages from archive.debian.org"
+            sed -i -E 's#https?://(deb|security)\.debian\.org/#http://archive.debian.org/#g' \
+              $(grep -rlsE '(deb|security)\.debian\.org' /etc/apt/sources.list /etc/apt/sources.list.d)
+            apt-get -o Acquire::Check-Valid-Until=false update -qq
+            apt-get install -y -qq /tmp/chrome.deb >/dev/null
+          fi
           google-chrome --version
 
       - name: Dependencies missing from a clean Odoo

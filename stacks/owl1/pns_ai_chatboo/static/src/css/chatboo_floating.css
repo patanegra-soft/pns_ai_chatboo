@@ -308,7 +308,7 @@
 .o_ai_data_table th.o_ai_th_sort::after {
     content: "↕";
     display: inline-block;
-    margin-left: 0.4em;
+    margin-inline-start: 0.4em;
     font-size: 0.95em;
     font-weight: 700;
     line-height: 1;
@@ -525,7 +525,7 @@
 }
 .o_chatboo_series_stats caption {
     caption-side: top;
-    text-align: left;
+    text-align: start;
     font-weight: 600;
     padding: 0 0 0.35em;
 }
@@ -904,7 +904,7 @@
 }
 .o_ai_form_card_lines {
     margin: 0;
-    padding-left: 1.1rem;
+    padding-inline-start: 1.1rem;
     font-size: 0.85rem;
 }
 .o_ai_form_card_open {

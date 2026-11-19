@@ -188,7 +188,7 @@ def test_export_strips_resize_chrome():
 def test_i18n_restore_width_both_stacks():
     files = (
         _ROOT / 'stacks' / 'owl1' / 'pns_ai_chatboo' / 'i18n' / 'es.po',
-        _ROOT / 'stacks' / 'owl2' / 'pns_ai_chatboo' / 'i18n' / 'es_ES.po',
+        _ROOT / 'stacks' / 'owl2' / 'pns_ai_chatboo' / 'i18n' / 'es.po',
     )
     for path in files:
         text = path.read_text(encoding='utf-8')
@@ -380,7 +380,7 @@ def test_show_series_stats_pref_and_ui_both_stacks():
     es1 = (_ROOT / 'stacks' / 'owl1' / 'pns_ai_chatboo' / 'i18n' / 'es.po').read_text(
         encoding='utf-8'
     )
-    es2 = (_ROOT / 'stacks' / 'owl2' / 'pns_ai_chatboo' / 'i18n' / 'es_ES.po').read_text(
+    es2 = (_ROOT / 'stacks' / 'owl2' / 'pns_ai_chatboo' / 'i18n' / 'es.po').read_text(
         encoding='utf-8'
     )
     for po in (es1, es2):
