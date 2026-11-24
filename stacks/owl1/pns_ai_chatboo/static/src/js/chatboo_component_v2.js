@@ -745,12 +745,7 @@ odoo.define('pns_ai_chatboo.Chatboo', function (require) {
                     try {
                         const listResult = await this.props.rpc({ route: '/chatboo/sessions/list', params: {} });
                         if (listResult && listResult.status === 'ok') {
-                            this.state.sessions = (listResult.sessions || []).map(session => {
-                                if (session.last_used_date) {
-                                    try { session.formatted_date = new Date(session.last_used_date).toLocaleDateString(formatters.getSessionLocale()); } catch (e) { session.formatted_date = session.last_used_date; }
-                                }
-                                return session;
-                            });
+                            this.state.sessions = listResult.sessions || [];
                         }
                     } catch (e) { /* non-fatal */ }
                 } else {
@@ -758,12 +753,7 @@ odoo.define('pns_ai_chatboo.Chatboo', function (require) {
                     const listResult = await this.props.rpc({ route: '/chatboo/sessions/list', params: {} });
 
                     if (listResult && listResult.status === 'ok') {
-                        this.state.sessions = (listResult.sessions || []).map(session => {
-                            if (session.last_used_date) {
-                                try { session.formatted_date = new Date(session.last_used_date).toLocaleDateString(formatters.getSessionLocale()); } catch (e) { session.formatted_date = session.last_used_date; }
-                            }
-                            return session;
-                        });
+                        this.state.sessions = listResult.sessions || [];
 
                         const targetId = listResult.active_session_id
                             || (listResult.sessions && listResult.sessions.length > 0 ? listResult.sessions[0].id : null);
@@ -1069,17 +1059,7 @@ odoo.define('pns_ai_chatboo.Chatboo', function (require) {
                     params: {}
                 });
                 if (result.status === 'ok') {
-                    // Format dates for display in template
-                    this.state.sessions = (result.sessions || []).map(session => {
-                        if (session.last_used_date) {
-                            try {
-                                session.formatted_date = new Date(session.last_used_date).toLocaleDateString(formatters.getSessionLocale());
-                            } catch (e) {
-                                session.formatted_date = session.last_used_date;
-                            }
-                        }
-                        return session;
-                    });
+                    this.state.sessions = result.sessions || [];
                 }
                 return result;
             } catch (error) {
@@ -6338,16 +6318,14 @@ odoo.define('pns_ai_chatboo.Chatboo', function (require) {
                                         <t t-if="state.editingSessionId !== session.id">
                                             <div class="flex-grow-1">
                                                 <div class="d-flex align-items-center">
-                                                    <strong t-esc="session.name"/>
+                                                    <strong t-esc="session.name" t-att-title="session.first_prompt"/>
                                                     <t t-if="state.currentSessionId === session.id">
                                                         <span class="badge badge-primary ml-2 text-white"><t t-esc="tipCurrent"/></span>
                                                     </t>
                                                 </div>
                                                 <small class="text-muted">
+                                                    <t t-if="session.created_label"><t t-esc="session.created_label"/> · </t>
                                                     <t t-esc="session.message_count || 0"/> <t t-esc="tipMessages"/>
-                                                    <t t-if="session.last_used_date">
-                                                        · <t t-esc="session.formatted_date"/>
-                                                    </t>
                                                 </small>
                                             </div>
                                             <div class="btn-group" t-on-click.stop="">

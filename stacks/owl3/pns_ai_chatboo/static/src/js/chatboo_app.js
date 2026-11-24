@@ -15,7 +15,6 @@ import { session } from "@web/session";
 import { ConfirmationDialog } from "@web/core/confirmation_dialog/confirmation_dialog";
 import * as exportUtils from "./chatboo_export";
 import {
-    getSessionLocale,
     formatWallclock,
     formatContent as sharedFormatContent,
     formatMarkdown as sharedFormatMarkdown,
@@ -879,17 +878,7 @@ class ChatbooApp extends Component {
         try {
             const res = await rpc("/chatboo/sessions/list", {});
             if (res.status === "ok") {
-                this.state.sessions = (res.sessions || []).map((session) => {
-                    const row = { ...session };
-                    if (row.last_used_date) {
-                        try {
-                            row.formatted_date = new Date(row.last_used_date).toLocaleDateString(getSessionLocale());
-                        } catch (e) {
-                            row.formatted_date = row.last_used_date;
-                        }
-                    }
-                    return row;
-                });
+                this.state.sessions = res.sessions || [];
                 if (!this.state.currentSessionId) {
                     const sessions = res.sessions || [];
                     this.state.currentSessionId = res.active_session_id

@@ -269,7 +269,9 @@ def test_systray_and_composer_have_no_hover_noise():
         _ROOT / 'stacks' / 'owl2' / 'pns_ai_chatboo'
         / 'static' / 'src' / 'xml' / 'chatboo_app.xml'
     ).read_text(encoding='utf-8')
-    footer2 = owl2.split('o_chatboo_main_footer', 1)[1]
+    footer2 = owl2.split('o_chatboo_main_footer', 1)[1].split(
+        'o_chatboo_session_modal_backdrop', 1,
+    )[0]
     prefs2 = footer2.split('o_chatboo_footer_prefs', 1)[1].split(
         'o_chatboo_tts_toggle', 1
     )[0]

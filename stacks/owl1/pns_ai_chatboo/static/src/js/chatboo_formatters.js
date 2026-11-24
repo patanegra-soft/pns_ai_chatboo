@@ -1194,7 +1194,6 @@ odoo.define('pns_ai_chatboo.formatters', function (require) {
     // Public API
     return {
         DEFAULT_DECIMAL_PLACES: DEFAULT_DECIMAL_PLACES,
-        getSessionLocale: getSessionLocale,
         getSessionTz: getSessionTz,
         formatWallclock: formatWallclock,
         isLikelyHtml: isLikelyHtml,
