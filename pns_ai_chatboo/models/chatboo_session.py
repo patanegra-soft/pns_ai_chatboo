@@ -1733,10 +1733,51 @@ class ChatbooSession(models.Model):
         composed, pipeline_incomplete = compose_capture_pipeline(
             relaxaicode_codes, fetch_steps,
         )
+        if pipeline_incomplete and not fetch_steps and len(self) == 1:
+            producer = self._query_turns_before(turn)
+            if producer:
+                composed, pipeline_incomplete = compose_capture_pipeline(
+                    producer + relaxaicode_codes, fetch_steps,
+                )
         if not composed:
             composed = code_body or ''
             return composed, capture_is_incomplete(composed, fetch_steps)
         return composed, pipeline_incomplete
+
+    def _query_turns_before(self, corr):
+        """Code of the earlier turns of this chat that made the rows ``corr`` repaints.
+
+        ``previous_result`` is the session's latest dataset, so the turns are
+        walked back until one ran its own query. Returns ``[]`` when none did
+        or one needed an external fetch.
+        """
+        from odoo.addons.pns_ai_chatboo.utils.skill_capture_compose import (
+            compose_capture_pipeline,
+        )
+        self.ensure_one()
+        turns = []
+        for msg in self.get_messages():
+            if not isinstance(msg, dict) or msg.get('role') != 'assistant':
+                continue
+            turn = self._normalize_turn_id(self._message_turn(msg))
+            if turn and turn not in turns:
+                turns.append(turn)
+        if corr not in turns:
+            return []
+        chain = []
+        for turn in reversed(turns[:turns.index(corr)]):
+            codes = self._relaxaicode_codes_for_turn(turn)
+            if not codes:
+                continue
+            if self._fetch_steps_for_turn(turn):
+                return []
+            composed, incomplete = compose_capture_pipeline(codes, [])
+            if not composed:
+                continue
+            chain.insert(0, composed)
+            if not incomplete:
+                return chain
+        return []
 
     def _fetch_steps_for_turn(self, corr):
         """Auto-confirmable fetch steps from every safe plan in this turn."""

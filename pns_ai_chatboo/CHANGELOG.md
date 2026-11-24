@@ -2,6 +2,11 @@
 
 What changes for people who use this module, one section per published version, newest first. The heading is the git tag.
 
+## owl1-2.1.598_owl2-2.1.598_owl3-2.1.598 (2026-11-24)
+
+- Creating a skill from a chat turn that only redrew the previous answer now also brings the query of that earlier turn, so the skill shows the same rows when you run it.
+- If that query cannot be found, saving the skill is refused with an explanation. Before, it saved a skill that showed only the total row.
+
 ## owl1-2.1.597_owl2-2.1.597_owl3-2.1.597 (2026-11-19)
 
 - The provider picker offers the providers the chat really uses: the agent's conversation chain or, with no chain, every active conversation provider. Before, with no chain, a second provider could not be picked.
