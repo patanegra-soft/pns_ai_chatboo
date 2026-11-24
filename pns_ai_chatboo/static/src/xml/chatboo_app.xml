@@ -506,12 +506,12 @@
                                         <t t-else="">
                                             <div class="flex-grow-1">
                                                 <div class="d-flex align-items-center">
-                                                    <strong t-out="session.name"/>
+                                                    <strong t-out="session.name" t-att-title="session.first_prompt"/>
                                                     <span t-if="this.state.currentSessionId === session.id" class="badge bg-primary text-white ms-2">Current</span>
                                                 </div>
                                                 <small class="text-muted">
+                                                    <t t-if="session.created_label"><t t-out="session.created_label"/> · </t>
                                                     <t t-out="session.message_count || 0"/> messages
-                                                    <t t-if="session.formatted_date"> · <t t-out="session.formatted_date"/></t>
                                                 </small>
                                             </div>
                                             <div class="btn-group" t-on-click.stop="">
