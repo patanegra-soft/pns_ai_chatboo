@@ -48,6 +48,23 @@ class ChatbooSession(models.Model):
         default=lambda self: _("Session %s") % self.format_display_datetime(),
         help="Descriptive name to identify the session",
     )
+    name_custom = fields.Boolean(
+        string='Name set by hand',
+        copy=False,
+        help="The owner renamed the session. Otherwise the name is the "
+             "first prompt of the conversation.",
+    )
+    opening_prompt = fields.Text(
+        string='First prompt',
+        compute='_compute_message_summary',
+        store=True,
+        help="First prompt of the conversation, whole, as plain text.",
+    )
+    message_count = fields.Integer(
+        string='Message count',
+        compute='_compute_message_summary',
+        store=True,
+    )
     user_id = fields.Many2one(
         'res.users',
         string='User',
@@ -202,12 +219,89 @@ class ChatbooSession(models.Model):
             )
         rename_stored_markup(self.env.cr, self._table, 'messages')
         rename_stored_markup(self.env.cr, self._table, 'canvas_design')
+        # Rows from before name_custom: a name that is not «word + stamp» was
+        # typed by someone, or is already a prompt.
+        self.env.cr.execute(
+            "UPDATE chatboo_session SET name_custom = "
+            "(name !~ %s) WHERE name_custom IS NULL",
+            (r'^\S+ \d{4}-\d{2}-\d{2} \d{2}:\d{2}:\d{2}$',),
+        )
 
     @api.model
     def format_display_datetime(self, utc_dt=None):
         """Wall clock for Chatboo UI (user tz, else company, else UTC)."""
         from ..utils.chatboo_display_time import format_env_wallclock
         return format_env_wallclock(self.env, utc_dt)
+
+    TITLE_LENGTH = 48
+
+    @staticmethod
+    def first_prompt(messages):
+        """First user prompt as plain text, whole. '' if none."""
+        for msg in messages or []:
+            if not isinstance(msg, dict) or msg.get('role') != 'user':
+                continue
+            content = msg.get('content')
+            if not isinstance(content, str):
+                continue
+            text = ' '.join(re.sub(r'<[^>]+>', ' ', content).split())
+            if text:
+                return text
+        return ''
+
+    @classmethod
+    def title_of(cls, text):
+        """``text`` cut to ``TITLE_LENGTH`` with «…», first letter upper. '' if none."""
+        text = text or ''
+        if not text:
+            return ''
+        if len(text) > cls.TITLE_LENGTH:
+            text = text[:cls.TITLE_LENGTH].rstrip() + '…'
+        return text[0].upper() + text[1:]
+
+    @classmethod
+    def title_from_messages(cls, messages):
+        """First user prompt cut to ``TITLE_LENGTH`` with «…». '' if none."""
+        return cls.title_of(cls.first_prompt(messages))
+
+    @api.depends('messages')
+    def _compute_message_summary(self):
+        for session in self:
+            messages = session.get_messages()
+            session.opening_prompt = self.first_prompt(messages) or False
+            session.message_count = len(messages)
+
+    _HISTORY_FIELDS = (
+        'name', 'name_custom', 'opening_prompt', 'message_count',
+        'create_date', 'last_used_date',
+    )
+
+    @api.model
+    def history_rows(self):
+        """Every session of the user for History, newest use first.
+
+        Only the short columns are read: the message JSON of hundreds of
+        sessions never leaves the database to draw the list.
+        """
+        sessions = self.get_user_sessions()
+        sessions.read(list(self._HISTORY_FIELDS))
+        rows = []
+        for s in sessions:
+            rows.append({
+                'id': s.id,
+                'name': s.name if s.name_custom else (
+                    self.title_of(s.opening_prompt) or s.name
+                ),
+                'first_prompt': s.opening_prompt or '',
+                'created_label': (
+                    self.format_display_datetime(s.create_date)[:16]
+                    if s.create_date else ''
+                ),
+                'create_date': s.create_date.isoformat() if s.create_date else None,
+                'last_used_date': s.last_used_date.isoformat() if s.last_used_date else None,
+                'message_count': s.message_count,
+            })
+        return rows
 
     # -- Serialization --
 
@@ -1496,10 +1590,10 @@ class ChatbooSession(models.Model):
             _logger.warning("Chatboo: fallo purgando datasets cacheados: %s", e)
 
     @api.model
-    def get_user_sessions(self, limit=50):
+    def get_user_sessions(self):
         return self.search(
             [('user_id', '=', self.env.user.id)],
-            limit=limit, order='last_used_date desc, create_date desc',
+            order='last_used_date desc, create_date desc',
         )
 
     # -- Skill capture from chat (/create-skill) --
