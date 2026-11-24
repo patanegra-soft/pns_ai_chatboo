@@ -198,6 +198,14 @@ class SkillCaptureWizard(models.TransientModel):
         if not self.chatboo_session_id:
             return super().action_create_draft()
         self._reapply_turn_fetch_wrap(keep_query=True)
+        from ..utils.skill_capture_compose import code_needs_prior_plan
+        if self.warn_incomplete_capture and code_needs_prior_plan(self.code_body):
+            raise UserError(_(
+                'This Code only repaints rows from an earlier answer '
+                '(previous_result). A slash starts without them, so the skill '
+                'would come out empty. Capture the turn that ran the query, '
+                'or put the query in the Code.'
+            ))
         if self._opens_saved_page() and self._page_has_param_rows():
             self._assert_captured_page_reusable()
         ctx = {
