@@ -711,6 +711,21 @@ msgid "Session Name"
 msgstr "Nombre de sesión"
 
 #. module: pns_ai_chatboo
+#: model:ir.model.fields,field_description:pns_ai_chatboo.field_chatboo_session__name_custom
+msgid "Name set by hand"
+msgstr "Nombre puesto a mano"
+
+#. module: pns_ai_chatboo
+#: model:ir.model.fields,field_description:pns_ai_chatboo.field_chatboo_session__opening_prompt
+msgid "First prompt"
+msgstr "Primer prompt"
+
+#. module: pns_ai_chatboo
+#: model:ir.model.fields,field_description:pns_ai_chatboo.field_chatboo_session__message_count
+msgid "Message count"
+msgstr "Número de mensajes"
+
+#. module: pns_ai_chatboo
 #: model:ir.model.fields,field_description:pns_ai_chatboo.field_chatboo_async_request__user_id
 #: model:ir.model.fields,field_description:pns_ai_chatboo.field_chatboo_job_mixin__user_id
 #: model:ir.model.fields,field_description:pns_ai_chatboo.field_chatboo_session__user_id
@@ -2197,6 +2212,20 @@ msgstr "Mostrar el icono de Chatboo en la barra de navegación superior."
 #: model:ir.model.fields,help:pns_ai_chatboo.field_chatboo_session__name
 msgid "Descriptive name to identify the session"
 msgstr "Nombre descriptivo para identificar la sesión"
+
+#. module: pns_ai_chatboo
+#: model:ir.model.fields,help:pns_ai_chatboo.field_chatboo_session__name_custom
+msgid ""
+"The owner renamed the session. Otherwise the name is the first prompt of "
+"the conversation."
+msgstr ""
+"La persona renombró la sesión. Si no, el nombre es el primer prompt de la "
+"conversación."
+
+#. module: pns_ai_chatboo
+#: model:ir.model.fields,help:pns_ai_chatboo.field_chatboo_session__opening_prompt
+msgid "First prompt of the conversation, whole, as plain text."
+msgstr "Primer prompt de la conversación, entero, en texto plano."
 
 #. module: pns_ai_chatboo
 #: model:ir.model.fields,help:pns_ai_chatboo.field_chatboo_session__user_id
