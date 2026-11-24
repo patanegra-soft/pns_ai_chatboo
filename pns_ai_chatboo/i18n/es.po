@@ -1659,6 +1659,17 @@ msgstr ""
 
 #. module: pns_ai_chatboo
 #: code:addons/pns_ai_chatboo/models/skill_capture_wizard.py:0
+msgid ""
+"This Code only repaints rows from an earlier answer (previous_result). A "
+"slash starts without them, so the skill would come out empty. Capture the "
+"turn that ran the query, or put the query in the Code."
+msgstr ""
+"Este Código solo vuelve a pintar filas de una respuesta anterior "
+"(previous_result). Un slash empieza sin ellas, así que el skill saldría "
+"vacío. Captura el turno que hizo la consulta o pon la consulta en el Código."
+
+#. module: pns_ai_chatboo
+#: code:addons/pns_ai_chatboo/models/skill_capture_wizard.py:0
 msgid "This page mixed data into the design. It cannot be saved as a skill."
 msgstr ""
 "Esta página mezcló los datos con el diseño. No se puede guardar como skill."

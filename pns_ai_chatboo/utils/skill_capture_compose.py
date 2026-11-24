@@ -302,6 +302,7 @@ def _merge_transform_and_present(transform_codes, present_code):
     inner_parts.append(
         "previous_result = {'rows': _pipeline_rows, 'data': _pipeline_rows}"
     )
+    inner_parts.append('raw_data = _pipeline_rows')
     inner_parts.append('result = {}')
     inner_parts.extend((present_code or '').splitlines())
     return '\n'.join(inner_parts)
