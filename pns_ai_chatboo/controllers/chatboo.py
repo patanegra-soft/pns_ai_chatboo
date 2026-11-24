@@ -263,18 +263,11 @@ class ChatbooController(http.Controller):
         if not self._user_may_use_chatboo():
             return self._chatboo_access_denied()
         try:
-            sessions = request.env['chatboo.session'].get_user_sessions(limit=50)
-            active_session_id = sessions[0].id if sessions else None
+            rows = request.env['chatboo.session'].history_rows()
             return {
                 'status': 'ok',
-                'active_session_id': active_session_id,
-                'sessions': [{
-                    'id': s.id,
-                    'name': s.name,
-                    'create_date': s.create_date.isoformat() if s.create_date else None,
-                    'last_used_date': s.last_used_date.isoformat() if s.last_used_date else None,
-                    'message_count': len(s.get_messages()),
-                } for s in sessions],
+                'active_session_id': rows[0]['id'] if rows else None,
+                'sessions': rows,
             }
         except Exception as e:
             _logger.error("Error listing sessions: %s", e)
@@ -292,6 +285,7 @@ class ChatbooController(http.Controller):
             else:
                 session = request.env['chatboo.session'].create({
                     'name': name,
+                    'name_custom': True,
                     'user_id': request.env.user.id,
                 })
             return {
@@ -430,10 +424,9 @@ class ChatbooController(http.Controller):
 
     @http.route('/chatboo/sessions/save', type=JSON_ROUTE_TYPE, auth='user')
     def save_session(self, session_id, messages, input_history, conversation_id=None):
-        """Save the state of a session. Auto-renames it from the first prompt."""
+        """Save the state of a session. Until renamed by hand, its name is the first prompt."""
         if not self._user_may_use_chatboo():
             return self._chatboo_access_denied()
-        import re
         try:
             session = self._own_session(session_id)
             if not session:
@@ -441,18 +434,10 @@ class ChatbooController(http.Controller):
             # A turn finishing on this row must not hold the HTTP worker for good.
             request.env.cr.execute("SET LOCAL lock_timeout = '10s'")
 
-            if session.name and session.name.startswith('Session '):
-                first_user_prompt = None
-                if messages and isinstance(messages, list):
-                    for msg in messages:
-                        if msg.get('role') == 'user' and msg.get('content'):
-                            first_user_prompt = msg.get('content')
-                            break
-                if first_user_prompt:
-                    clean_prompt = re.sub(r'<[^>]+>', '', first_user_prompt).strip()
-                    new_name = clean_prompt[:40] + ('...' if len(clean_prompt) > 40 else '')
-                    if new_name:
-                        session.name = new_name[0].upper() + new_name[1:]
+            if not session.name_custom:
+                title = session.title_from_messages(messages)
+                if title and title != session.name:
+                    session.name = title
 
             session.set_messages(messages)
             session.set_input_history(input_history)
@@ -474,7 +459,7 @@ class ChatbooController(http.Controller):
             session = self._own_session(session_id)
             if not session:
                 return {'status': 'error', 'message': 'Session not found'}
-            session.name = new_name.strip()
+            session.write({'name': new_name.strip(), 'name_custom': True})
             return {'status': 'ok', 'new_name': session.name}
         except Exception as e:
             _logger.error("Error renaming session %s: %s", session_id, e)
