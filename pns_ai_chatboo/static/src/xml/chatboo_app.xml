@@ -505,12 +505,12 @@
                                         <t t-else="">
                                             <div class="flex-grow-1">
                                                 <div class="d-flex align-items-center">
-                                                    <strong t-esc="session.name"/>
+                                                    <strong t-esc="session.name" t-att-title="session.first_prompt"/>
                                                     <span t-if="state.currentSessionId === session.id" class="badge bg-primary text-white ms-2">Current</span>
                                                 </div>
                                                 <small class="text-muted">
+                                                    <t t-if="session.created_label"><t t-esc="session.created_label"/> · </t>
                                                     <t t-esc="session.message_count || 0"/> messages
-                                                    <t t-if="session.formatted_date"> · <t t-esc="session.formatted_date"/></t>
                                                 </small>
                                             </div>
                                             <div class="btn-group" t-on-click.stop="">
