@@ -352,6 +352,50 @@ def test_a_self_contained_last_round_is_the_whole_skill():
     assert 'return composed, pipeline_incomplete' in body
 
 
+def test_a_repaint_of_an_earlier_turn_brings_that_query_along():
+    """The turn only repainted the rows of the turn before: both go in.
+
+    On /slash ``previous_result`` and ``raw_data`` start empty, so the
+    repaint alone paints the total row and nothing else.
+    """
+    compose = _load()
+    query = (
+        "result = {}\n"
+        "rows = [{'id': 7, 'Cliente': 'ACME', 'Importe': 10.0}]\n"
+        "result = {'data': rows, '__return_direct__': True}\n"
+    )
+    repaint = (
+        "result = {}\n"
+        "src = raw_data if isinstance(raw_data, list) else "
+        "((previous_result or {}).get('data') or [])\n"
+        "rows = [dict(r) for r in src if not r.get('_tfoot')]\n"
+        "rows.append({'Cliente': 'Total', '_tfoot': True})\n"
+        "result = {'data': rows, '__return_direct__': True}\n"
+    )
+    alone, incomplete = compose.compose_capture_pipeline([repaint], [])
+    assert incomplete
+    merged, incomplete = compose.compose_capture_pipeline([query, repaint], [])
+    assert not incomplete
+    scope = {'raw_data': None, 'previous_result': None}
+    exec(compile(merged, '<skill>', 'exec'), scope)
+    assert [r.get('Cliente') for r in scope['result']['data']] == ['ACME', 'Total']
+    src = (_ROOT / 'common' / 'models' / 'chatboo_session.py').read_text(
+        encoding='utf-8',
+    )
+    body = src.split('def compose_capture_code', 1)[1].split('\n    def ', 1)[0]
+    assert '_query_turns_before(turn)' in body
+
+
+def test_saving_a_repaint_without_its_query_is_refused():
+    src = (
+        _ROOT / 'common' / 'models' / 'skill_capture_wizard.py'
+    ).read_text(encoding='utf-8')
+    create = src.split('def action_create_draft', 1)[1].split('\n    def ', 1)[0]
+    assert (
+        'if self.warn_incomplete_capture and code_needs_prior_plan(self.code_body):'
+    ) in create
+
+
 def test_a_step_the_sandbox_refused_is_not_captured():
     compose = _load()
     assert compose.log_run_failed(
