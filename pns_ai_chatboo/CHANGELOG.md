@@ -2,6 +2,12 @@
 
 What changes for people who use this module, one section per published version, newest first. The heading is the git tag.
 
+## owl1-2.1.602_owl2-2.1.602_owl3-2.1.602 (2026-11-24)
+
+- History: a session is named after its first prompt until you rename it. Before, sessions in Spanish kept the default name.
+- History: pointing at a session name shows the whole first prompt, also after renaming; the start date is shown under the name.
+- History lists every session of the user, not only the last 50, and opens without reading every conversation.
+
 ## owl1-2.1.598_owl2-2.1.598_owl3-2.1.598 (2026-11-24)
 
 - Creating a skill from a chat turn that only redrew the previous answer now also brings the query of that earlier turn, so the skill shows the same rows when you run it.

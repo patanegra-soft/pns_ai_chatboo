@@ -1172,7 +1172,6 @@ function formatMarkdown(content) {
 
 export {
     DEFAULT_DECIMAL_PLACES,
-    getSessionLocale,
     getSessionTz,
     formatWallclock,
     isLikelyHtml,
